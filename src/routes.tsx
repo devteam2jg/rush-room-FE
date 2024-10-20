@@ -3,8 +3,9 @@ import Home from './pages/HomePage/Home';
 import Layout from './pages/LayoutPage/Layout';
 import Error from './pages/ErrorPage/Error';
 import Login from './pages/LoginPage/Login';
+import CreateAuction from './pages/CreateAuctionPage/CreateAuction';
 
-const authenticated = true;
+const authenticated = false;
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
       {
         path: 'login',
         element: !authenticated ? <Login /> : <Navigate to="/" />,
+      },
+      {
+        path: 'crauction',
+        element: <CreateAuction />,
       },
     ],
   },
