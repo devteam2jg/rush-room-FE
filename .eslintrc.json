@@ -24,19 +24,32 @@
     "@typescript-eslint/no-explicit-any": "off",
     "react/jsx-filename-extension": ["warn", { "extensions": [".tsx", ".jsx"] }]
   },
-  "import/resolver": {
-    "typescript": {
-      "alwaysTryTypes": true
-    }
-  },
-  "import/extensions": [
-    "error",
-    "ignorePackages",
-    {
-      "js": "never",
-      "jsx": "never",
-      "ts": "never",
-      "tsx": "never"
-    }
-  ]
+  "settings": {
+    "import/resolver": {
+      "typescript": {
+        "alwaysTryTypes": true
+      }
+    },
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ],
+    "overrides": [
+      {
+        "files": ["vite.config.ts"],
+        "rules": {
+          "@typescript-eslint/no-unused-vars": "off"
+        },
+        "parserOptions": {
+          "project": null
+        }
+      }
+    ]
+  }
 }

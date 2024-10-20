@@ -1,4 +1,4 @@
-import { Box, Text } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import { Outlet } from 'react-router-dom';
 
 const Layout = () => {
@@ -7,7 +7,6 @@ const Layout = () => {
       <Box>
         <Outlet />
       </Box>
-      <Text>네브바</Text>
     </>
   );
 };
