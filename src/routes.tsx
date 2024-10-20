@@ -1,7 +1,11 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 import Home from './pages/HomePage/Home';
 import Layout from './pages/LayoutPage/Layout';
 import Error from './pages/ErrorPage/Error';
+import Login from './pages/LoginPage/Login';
+import CreateAuction from './pages/CreateAuctionPage/CreateAuction';
+
+const authenticated = false;
 
 const router = createBrowserRouter([
   {
@@ -11,9 +15,16 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Home />,
+        element: authenticated ? <Home /> : <Navigate to="/login" />,
       },
-      { path: 'example', element: '' },
+      {
+        path: 'login',
+        element: !authenticated ? <Login /> : <Navigate to="/" />,
+      },
+      {
+        path: 'crauction',
+        element: <CreateAuction />,
+      },
     ],
   },
 ]);
