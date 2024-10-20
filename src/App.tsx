@@ -1,12 +1,11 @@
-import { Route, Routes } from 'react-router-dom';
 import './App.css';
-import Home from './pages/HomePage/Home';
+
+import { Button, useColorMode } from '@chakra-ui/react';
 function App() {
+  const { toggleColorMode } = useColorMode();
   return (
     <>
-      <Routes>
-        <Route path="/" element={<Home />} />
-      </Routes>
+      <Button onClick={toggleColorMode} />
     </>
   );
 }
