@@ -109,3 +109,4 @@ sketch
 *.wat
 *.xhtml
 
+.env
