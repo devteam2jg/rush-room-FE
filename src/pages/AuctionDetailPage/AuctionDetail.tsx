@@ -2,7 +2,7 @@ import AuctionInfo from '../../components/AuctionInfo';
 import AddAuction from '../../components/AddAuction';
 import AuctionList from '../../components/AuctionList';
 
-function Auction() {
+function AuctionDetail() {
   return (
     <div>
       <AuctionInfo />
@@ -12,4 +12,4 @@ function Auction() {
   );
 }
 
-export default Auction;
+export default AuctionDetail;

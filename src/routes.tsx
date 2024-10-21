@@ -3,7 +3,7 @@ import Home from './pages/HomePage/Home';
 import Layout from './pages/LayoutPage/Layout';
 import Error from './pages/ErrorPage/Error';
 import Login from './pages/LoginPage/Login';
-import Auction from './pages/AuctionPage/Auction';
+import AuctionDetail from './pages/AuctionDetailPage/AuctionDetail';
 
 const authenticated = true;
 
@@ -23,7 +23,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'auction',
-        element: <Auction />,
+        element: <AuctionDetail />,
       },
     ],
   },
