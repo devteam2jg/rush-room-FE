@@ -3,6 +3,7 @@ import Home from './pages/HomePage/Home';
 import Layout from './pages/LayoutPage/Layout';
 import Error from './pages/ErrorPage/Error';
 import Login from './pages/LoginPage/Login';
+import Auction from './pages/AuctionPage/Auction';
 
 const authenticated = true;
 
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
       {
         path: 'login',
         element: !authenticated ? <Login /> : <Navigate to="/" />,
+      },
+      {
+        path: 'auction',
+        element: <Auction />,
       },
     ],
   },
