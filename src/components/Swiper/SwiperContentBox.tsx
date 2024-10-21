@@ -1,14 +1,17 @@
 import { Box, Input, Text, Textarea } from '@chakra-ui/react';
 import useAuctionStore from '../../store/AuctionStore';
 import useShowToast from '../../hooks/useShowToast';
+import useAuctionItemStore from '../../store/AuntionItemStore';
 
 type SwiperProps = 'title' | 'content' | 'date' | 'duration';
+type SwiperItemProps = 'itemName' | 'content' | 'price';
 
 interface SwiperContentBoxProps {
   labelText: string;
-  typeValue: SwiperProps;
+  typeValue: SwiperProps | SwiperItemProps;
   inputType: string;
   placeholderText: string;
+  sourceType: 'auction' | 'auctionItem';
 }
 
 function SwiperContentBox({
@@ -16,21 +19,39 @@ function SwiperContentBox({
   typeValue,
   inputType,
   placeholderText,
+  sourceType,
 }: SwiperContentBoxProps) {
   const { auctionInfo, updateField } = useAuctionStore();
+  const { auctionItemInfo, updateItemField } = useAuctionItemStore();
   const showToast = useShowToast();
-  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (typeValue !== 'date') {
-      updateField(typeValue, e.target.value);
+
+  // 공통된 업데이트 로직 함수
+  const handleUpdate = (
+    field: SwiperProps | SwiperItemProps,
+    value: string
+  ) => {
+    if (sourceType === 'auction') {
+      updateField(field as SwiperProps, value);
     } else {
+      updateItemField(field as SwiperItemProps, value);
+    }
+  };
+
+  // 입력값 변경 처리 함수
+  const handleOnChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { value } = e.target;
+
+    if (typeValue === 'date') {
       const minDate = new Date(
         Date.now() + 10 * 60 * 1000 - new Date().getTimezoneOffset() * 60000
       )
         .toISOString()
         .slice(0, 16);
 
-      if (e.target.value > minDate) {
-        updateField('date', e.target.value);
+      if (value > minDate) {
+        handleUpdate('date', value);
       } else {
         showToast(
           'Error',
@@ -38,8 +59,20 @@ function SwiperContentBox({
           'error'
         );
       }
+    } else {
+      handleUpdate(typeValue, value);
     }
   };
+
+  const getValue = () => {
+    const value =
+      sourceType === 'auction'
+        ? auctionInfo[typeValue as SwiperProps]
+        : auctionItemInfo[typeValue as SwiperItemProps];
+
+    return value !== undefined ? value : '';
+  };
+
   return (
     <Box margin="0 auto" width="90vw" height="60vh">
       <Text fontSize="12px" mb="8px">
@@ -48,14 +81,16 @@ function SwiperContentBox({
       {inputType !== 'textarea' ? (
         <Input
           type={inputType}
-          value={auctionInfo[typeValue]}
+          value={getValue()}
           onChange={handleOnChange}
           placeholder={placeholderText}
         />
       ) : (
         <Textarea
-          value={auctionInfo[typeValue]}
-          onChange={(e) => updateField(typeValue, e.target.value)}
+          h="200px"
+          size="md"
+          value={getValue()}
+          onChange={handleOnChange}
           placeholder={placeholderText}
         />
       )}
