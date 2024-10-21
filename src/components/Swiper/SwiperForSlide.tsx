@@ -8,9 +8,14 @@ import { Pagination, Navigation } from 'swiper/modules';
 interface SwiperProps {
   children: React.ReactNode[];
   onIndexChange: (index: number) => void;
+  setTotalSlides: (slides: number) => void;
 }
 
-const SwiperForSlide = ({ children, onIndexChange }: SwiperProps) => {
+function SwiperForSlide({
+  children,
+  onIndexChange,
+  setTotalSlides,
+}: SwiperProps) {
   return (
     <Swiper
       pagination={{
@@ -23,6 +28,7 @@ const SwiperForSlide = ({ children, onIndexChange }: SwiperProps) => {
       modules={[Pagination, Navigation]}
       className="mySwiper"
       allowTouchMove={false}
+      onSwiper={(swiper) => setTotalSlides(swiper.slides.length)}
       onSlideChange={(swiper) => onIndexChange(swiper.activeIndex)}
     >
       {children.map((child, index) => (
@@ -30,6 +36,6 @@ const SwiperForSlide = ({ children, onIndexChange }: SwiperProps) => {
       ))}
     </Swiper>
   );
-};
+}
 
 export default SwiperForSlide;
