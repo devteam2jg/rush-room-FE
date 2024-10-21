@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
 import { ChakraProvider } from '@chakra-ui/react';
 import router from './routes';
-import './index.css';
+// import './index.css';
 import theme from './utils/theme';
 
 createRoot(document.getElementById('root')!).render(
