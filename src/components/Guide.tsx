@@ -2,9 +2,9 @@ import { Box, Image, Heading, VStack } from '@chakra-ui/react';
 
 export default function Guide() {
   return (
-    <Box p={4} textAlign="center">
+    <Box p={4} textAlign="center" backgroundColor="white">
       <VStack spacing={4}>
-        <Heading as="h1" size="md">
+        <Heading as="h1" size="sm">
           서비스 사용 가이드
         </Heading>
         <Image
