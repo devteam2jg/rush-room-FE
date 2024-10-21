@@ -1,25 +1,30 @@
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
+import useShowToast from './useShowToast';
+import useAuctionStore from '../store/AuctionStore';
 
-interface CreateAuctionData {
-  title: string;
-  description: string;
-  date: string;
-}
+const useCreateAuction = () => {
+  const { getFormData, resetForm } = useAuctionStore();
+  const showToast = useShowToast();
 
-const createAuction = async (data: CreateAuctionData) => {
-  const response = await axios.post('/api/post', data);
-  return response.data;
-};
+  const createAuction = async () => {
+    const data = getFormData();
+    const response = await axios.post('/api/post', data);
+    return response.data;
+  };
 
-export const useCreateAuction = () => {
   return useMutation({
     mutationFn: createAuction,
     onSuccess: (data) => {
-      console.log('성공', data);
+      resetForm();
+      console.log(data);
+      showToast('Success', '경매 생성이 완료되었습니다.', 'success');
     },
     onError: (error) => {
       console.log('에러', error);
+      showToast('Error', `${error}`, 'error');
     },
   });
 };
+
+export default useCreateAuction;
