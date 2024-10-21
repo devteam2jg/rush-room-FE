@@ -7,7 +7,7 @@ const Layout = () => {
       <Box>
         <Outlet />
       </Box>
-      <Text>네브바</Text>
+      <Text />
     </>
   );
 };
