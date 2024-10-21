@@ -13,14 +13,21 @@ import {
   useColorModeValue,
   useDisclosure,
 } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 
 export default function AuctionInfo() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const navigate = useNavigate();
 
   return (
     <Box bg={useColorModeValue('white', 'gray.900')} px={4} py={2} shadow="md">
       <Flex h={16} alignItems="center" justifyContent="space-between">
-        <Button bg="white">
+        <Button
+          bg="white"
+          onClick={() => {
+            navigate('/');
+          }}
+        >
           <Image src="images/leftarrow.png" alt="뒤로가기" boxSize="24px" />
         </Button>
 

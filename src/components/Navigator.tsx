@@ -1,64 +1,75 @@
-import { Box, Flex, Image, Text, Link } from '@chakra-ui/react';
+import { Box, Flex, Image, Text } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Navigator() {
+  const navigate = useNavigate();
+
   return (
     <Box
       position="fixed"
-      bottom={0}
-      left={0}
-      right={0}
+      bottom={2}
+      left={2}
+      right={2}
       bg="white"
       shadow="lg"
       borderTop="1px solid"
       borderColor="gray.200"
+      borderRadius={15}
     >
       <Flex justify="space-around" align="center" p={2}>
-        <Link href="/home">
-          <Flex direction="column" align="center">
-            <Image src="images/home_icon.png" alt="홈" boxSize="24px" />
-            <Text fontSize="sm">홈</Text>
-          </Flex>
-        </Link>
+        <Flex
+          direction="column"
+          align="center"
+          onClick={() => navigate('/')}
+          cursor="pointer"
+        >
+          <Image src="images/home_icon.png" alt="홈" boxSize="24px" />
+          <Text fontSize="sm">홈</Text>
+        </Flex>
 
-        <Link href="/">
-          <Flex direction="column" align="center">
-            <Image
-              src="images/list_icon.png"
-              alt="경매 리스트"
-              boxSize="24px"
-            />
-            <Text fontSize="sm">경매 리스트</Text>
-          </Flex>
-        </Link>
+        <Flex
+          direction="column"
+          align="center"
+          onClick={() => navigate('/auction')}
+          cursor="pointer"
+        >
+          <Image src="images/list_icon.png" alt="경매 리스트" boxSize="24px" />
+          <Text fontSize="sm">경매 리스트</Text>
+        </Flex>
 
-        <Link href="/">
-          <Flex direction="column" align="center">
-            <Image src="images/add_icon.png" alt="새로운 경매" boxSize="24px" />
-            <Text fontSize="sm">새로운 경매</Text>
-          </Flex>
-        </Link>
+        <Flex
+          direction="column"
+          align="center"
+          onClick={() => navigate('/auction')}
+          cursor="pointer"
+        >
+          <Image src="images/add_icon.png" alt="새로운 경매" boxSize="24px" />
+          <Text fontSize="sm">새로운 경매</Text>
+        </Flex>
 
-        <Link href="/">
-          <Flex direction="column" align="center">
-            <Image
-              src="images/participant_icon.png"
-              alt="참여중 경매"
-              boxSize="24px"
-            />
-            <Text fontSize="sm">참여중 경매</Text>
-          </Flex>
-        </Link>
+        <Flex
+          direction="column"
+          align="center"
+          onClick={() => navigate('/')}
+          cursor="pointer"
+        >
+          <Image
+            src="images/participant_icon.png"
+            alt="참여중 경매"
+            boxSize="24px"
+          />
+          <Text fontSize="sm">참여중 경매</Text>
+        </Flex>
 
-        <Link href="/">
-          <Flex direction="column" align="center">
-            <Image
-              src="images/mypage_icon.png"
-              alt="마이페이지"
-              boxSize="24px"
-            />
-            <Text fontSize="sm">마이페이지</Text>
-          </Flex>
-        </Link>
+        <Flex
+          direction="column"
+          align="center"
+          onClick={() => navigate('/')}
+          cursor="pointer"
+        >
+          <Image src="images/mypage_icon.png" alt="마이페이지" boxSize="24px" />
+          <Text fontSize="sm">마이페이지</Text>
+        </Flex>
       </Flex>
     </Box>
   );

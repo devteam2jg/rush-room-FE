@@ -15,7 +15,7 @@ export default function AddAuction() {
         <Box flex="1" />
       </VStack>
 
-      <Box flex="1" />
+      <Box flex="1" h={1} />
 
       <Button
         fontSize="lg"
@@ -24,6 +24,7 @@ export default function AddAuction() {
         color="white"
         width="240px"
         height="40px"
+        onClick={() => {}}
       >
         등록하기
       </Button>
