@@ -4,7 +4,7 @@ interface AuctionInfo {
   title: string;
   content: string;
   date: string;
-  duration: number;
+  duration: number | undefined;
 }
 
 interface AuctionStore {
@@ -18,7 +18,7 @@ const initialState: AuctionInfo = {
   title: '',
   content: '',
   date: '',
-  duration: 10,
+  duration: undefined,
 };
 
 const useAuctionStore = create<AuctionStore>((set, get) => ({

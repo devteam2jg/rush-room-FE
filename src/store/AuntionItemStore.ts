@@ -3,7 +3,7 @@ import { create } from 'zustand';
 interface AuctionItemInfo {
   itemName: string;
   content: string;
-  price: number;
+  price: number | undefined;
 }
 
 interface AuctionItemStore {
@@ -19,7 +19,7 @@ interface AuctionItemStore {
 const initialState: AuctionItemInfo = {
   itemName: '',
   content: '',
-  price: 0,
+  price: undefined,
 };
 
 const useAuctionItemStore = create<AuctionItemStore>((set, get) => ({
