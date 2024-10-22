@@ -4,6 +4,7 @@ import Layout from './pages/LayoutPage/Layout';
 import Error from './pages/ErrorPage/Error';
 import Login from './pages/LoginPage/Login';
 import CreateAuction from './pages/CreateAuctionPage/CreateAuction';
+import CreateItem from './pages/CreateItemPage/CreateItem';
 
 const authenticated = false;
 
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
       {
         path: 'crauction',
         element: <CreateAuction />,
+      },
+      {
+        path: 'critem',
+        element: <CreateItem />,
       },
     ],
   },
