@@ -8,9 +8,33 @@ import {
   Button,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+
+interface Item {
+  title: string;
+  body: string;
+}
+
+const fetchItem = async () => {
+  const responce = await fetch('https://jsonplaceholder.typicode.com/posts/1');
+  console.log(responce);
+  if (!responce.ok) {
+    throw new Error('Network response was not ok');
+  }
+  return responce.json();
+};
 
 export default function BidItem() {
   const navigate = useNavigate();
+  const { data, isLoading, error } = useQuery<Item>({
+    queryKey: ['Item'],
+    queryFn: fetchItem,
+  });
+
+  if (isLoading) return <Text>Loding,,,</Text>;
+
+  if (error) return <Text>An error has occurred: {error.message}</Text>;
+
   return (
     <Box
       maxW={{ base: '100%', md: '445px' }}
@@ -69,7 +93,7 @@ export default function BidItem() {
           fontSize={{ base: 'xl', md: '2xl' }}
           fontFamily={'body'}
         >
-          혼종
+          {data?.title}
         </Heading>
         <Text
           color={'white'}
@@ -79,12 +103,7 @@ export default function BidItem() {
         >
           물품 상세 설명
         </Text>
-        <Text color={'whiteAlpha.800'}>
-          Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-          nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
-          sed diam voluptua. At vero eos et accusam et justo duo dolores et ea
-          rebum.
-        </Text>
+        <Text color={'whiteAlpha.800'}>{data?.body}</Text>
         <Stack mt={'1rem'} width={'100%'} direction={'row'} spacing={4}>
           <Button flex={1} onClick={() => {}}>
             5%
