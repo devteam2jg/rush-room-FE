@@ -7,33 +7,28 @@ import {
   useColorModeValue,
   Button,
 } from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-
-interface Item {
-  title: string;
-  body: string;
-}
-
-const fetchItem = async () => {
-  const responce = await fetch('https://jsonplaceholder.typicode.com/posts/1');
-  console.log(responce);
-  if (!responce.ok) {
-    throw new Error('Network response was not ok');
-  }
-  return responce.json();
-};
+import { useEffect, useState } from 'react';
 
 export default function BidItem() {
-  const navigate = useNavigate();
-  const { data, isLoading, error } = useQuery<Item>({
-    queryKey: ['Item'],
-    queryFn: fetchItem,
-  });
+  const [selectedButton, setSelectedButton] = useState(null);
+  const [selectedPercentage, setSelectedPercentage] = useState(null);
+  const percentages = [5, 10, 20];
 
-  if (isLoading) return <Text>Loding,,,</Text>;
+  //  현재가 처리 함수
+  const handleBid = () => {
+    if (selectedPercentage) {
+      const newCurrentBid = Math.ceil(
+        currentBid * (1 + selectedPercentage / 100)
+      );
+      setCurrentBid(newCurrentBid);
+      console.log(newCurrentBid);
+      // socket.emit('newCurrentBid', newCurrentBid); // 서버로 새로운 입찰가 전송
+    }
+  };
 
-  if (error) return <Text>An error has occurred: {error.message}</Text>;
+  const handlePercentage = (percentage) => {
+    setSelectedPercentage(percentage);
+  };
 
   return (
     <Box
@@ -76,7 +71,7 @@ export default function BidItem() {
       >
         현재가{' '}
         <Box as="span" color={'#EFDA19'}>
-          43,000
+          {currentBid}
         </Box>
       </Text>
       <Stack>
@@ -93,7 +88,7 @@ export default function BidItem() {
           fontSize={{ base: 'xl', md: '2xl' }}
           fontFamily={'body'}
         >
-          {data?.title}
+          {/* {data.title} */}
         </Heading>
         <Text
           color={'white'}
@@ -103,17 +98,20 @@ export default function BidItem() {
         >
           물품 상세 설명
         </Text>
-        <Text color={'whiteAlpha.800'}>{data?.body}</Text>
+        <Text color={'whiteAlpha.800'}>{/* {data.body} */}</Text>
         <Stack mt={'1rem'} width={'100%'} direction={'row'} spacing={4}>
-          <Button flex={1} onClick={() => {}}>
-            5%
-          </Button>
-          <Button flex={1} onClick={() => {}}>
-            10%
-          </Button>
-          <Button flex={1} onClick={() => {}}>
-            20%
-          </Button>
+          {percentages.map((percentage: number) => (
+            <Button
+              key={percentage}
+              flex={1}
+              onClick={() => handlePercentage(percentage)}
+              bg={selectedButton === percentage ? '#AA8EBF' : 'gray.200'}
+              _hover={{ bg: '#AA8EBF' }}
+              _active={{ bg: '#AA8EBF' }}
+            >
+              {percentage}%
+            </Button>
+          ))}
         </Stack>
         <Button
           mt={4}
@@ -123,9 +121,7 @@ export default function BidItem() {
           fontSize={'xl'}
           fontWeight={'bold'}
           letterSpacing={1.1}
-          onClick={() => {
-            navigate('');
-          }}
+          onClick={handleBid}
         >
           입찰하기
         </Button>
