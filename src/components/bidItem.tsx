@@ -57,6 +57,7 @@ export default function BidItem() {
       );
       setCurrentBid(newCurrentBid);
       console.log(newCurrentBid);
+      setSelectedPercentage(null);
       // socket.emit('newCurrentBid', newCurrentBid); // 서버로 새로운 입찰가 전송
     }
   };
