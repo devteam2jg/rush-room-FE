@@ -2,31 +2,19 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
 import { ChakraProvider } from '@chakra-ui/react';
-import { extendTheme } from '@chakra-ui/react';
-import { GlobalStyleProps, mode } from '@chakra-ui/theme-tools';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import router from './routes';
 import './index.css';
+import theme from './utils/theme';
 
-const styles = {
-  global: (props: GlobalStyleProps) => ({
-    body: {
-      bg: mode('gray.100', '#000')(props),
-      color: mode('gray.800', 'whiteAlpha.900')(props),
-    },
-  }),
-};
-
-const config = {
-  initialColorMode: 'light',
-  useSystemColorMode: false,
-};
-
-const theme = extendTheme({ config, styles });
+const queryClient = new QueryClient();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ChakraProvider theme={theme}>
-      <RouterProvider router={router} />
-    </ChakraProvider>
+    <QueryClientProvider client={queryClient}>
+      <ChakraProvider theme={theme}>
+        <RouterProvider router={router} />
+      </ChakraProvider>
+    </QueryClientProvider>
   </StrictMode>
 );
