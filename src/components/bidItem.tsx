@@ -7,9 +7,44 @@ import {
   useColorModeValue,
   Button,
 } from '@chakra-ui/react';
+import { io } from 'socket.io-client';
 import { useEffect, useState } from 'react';
 
 export default function BidItem() {
+  const socket = io('http://192.168.1.22:3000/auction-execute');
+  const auctionId = 'auction123';
+
+  // 현재가 43000원
+  const [currentBid, setCurrentBid] = useState<number>(1000);
+
+  useEffect(() => {
+    console.log(socket);
+  }, []);
+
+  // 소켓 연결 후 경매 방 참여
+  socket.emit('join_auction', auctionId);
+
+  socket.on('connect', () => {
+    console.log(socket.connected); // 연결 여부 확인
+  });
+
+  // 현재 입찰가를 서버에서 받아와 업데이트
+  socket.on('currentBid', (currentBid: number) => {
+    console.log('현재 입찰가: ', currentBid);
+    setCurrentBid(currentBid);
+  });
+
+  // 새 입찰이 들어왔을 때 업데이트
+  socket.on('newCurrentBid', (newCurrentBid: number) => {
+    console.log('업데이트 입찰가: ', newCurrentBid);
+    setCurrentBid(newCurrentBid);
+  });
+
+  // 입찰 에러 처리
+  socket.on('bid_error', (message) => {
+    alert(message);
+  });
+
   const [selectedButton, setSelectedButton] = useState(null);
   const [selectedPercentage, setSelectedPercentage] = useState(null);
   const percentages = [5, 10, 20];
