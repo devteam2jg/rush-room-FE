@@ -39,6 +39,17 @@
         "ts": "never",
         "tsx": "never"
       }
+    ],
+    "overrides": [
+      {
+        "files": ["vite.config.ts"],
+        "rules": {
+          "@typescript-eslint/no-unused-vars": "off"
+        },
+        "parserOptions": {
+          "project": null
+        }
+      }
     ]
   }
 }
