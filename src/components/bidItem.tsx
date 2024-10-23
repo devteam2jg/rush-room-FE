@@ -1,14 +1,7 @@
-import {
-  Box,
-  Heading,
-  Image,
-  Text,
-  Stack,
-  useColorModeValue,
-  Button,
-} from '@chakra-ui/react';
+import { Box, Heading, Image, Text, Stack, Button } from '@chakra-ui/react';
 import { io } from 'socket.io-client';
 import { useEffect, useState } from 'react';
+import usePostData from '../hooks/usePostQuery';
 
 export default function BidItem() {
   const socket = io('http://192.168.1.22:3000/auction-execute');
@@ -16,6 +9,12 @@ export default function BidItem() {
 
   // 현재가 43000원
   const [currentBid, setCurrentBid] = useState<number>(0);
+  const { data, error, isLoading } = usePostData();
+  const [selectedButton, setSelectedButton] = useState<number | null>(null);
+  const [selectedPercentage, setSelectedPercentage] = useState<number | null>(
+    null
+  );
+  const percentages = [5, 10, 20];
 
   useEffect(() => {
     console.log(socket);
@@ -44,23 +43,17 @@ export default function BidItem() {
     });
   }, []);
 
-  const [selectedButton, setSelectedButton] = useState<number | null>(null);
-  const [selectedPercentage, setSelectedPercentage] = useState<number | null>(
-    null
-  );
-  const percentages = [5, 10, 20];
-
   //  현재가 처리 함수
   const handleBid = () => {
     if (selectedPercentage) {
       const newCurrentBid = Math.ceil(
         currentBid * (1 + selectedPercentage / 100)
       );
+      socket.emit('new_bid', { auctionId, newCurrentBid }); // 서버로 새로운 입찰가 전송
       setCurrentBid(newCurrentBid);
       console.log('update bid ---', newCurrentBid);
       setSelectedPercentage(null);
       setSelectedButton(null);
-      socket.emit('new_bid', { auctionId, newCurrentBid }); // 서버로 새로운 입찰가 전송
     }
   };
 
@@ -68,12 +61,24 @@ export default function BidItem() {
     setSelectedPercentage(percentage);
   };
 
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  if (!data) {
+    return <div>No data available</div>;
+  }
+
   return (
     <Box
       maxW={{ base: '100%', md: '445px' }}
       w={'full'}
       h={'100vh'}
-      bg={useColorModeValue('#2F2F2F', 'gray.900')}
+      bg={'#2F2F2F'}
       boxShadow={'2xl'}
       rounded={'md'}
       fontFamily="SpoqaHanSansNeo"
@@ -127,7 +132,7 @@ export default function BidItem() {
           fontSize={{ base: 'xl', md: '2xl' }}
           fontFamily={'body'}
         >
-          {/* {data.title} */}
+          {data.title}
         </Heading>
         <Text
           color={'white'}
@@ -137,7 +142,7 @@ export default function BidItem() {
         >
           물품 상세 설명
         </Text>
-        <Text color={'whiteAlpha.800'}>{/* {data.body} */}</Text>
+        <Text color={'whiteAlpha.800'}>{data.description}</Text>
         <Stack mt={'1rem'} width={'100%'} direction={'row'} spacing={4}>
           {percentages.map((percentage: number) => (
             <Button
