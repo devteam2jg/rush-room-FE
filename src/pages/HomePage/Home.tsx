@@ -1,10 +1,11 @@
-import { Button } from '@chakra-ui/react';
+import { Box, Button, Flex, Image } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import useAuthStore from '../../store/UserAuthStore';
 import axiosInstance from '../../utils/AxiosInstance';
 import useShowToast from '../../hooks/useShowToast';
 import Navigator from '../../components/Navigator';
 import Guide from '../../components/Guide';
+import serviceLogo from '../../assets/images/serviceLogo.png';
 
 function Home() {
   const logout = useAuthStore((state) => state.logout);
@@ -32,13 +33,16 @@ function Home() {
   };
 
   return (
-    <>
-      <div>
-        <Button onClick={handleLogout}>Logout</Button>
-      </div>
+    <Box minHeight="100vh" backgroundColor="white">
+      <Flex backgroundColor="white" justifyContent="space-between">
+        <Image height="50px" src={serviceLogo} />
+        <Button backgroundColor="transparent" onClick={handleLogout}>
+          Logout
+        </Button>
+      </Flex>
       <Guide />
       <Navigator />
-    </>
+    </Box>
   );
 }
 

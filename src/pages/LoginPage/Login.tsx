@@ -10,6 +10,7 @@ function Login() {
   };
   return (
     <Flex
+      bg="white"
       width="100%"
       height="100vh"
       flexDirection="column"
