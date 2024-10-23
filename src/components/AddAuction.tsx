@@ -27,7 +27,7 @@ export default function AddAuction() {
         width="240px"
         height="40px"
         onClick={() => {
-          navigate('');
+          navigate('/auction/create');
         }}
       >
         등록하기
