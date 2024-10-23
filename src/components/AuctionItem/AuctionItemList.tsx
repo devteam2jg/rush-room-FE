@@ -1,5 +1,5 @@
 import { HStack, VStack, Text, Button } from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 interface User {
   nickname: string;
@@ -27,9 +27,10 @@ type ItemsProps = {
 };
 
 function AuctionItemList({ item }: ItemsProps) {
+  const { id } = useParams();
   const nav = useNavigate();
   const handleEnterAuction = () => {
-    nav('/bid');
+    nav(`/auction/${id}/bid`);
   };
   return (
     <HStack width="100%" justifyContent="space-between">

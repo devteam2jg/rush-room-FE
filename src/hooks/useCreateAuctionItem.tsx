@@ -30,14 +30,12 @@ const useCreateAuctionItem = () => {
   return useMutation({
     mutationFn: createAuctionItem,
     onSuccess: (data) => {
-      console.log(data);
       resetItemForm();
       updateItemField('auctionItemId', data);
       showToast('Success', '아이템 생성이 완료되었습니다.', 'success');
       nav(-1);
     },
     onError: (error) => {
-      console.log('에러', error);
       showToast('Error', `Item${error}`, 'error');
     },
   });

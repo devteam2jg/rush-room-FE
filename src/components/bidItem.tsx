@@ -1,10 +1,23 @@
-import { Box, Heading, Image, Text, Stack, Button } from '@chakra-ui/react';
+import {
+  Box,
+  Heading,
+  Image,
+  Text,
+  Stack,
+  Button,
+  createStandaloneToast,
+} from '@chakra-ui/react';
 import { io } from 'socket.io-client';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import useAuctionDetail from '../hooks/useAuctionDetail';
 
 export default function BidItem() {
   const socket = io('http://192.168.1.22:3000/auction-execute');
   const auctionId = 'auction123';
+  const nav = useNavigate();
+  const { toast } = createStandaloneToast();
+  const { data, error, isPending } = useAuctionDetail();
 
   // 현재가 43000원
   const [currentBid, setCurrentBid] = useState<number>(0);
@@ -20,7 +33,8 @@ export default function BidItem() {
     socket.emit('join_auction', auctionId);
 
     socket.on('connect', () => {
-      console.log('socket on -- ', socket.connected); // 연결 여부 확인
+      console.log('socket on -- ', socket.connected);
+      // socket.emit('current_bid', data.items[0].startPrice); // 연결 여부 확인
     });
 
     // 서버에서 현재 최고가를 받아와 표시
@@ -59,79 +73,95 @@ export default function BidItem() {
     setSelectedPercentage(percentage);
   };
 
+  if (isPending) {
+    return <div>Loading ...</div>;
+  }
+
+  if (error) {
+    toast({
+      title: '실패',
+      description: `${error.message}`,
+      status: 'error',
+      variant: 'left-accent',
+      duration: 3000,
+      isClosable: true,
+    });
+    nav('/');
+  }
+
   return (
     <Box
       maxW={{ base: '100%', md: '445px' }}
-      w={'full'}
-      h={'100vh'}
-      bg={'#2F2F2F'}
-      boxShadow={'2xl'}
-      rounded={'md'}
+      w="full"
+      h="100vh"
+      bg="#2F2F2F"
+      boxShadow="2xl"
+      rounded="md"
       fontFamily="SpoqaHanSansNeo"
       p={6}
-      overflow={'hidden'}
-      display={'flex'}
-      flexDirection={'column'}
-      justifyContent={'space-between'}
+      overflow="hidden"
+      display="flex"
+      flexDirection="column"
+      justifyContent="space-between"
     >
       <Box
         flex={1}
         h={{ base: '200px', md: '251px' }}
-        bg={'gray.100'}
+        bg="gray.100"
         mt={-6}
         mx={-6}
-        pos={'relative'}
+        pos="relative"
       >
         <Image
-          src={'images/biditem.png'}
+          src="/images/biditem.png"
           alt="경매 물품"
-          objectFit={'cover'}
-          width={'100%'}
-          height={'100%'}
+          objectFit="cover"
+          width="100%"
+          height="100%"
         />
       </Box>
       <Box p={4} />
       <Text
-        color={'white'}
-        fontWeight={'bold'}
+        color="white"
+        fontWeight="bold"
         fontSize={{ base: 'lg', md: 'xl' }}
         letterSpacing={1.1}
         textAlign="right"
       >
         현재가{' '}
-        <Box as="span" color={'#EFDA19'}>
+        <Box as="span" color="#EFDA19">
           {currentBid}
         </Box>
         원
       </Text>
       <Stack>
         <Text
-          color={'white'}
-          fontWeight={'bold'}
+          color="white"
+          fontWeight="bold"
           fontSize={{ base: 'sm', md: 'md' }}
           letterSpacing={1.1}
         >
           물품 제목
         </Text>
         <Heading
-          color={'white'}
-          fontSize={{ base: 'xl', md: '2xl' }}
-          fontFamily={'body'}
+          fontSize={{ base: 'sm', md: 'md' }}
+          fontFamily="body"
+          color="whiteAlpha.800"
         >
-          {/* {item.title} */}
+          {data.items[0].title}
         </Heading>
         <Text
-          color={'white'}
-          fontWeight={'bold'}
+          color="white"
+          fontWeight="bold"
           fontSize={{ base: 'sm', md: 'md' }}
           letterSpacing={1.1}
         >
           물품 상세 설명
         </Text>
-        <Text color={'whiteAlpha.800'}>{/* {item.description} */}</Text>
+        <Text color="whiteAlpha.800">담곰이를 담그면 담근곰</Text>
       </Stack>
       <Stack>
-        <Stack mt={'1rem'} width={'100%'} direction={'row'} spacing={4}>
+        <Stack mt="1rem" width="100%" direction="row" spacing={4}>
           {percentages.map((percentage: number) => (
             <Button
               key={percentage}
@@ -147,11 +177,11 @@ export default function BidItem() {
         </Stack>
         <Button
           mt={4}
-          bg={'#AA8EBF'}
-          color={'white'}
-          height={'55.31px'}
-          fontSize={'xl'}
-          fontWeight={'bold'}
+          bg="#AA8EBF"
+          color="white"
+          height="55.31px"
+          fontSize="xl"
+          fontWeight="bold"
           letterSpacing={1.1}
           onClick={handleBid}
         >
