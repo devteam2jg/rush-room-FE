@@ -24,7 +24,7 @@ export default function Navigator() {
           cursor="pointer"
         >
           <Image src="images/home_icon.png" alt="홈" boxSize="24px" />
-          <Text fontSize="sm">홈</Text>
+          <Text fontSize="xs">홈</Text>
         </Flex>
 
         <Flex
@@ -34,7 +34,7 @@ export default function Navigator() {
           cursor="pointer"
         >
           <Image src="images/list_icon.png" alt="경매 리스트" boxSize="24px" />
-          <Text fontSize="sm">경매 리스트</Text>
+          <Text fontSize="xs">경매 리스트</Text>
         </Flex>
 
         <Flex
@@ -44,7 +44,7 @@ export default function Navigator() {
           cursor="pointer"
         >
           <Image src="images/add_icon.png" alt="새로운 경매" boxSize="24px" />
-          <Text fontSize="sm">새로운 경매</Text>
+          <Text fontSize="xs">새로운 경매</Text>
         </Flex>
 
         <Flex
@@ -58,7 +58,7 @@ export default function Navigator() {
             alt="참여중 경매"
             boxSize="24px"
           />
-          <Text fontSize="sm">참여중 경매</Text>
+          <Text fontSize="xs">참여중 경매</Text>
         </Flex>
 
         <Flex
@@ -68,7 +68,7 @@ export default function Navigator() {
           cursor="pointer"
         >
           <Image src="images/mypage_icon.png" alt="마이페이지" boxSize="24px" />
-          <Text fontSize="sm">마이페이지</Text>
+          <Text fontSize="xs">마이페이지</Text>
         </Flex>
       </Flex>
     </Box>
