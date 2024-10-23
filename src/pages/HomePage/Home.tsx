@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import useAuthStore from '../../store/UserAuthStore';
 import axiosInstance from '../../utils/AxiosInstance';
 import useShowToast from '../../hooks/useShowToast';
-import queryClient from '../../main';
+import Navigator from '../../components/Navigator';
+import Guide from '../../components/Guide';
 
 function Home() {
   const logout = useAuthStore((state) => state.logout);
@@ -22,7 +23,7 @@ function Home() {
     const result = await getLogout();
     if (result.success) {
       logout();
-      queryClient.removeQueries({ queryKey: ['userInfo'] });
+      // queryClient.removeQueries({ queryKey: ['userInfo'] });
       showToast('로그아웃 성공', result.message, 'success');
       nav('/login');
     } else {
@@ -31,10 +32,13 @@ function Home() {
   };
 
   return (
-    <div>
-      <div>Home</div>
-      <Button onClick={handleLogout}>Logout</Button>
-    </div>
+    <>
+      <div>
+        <Button onClick={handleLogout}>Logout</Button>
+      </div>
+      <Guide />
+      <Navigator />
+    </>
   );
 }
 
