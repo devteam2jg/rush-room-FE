@@ -15,38 +15,39 @@ export default function BidItem() {
   const auctionId = 'auction123';
 
   // 현재가 43000원
-  const [currentBid, setCurrentBid] = useState<number>(1000);
+  const [currentBid, setCurrentBid] = useState<number>(0);
 
   useEffect(() => {
     console.log(socket);
+    // 소켓 연결 후 경매 방 참여
+    socket.emit('join_auction', auctionId);
+
+    socket.on('connect', () => {
+      console.log('socket on -- ', socket.connected); // 연결 여부 확인
+    });
+
+    // 서버에서 현재 최고가를 받아와 표시
+    socket.on('current_bid', (currentBid: number) => {
+      console.log('현재 입찰가: ', currentBid);
+      setCurrentBid(currentBid);
+    });
+
+    // 입찰 성공 시, 새로운 최고가를 화면에 표시
+    socket.on('bid_updated', (newBid: number) => {
+      console.log('업데이트 입찰가: ', newBid);
+      setCurrentBid(newBid);
+    });
+
+    // 입찰 에러 처리
+    socket.on('bid_error', (message) => {
+      alert(message);
+    });
   }, []);
 
-  // 소켓 연결 후 경매 방 참여
-  socket.emit('join_auction', auctionId);
-
-  socket.on('connect', () => {
-    console.log(socket.connected); // 연결 여부 확인
-  });
-
-  // 현재 입찰가를 서버에서 받아와 업데이트
-  socket.on('currentBid', (currentBid: number) => {
-    console.log('현재 입찰가: ', currentBid);
-    setCurrentBid(currentBid);
-  });
-
-  // 새 입찰이 들어왔을 때 업데이트
-  socket.on('newCurrentBid', (newCurrentBid: number) => {
-    console.log('업데이트 입찰가: ', newCurrentBid);
-    setCurrentBid(newCurrentBid);
-  });
-
-  // 입찰 에러 처리
-  socket.on('bid_error', (message) => {
-    alert(message);
-  });
-
-  const [selectedButton, setSelectedButton] = useState(null);
-  const [selectedPercentage, setSelectedPercentage] = useState(null);
+  const [selectedButton, setSelectedButton] = useState<number | null>(null);
+  const [selectedPercentage, setSelectedPercentage] = useState<number | null>(
+    null
+  );
   const percentages = [5, 10, 20];
 
   //  현재가 처리 함수
@@ -56,13 +57,14 @@ export default function BidItem() {
         currentBid * (1 + selectedPercentage / 100)
       );
       setCurrentBid(newCurrentBid);
-      console.log(newCurrentBid);
+      console.log('update bid ---', newCurrentBid);
       setSelectedPercentage(null);
-      // socket.emit('newCurrentBid', newCurrentBid); // 서버로 새로운 입찰가 전송
+      setSelectedButton(null);
+      socket.emit('new_bid', { auctionId, newCurrentBid }); // 서버로 새로운 입찰가 전송
     }
   };
 
-  const handlePercentage = (percentage) => {
+  const handlePercentage = (percentage: number) => {
     setSelectedPercentage(percentage);
   };
 
@@ -109,6 +111,7 @@ export default function BidItem() {
         <Box as="span" color={'#EFDA19'}>
           {currentBid}
         </Box>
+        원
       </Text>
       <Stack>
         <Text
