@@ -1,4 +1,5 @@
 import { HStack, VStack, Text, Button } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 
 interface User {
   nickname: string;
@@ -26,13 +27,17 @@ type ItemsProps = {
 };
 
 function AuctionItemList({ item }: ItemsProps) {
+  const nav = useNavigate();
+  const handleEnterAuction = () => {
+    nav('/bid');
+  };
   return (
     <HStack width="100%" justifyContent="space-between">
       <VStack flex="1.3" gap={-10} alignItems="flex-start">
         <Text fontSize="15px" fontWeight={700}>
           {item.title}
         </Text>
-        <div>{item.postedUser.id.slice(1, 5)}</div>
+        <Text fontSize="13px">{item.postedUser.nickname}</Text>
       </VStack>
       <Text fontSize="xs" flex="0.7" fontWeight={700} textAlign="center">
         시작가
@@ -51,8 +56,9 @@ function AuctionItemList({ item }: ItemsProps) {
         color="white"
         flex="0.5"
         textAlign="center"
+        onClick={handleEnterAuction}
       >
-        <Text fontSize="xs">상세보기</Text>
+        <Text fontSize="xs">경매참여</Text>
       </Button>
     </HStack>
   );
