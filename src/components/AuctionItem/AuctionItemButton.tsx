@@ -23,9 +23,9 @@ function AuctionItemButton({ type, currentIndex }: ButtonProps) {
   const handleSubmit = () => {
     if (
       !auctionInfo.title ||
-      !auctionInfo.content ||
+      !auctionInfo.description ||
       !auctionInfo.date ||
-      !auctionInfo.duration
+      !auctionInfo.sellingLimitTime
     ) {
       showToast('Error', '모든 필드를 입력해 주세요!', 'error');
       return;

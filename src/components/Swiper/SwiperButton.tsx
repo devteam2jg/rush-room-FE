@@ -31,9 +31,9 @@ function SwiperButton({ type, currentIndex, slides, sourceType }: ButtonProps) {
     if (sourceType === 'auction') {
       if (
         !auctionInfo.title ||
-        !auctionInfo.content ||
+        !auctionInfo.description ||
         !auctionInfo.date ||
-        !auctionInfo.duration
+        !auctionInfo.sellingLimitTime
       ) {
         showToast('Error', '모든 필드를 입력해 주세요!', 'error');
         return;
@@ -42,7 +42,7 @@ function SwiperButton({ type, currentIndex, slides, sourceType }: ButtonProps) {
     } else {
       if (
         !auctionItemInfo.itemName ||
-        !auctionItemInfo.content ||
+        !auctionItemInfo.description ||
         !auctionItemInfo.price
       ) {
         showToast('Error', '모든 필드를 입력해 주세요!', 'error');

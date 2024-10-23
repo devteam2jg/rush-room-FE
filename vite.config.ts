@@ -10,7 +10,7 @@ export default defineConfig(({ mode }) => {
     base: '/', // 이것은 배포 시의 public path
     plugins: [react()],
     server: {
-      host: env.VITE_APP_BASE_URL || 'localhost', // 개발 서버 호스트
+      host: true, // 개발 서버 호스트
       port: env.VITE_PORT || 3000,
     },
   };

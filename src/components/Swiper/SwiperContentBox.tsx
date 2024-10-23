@@ -3,8 +3,8 @@ import useAuctionStore from '../../store/AuctionStore';
 import useShowToast from '../../hooks/useShowToast';
 import useAuctionItemStore from '../../store/AuntionItemStore';
 
-type SwiperProps = 'title' | 'content' | 'date' | 'duration';
-type SwiperItemProps = 'itemName' | 'content' | 'price';
+type SwiperProps = 'title' | 'description' | 'date' | 'sellingLimitTime';
+type SwiperItemProps = 'itemName' | 'description' | 'price';
 
 interface SwiperContentBoxProps {
   labelText: string;

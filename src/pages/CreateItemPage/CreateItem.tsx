@@ -39,7 +39,7 @@ function CreateItem() {
         />
         <SwiperContentBox
           labelText="자세한 설명"
-          typeValue="content"
+          typeValue="description"
           inputType="textarea"
           placeholderText="신뢰할 수 있는 거래를 위해 자세히 적어주세요. 해당 물건이 가지는 가치를 잘 표현 한다면 더 높은 가격을 받을 수도 있겠죠?"
           sourceType="auctionItem"
