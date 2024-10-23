@@ -1,15 +1,28 @@
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
+import axiosInstance from '../utils/AxiosInstance';
 import useShowToast from './useShowToast';
 import useAuctionStore from '../store/AuctionStore';
 
 const useCreateAuction = () => {
-  const { getFormData, resetForm } = useAuctionStore();
+  const { getFormData, resetForm, updateField } = useAuctionStore();
   const showToast = useShowToast();
 
   const createAuction = async () => {
-    const data = getFormData();
-    const response = await axios.post('/api/post', data);
+    const formData = getFormData();
+
+    const data = {
+      title: formData.title,
+      description: formData.description,
+      eventDate: new Date(formData.date).toISOString(),
+      sellingLimitTime: Number(formData.sellingLimitTime),
+    };
+
+    // console.log(data.title);
+    // console.log(data.description);
+    // console.log(data.eventDate);
+    // console.log(data.sellingLitmitTime);
+
+    const response = await axiosInstance.post('/auction', data);
     return response.data;
   };
 
@@ -18,6 +31,7 @@ const useCreateAuction = () => {
     onSuccess: (data) => {
       resetForm();
       console.log(data);
+      updateField('createdAuctionId', data);
       showToast('Success', '경매 생성이 완료되었습니다.', 'success');
     },
     onError: (error) => {
