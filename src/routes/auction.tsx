@@ -14,11 +14,16 @@ const auctions = [
   },
   {
     path: ':id',
-    element: <AuctionDetail />,
-  },
-  {
-    path: 'create',
-    element: <CreateItem />,
+    children: [
+      {
+        index: true,
+        element: <AuctionDetail />,
+      },
+      {
+        path: 'create',
+        element: <CreateItem />,
+      },
+    ],
   },
 ];
 
