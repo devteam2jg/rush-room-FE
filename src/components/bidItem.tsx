@@ -1,7 +1,6 @@
 import { Box, Heading, Image, Text, Stack, Button } from '@chakra-ui/react';
 import { io } from 'socket.io-client';
 import { useEffect, useState } from 'react';
-import usePostData from '../hooks/usePostQuery';
 
 export default function BidItem() {
   const socket = io('http://192.168.1.22:3000/auction-execute');
@@ -9,7 +8,6 @@ export default function BidItem() {
 
   // 현재가 43000원
   const [currentBid, setCurrentBid] = useState<number>(0);
-  const { data, error, isLoading } = usePostData();
   const [selectedButton, setSelectedButton] = useState<number | null>(null);
   const [selectedPercentage, setSelectedPercentage] = useState<number | null>(
     null
@@ -60,18 +58,6 @@ export default function BidItem() {
   const handlePercentage = (percentage: number) => {
     setSelectedPercentage(percentage);
   };
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
-
-  if (!data) {
-    return <div>No data available</div>;
-  }
 
   return (
     <Box
@@ -132,7 +118,7 @@ export default function BidItem() {
           fontSize={{ base: 'xl', md: '2xl' }}
           fontFamily={'body'}
         >
-          {data.title}
+          {/* {item.title} */}
         </Heading>
         <Text
           color={'white'}
@@ -142,7 +128,9 @@ export default function BidItem() {
         >
           물품 상세 설명
         </Text>
-        <Text color={'whiteAlpha.800'}>{data.description}</Text>
+        <Text color={'whiteAlpha.800'}>{/* {item.description} */}</Text>
+      </Stack>
+      <Stack>
         <Stack mt={'1rem'} width={'100%'} direction={'row'} spacing={4}>
           {percentages.map((percentage: number) => (
             <Button
