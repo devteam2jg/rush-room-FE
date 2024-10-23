@@ -1,7 +1,7 @@
 import { Box } from '@chakra-ui/react';
 import { Outlet } from 'react-router-dom';
 
-const Layout = () => {
+function Layout() {
   return (
     <>
       <Box>
@@ -9,6 +9,6 @@ const Layout = () => {
       </Box>
     </>
   );
-};
+}
 
 export default Layout;

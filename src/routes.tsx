@@ -42,6 +42,10 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         ), // 보호된 경로
       },
+      {
+        path: 'auction',
+        element: <AuctionDetail />,
+      },
     ],
   },
 ]);
