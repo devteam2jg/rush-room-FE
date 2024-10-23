@@ -42,7 +42,7 @@ export default function CreateAuction() {
         />
         <SwiperContentBox
           labelText="상세내용"
-          typeValue="content"
+          typeValue="description"
           inputType="textarea"
           placeholderText="경매 이벤트의 상세 내용을 입력해주세요."
           sourceType="auction"
@@ -56,7 +56,7 @@ export default function CreateAuction() {
         />
         <SwiperContentBox
           labelText="물품 당 경매 시간"
-          typeValue="duration"
+          typeValue="sellingLimitTime"
           inputType="text"
           placeholderText="물품 당 경매 시간을 정해주세요."
           sourceType="auction"
