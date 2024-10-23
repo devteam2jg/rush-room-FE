@@ -44,6 +44,11 @@ createRoot(document.getElementById('root')!).render(
         <RouterProvider router={router} />
       </ChakraProvider>
     </QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      <ChakraProvider theme={theme}>
+        <RouterProvider router={router} />
+      </ChakraProvider>
+    </QueryClientProvider>
   </StrictMode>
 );
 

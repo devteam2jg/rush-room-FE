@@ -8,6 +8,7 @@ import CreateItem from '../pages/CreateItemPage/CreateItem';
 import ProtectedRoute from '../components/ProtectedRoute/ProtectedRoute';
 import auctions from './auction';
 import TermsOfUse from '../pages/TermsOfUsePage/TermsOfUse';
+import Bidding from '../pages/bidPage/bidding';
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
       {
         path: 'login',
         element: <Login />,
+      },
+      {
+        path: 'bid',
+        element: <Bidding />,
       },
       {
         path: 'docs/termsuse',
