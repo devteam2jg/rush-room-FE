@@ -2,9 +2,10 @@ import { create } from 'zustand';
 
 interface AuctionInfo {
   title: string;
-  content: string;
+  description: string;
   date: string;
-  duration: number | undefined;
+  sellingLimitTime: number | undefined;
+  createdAuctionId: string;
 }
 
 interface AuctionStore {
@@ -12,13 +13,15 @@ interface AuctionStore {
   updateField: (field: keyof AuctionInfo, value: string | number) => void;
   resetForm: () => void;
   getFormData: () => AuctionInfo;
+  getResponse: () => AuctionInfo['createdAuctionId'];
 }
 
 const initialState: AuctionInfo = {
   title: '',
-  content: '',
+  description: '',
   date: '',
-  duration: undefined,
+  sellingLimitTime: undefined,
+  createdAuctionId: '',
 };
 
 const useAuctionStore = create<AuctionStore>((set, get) => ({
@@ -31,10 +34,14 @@ const useAuctionStore = create<AuctionStore>((set, get) => ({
       },
     })),
   resetForm: () =>
-    set({
-      auctionInfo: initialState,
-    }),
+    set((state) => ({
+      auctionInfo: {
+        ...initialState,
+        createdAuctionId: state.auctionInfo.createdAuctionId,
+      },
+    })),
   getFormData: () => get().auctionInfo,
+  getResponse: () => get().auctionInfo.createdAuctionId,
 }));
 
 export default useAuctionStore;
