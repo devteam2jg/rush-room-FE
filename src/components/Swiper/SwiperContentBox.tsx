@@ -48,6 +48,14 @@ function SwiperContentBox({
   ) => {
     const { value } = e.target;
 
+    // const { val } = e.target;
+
+    console.log(e.target.checked);
+
+    if (typeValue === 'isPrivate') {
+      handleUpdate(typeValue, e.target.checked);
+    }
+
     if (typeValue === 'date') {
       const minDate = new Date(
         Date.now() + 9 * 60 * 1000 - new Date().getTimezoneOffset() * 60000
@@ -64,6 +72,8 @@ function SwiperContentBox({
           'error'
         );
       }
+    } else if (typeValue === 'isPrivate') {
+      handleUpdate(typeValue, value);
     } else {
       handleUpdate(typeValue, value);
     }
@@ -88,7 +98,10 @@ function SwiperContentBox({
         {labelText}
       </Text>
       {inputType === 'checkbox' ? (
-        <Checkbox onChange={handleOnChange} checked={Boolean(getValue())} />
+        <Checkbox
+          onChange={handleOnChange}
+          isChecked={getValue() !== 'false'}
+        />
       ) : null}
       {inputType === 'textarea' ? (
         <Textarea

@@ -11,7 +11,10 @@ interface AuctionInfo {
 
 interface AuctionStore {
   auctionInfo: AuctionInfo;
-  updateField: (field: keyof AuctionInfo, value: string | number) => void;
+  updateField: (
+    field: keyof AuctionInfo,
+    value: string | number | boolean
+  ) => void;
   resetForm: () => void;
   getFormData: () => AuctionInfo;
   getResponse: () => AuctionInfo['createdAuctionId'];
