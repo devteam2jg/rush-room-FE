@@ -48,17 +48,17 @@ export default function CreateAuction() {
           sourceType="auction"
         />
         <SwiperContentBox
-          labelText="날짜"
-          typeValue="date"
-          inputType="datetime-local"
-          placeholderText="경매 이벤트의 상세 내용을 입력해주세요."
-          sourceType="auction"
-        />
-        <SwiperContentBox
           labelText="물품 당 경매 시간"
           typeValue="sellingLimitTime"
           inputType="text"
           placeholderText="물품 당 경매 시간을 정해주세요."
+          sourceType="auction"
+        />
+        <SwiperContentBox
+          labelText="날짜"
+          typeValue="date"
+          inputType="datetime-local"
+          placeholderText="경매 이벤트의 상세 내용을 입력해주세요."
           sourceType="auction"
         />
       </SwiperForSlide>
