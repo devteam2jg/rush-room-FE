@@ -1,9 +1,14 @@
-import { Box, Input, Text, Textarea } from '@chakra-ui/react';
+import { Box, Checkbox, Input, Text, Textarea } from '@chakra-ui/react';
 import useAuctionStore from '../../store/AuctionStore';
 import useShowToast from '../../hooks/useShowToast';
 import useAuctionItemStore from '../../store/AuntionItemStore';
 
-type SwiperProps = 'title' | 'description' | 'date' | 'sellingLimitTime';
+type SwiperProps =
+  | 'title'
+  | 'description'
+  | 'date'
+  | 'sellingLimitTime'
+  | 'isPrivate';
 type SwiperItemProps = 'itemName' | 'description' | 'price';
 
 interface SwiperContentBoxProps {
@@ -70,6 +75,10 @@ function SwiperContentBox({
         ? auctionInfo[typeValue as SwiperProps]
         : auctionItemInfo[typeValue as SwiperItemProps];
 
+    if (typeof value === 'boolean') {
+      return String(value);
+    }
+
     return value !== undefined ? value : '';
   };
 
@@ -78,14 +87,10 @@ function SwiperContentBox({
       <Text fontSize="12px" mb="8px">
         {labelText}
       </Text>
-      {inputType !== 'textarea' ? (
-        <Input
-          type={inputType}
-          value={getValue()}
-          onChange={handleOnChange}
-          placeholder={placeholderText}
-        />
-      ) : (
+      {inputType === 'checkbox' ? (
+        <Checkbox onChange={handleOnChange} checked={Boolean(getValue())} />
+      ) : null}
+      {inputType === 'textarea' ? (
         <Textarea
           h="200px"
           size="md"
@@ -93,7 +98,23 @@ function SwiperContentBox({
           onChange={handleOnChange}
           placeholder={placeholderText}
         />
-      )}
+      ) : null}
+      {inputType === 'text' ? (
+        <Input
+          type={inputType}
+          value={getValue()}
+          onChange={handleOnChange}
+          placeholder={placeholderText}
+        />
+      ) : null}
+      {inputType === 'datetime-local' ? (
+        <Input
+          type={inputType}
+          value={getValue()}
+          onChange={handleOnChange}
+          placeholder={placeholderText}
+        />
+      ) : null}
     </Box>
   );
 }

@@ -6,6 +6,7 @@ interface AuctionInfo {
   date: string;
   sellingLimitTime: number | undefined;
   createdAuctionId: string;
+  isPrivate: boolean;
 }
 
 interface AuctionStore {
@@ -22,6 +23,7 @@ const initialState: AuctionInfo = {
   date: '',
   sellingLimitTime: undefined,
   createdAuctionId: '',
+  isPrivate: false,
 };
 
 const useAuctionStore = create<AuctionStore>((set, get) => ({
@@ -38,6 +40,7 @@ const useAuctionStore = create<AuctionStore>((set, get) => ({
       auctionInfo: {
         ...initialState,
         createdAuctionId: state.auctionInfo.createdAuctionId,
+        isPrivate: state.auctionInfo.isPrivate,
       },
     })),
   getFormData: () => get().auctionInfo,

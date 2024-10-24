@@ -61,6 +61,13 @@ export default function CreateAuction() {
           placeholderText="경매 이벤트의 상세 내용을 입력해주세요."
           sourceType="auction"
         />
+        <SwiperContentBox
+          labelText="참가 제한 여부"
+          typeValue="isPrivate"
+          inputType="checkbox"
+          placeholderText="."
+          sourceType="auction"
+        />
       </SwiperForSlide>
       <SwiperButton
         type="next"
