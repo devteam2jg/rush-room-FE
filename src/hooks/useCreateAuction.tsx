@@ -19,11 +19,6 @@ const useCreateAuction = () => {
       sellingLimitTime: Number(formData.sellingLimitTime),
     };
 
-    // console.log(data.title);
-    // console.log(data.description);
-    // console.log(data.eventDate);
-    // console.log(data.sellingLitmitTime);
-
     const response = await axiosInstance.post('/auction', data);
     return response.data;
   };
@@ -37,7 +32,6 @@ const useCreateAuction = () => {
       nav(`/auction/${data.createdAuctionId}`);
     },
     onError: (error) => {
-      console.log('에러', error);
       showToast('Error', `${error}`, 'error');
     },
   });

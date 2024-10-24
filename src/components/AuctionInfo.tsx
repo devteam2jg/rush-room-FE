@@ -9,18 +9,45 @@ import {
   Text,
   Flex,
   Heading,
-  Image,
-  useColorModeValue,
   useDisclosure,
+  createStandaloneToast,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
+import useAuctionDetail from '../hooks/useAuctionDetail';
 
 export default function AuctionInfo() {
+  const nav = useNavigate();
+  const { toast } = createStandaloneToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { data, isPending, error } = useAuctionDetail();
   const navigate = useNavigate();
 
+  if (isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    nav('/');
+    toast({
+      title: '실패',
+      description: `${error.message}`,
+      status: 'error',
+      variant: 'left-accent',
+      duration: 3000,
+      isClosable: true,
+    });
+  }
+  const date = new Date(data.auctionDto.eventDate);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const seconds = String(date.getSeconds()).padStart(2, '0');
+
+  console.log(data.auctionDto);
   return (
-    <Box bg={useColorModeValue('white', 'gray.900')} px={4} py={2} shadow="md">
+    <Box bg="white" shadow="md">
       <Flex h={16} alignItems="center" justifyContent="space-between">
         <Button
           bg="white"
@@ -28,7 +55,7 @@ export default function AuctionInfo() {
             navigate('/');
           }}
         >
-          <Image src="images/leftarrow.png" alt="뒤로가기" boxSize="24px" />
+          &lt;
         </Button>
 
         <Box flex="1" />
@@ -55,22 +82,25 @@ export default function AuctionInfo() {
               경매 이벤트 명
             </Heading>
             <Text fontSize="sm" mb={2}>
-              정글 수료 기념 애장품 경매
+              {data.auctionDto.title}
             </Text>
             <Heading as="h5" size="sm" textAlign="left" mb={2}>
               경매 상세 설명
             </Heading>
             <Text fontSize="sm" mb={4} color="gray.600">
-              정글 수료 기념 애장품 경매 정글 수료 기념 애장품 경매 정글 수료
-              기념 애장품 경매 정글 수료 기념 애장품 경매 정글 수료 기념 애장품
-              경매 정글 수료 기념 애장품 경매 정글 수료 기념 애장품 경매 정글
-              수료 기념 애장품 경매
+              {data.auctionDto.description}
             </Text>
             <Heading as="h5" size="sm" textAlign="left" mb={2}>
               경매 시작 일시
             </Heading>
-            <Text fontSize="2xl" fontWeight={1000} textAlign="center">
-              08 : 23 : 40
+            <Text
+              fontSize="xm"
+              fontWeight={1000}
+              textAlign="center"
+              color="gray.600"
+            >
+              {`${year}년 ${month}월 ${day}일 ${hours}시 ${minutes}분 ${seconds}
+              초`}
             </Text>
           </DrawerBody>
         </DrawerContent>

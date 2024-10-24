@@ -45,7 +45,7 @@ function SwiperContentBox({
 
     if (typeValue === 'date') {
       const minDate = new Date(
-        Date.now() + 10 * 60 * 1000 - new Date().getTimezoneOffset() * 60000
+        Date.now() + 9 * 60 * 1000 - new Date().getTimezoneOffset() * 60000
       )
         .toISOString()
         .slice(0, 16);

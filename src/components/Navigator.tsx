@@ -11,9 +11,9 @@ export default function Navigator() {
       left={2}
       right={2}
       bg="white"
-      shadow="lg"
-      borderTop="1px solid"
-      borderColor="gray.200"
+      boxShadow="2xl"
+      border="2px solid"
+      borderColor="gray.100"
       borderRadius={15}
     >
       <Flex justify="space-around" align="center" p={2}>
