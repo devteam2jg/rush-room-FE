@@ -33,7 +33,7 @@ function SwiperContentBox({
   // 공통된 업데이트 로직 함수
   const handleUpdate = (
     field: SwiperProps | SwiperItemProps,
-    value: string
+    value: string | boolean
   ) => {
     if (sourceType === 'auction') {
       updateField(field as SwiperProps, value);
@@ -42,19 +42,16 @@ function SwiperContentBox({
     }
   };
 
-  // 입력값 변경 처리 함수
+  // checkbox 전용 핸들러
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleUpdate(typeValue, e.target.checked);
+  };
+
+  // 일반 입력값 변경 처리 함수
   const handleOnChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { value } = e.target;
-
-    // const { val } = e.target;
-
-    console.log(e.target.checked);
-
-    if (typeValue === 'isPrivate') {
-      handleUpdate(typeValue, e.target.checked);
-    }
 
     if (typeValue === 'date') {
       const minDate = new Date(
@@ -72,8 +69,6 @@ function SwiperContentBox({
           'error'
         );
       }
-    } else if (typeValue === 'isPrivate') {
-      handleUpdate(typeValue, value);
     } else {
       handleUpdate(typeValue, value);
     }
@@ -84,11 +79,6 @@ function SwiperContentBox({
       sourceType === 'auction'
         ? auctionInfo[typeValue as SwiperProps]
         : auctionItemInfo[typeValue as SwiperItemProps];
-
-    if (typeof value === 'boolean') {
-      return String(value);
-    }
-
     return value !== undefined ? value : '';
   };
 
@@ -99,15 +89,15 @@ function SwiperContentBox({
       </Text>
       {inputType === 'checkbox' ? (
         <Checkbox
-          onChange={handleOnChange}
-          isChecked={getValue() !== 'false'}
+          onChange={handleCheckboxChange}
+          isChecked={getValue() as boolean}
         />
       ) : null}
       {inputType === 'textarea' ? (
         <Textarea
           h="200px"
           size="md"
-          value={getValue()}
+          value={getValue() as string}
           onChange={handleOnChange}
           placeholder={placeholderText}
         />
@@ -115,7 +105,7 @@ function SwiperContentBox({
       {inputType === 'text' ? (
         <Input
           type={inputType}
-          value={getValue()}
+          value={getValue() as string}
           onChange={handleOnChange}
           placeholder={placeholderText}
         />
@@ -123,7 +113,7 @@ function SwiperContentBox({
       {inputType === 'datetime-local' ? (
         <Input
           type={inputType}
-          value={getValue()}
+          value={getValue() as string}
           onChange={handleOnChange}
           placeholder={placeholderText}
         />
