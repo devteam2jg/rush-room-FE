@@ -43,7 +43,7 @@ const useAuctionStore = create<AuctionStore>((set, get) => ({
       auctionInfo: {
         ...initialState,
         createdAuctionId: state.auctionInfo.createdAuctionId,
-        isPrivate: state.auctionInfo.isPrivate,
+        // isPrivate: state.auctionInfo.isPrivate,
       },
     })),
   getFormData: () => get().auctionInfo,
