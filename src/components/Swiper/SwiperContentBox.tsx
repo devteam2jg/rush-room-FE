@@ -8,6 +8,7 @@ type SwiperProps =
   | 'description'
   | 'date'
   | 'sellingLimitTime'
+  | 'budget'
   | 'isPrivate'
   | 'privateCode';
 type SwiperItemProps = 'itemName' | 'description' | 'price';

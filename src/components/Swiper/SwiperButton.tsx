@@ -33,7 +33,8 @@ function SwiperButton({ type, currentIndex, slides, sourceType }: ButtonProps) {
         !auctionInfo.title ||
         !auctionInfo.description ||
         !auctionInfo.date ||
-        !auctionInfo.sellingLimitTime
+        !auctionInfo.sellingLimitTime ||
+        !auctionInfo.budget
       ) {
         showToast('Error', '모든 필드를 입력해 주세요!', 'error');
         return;

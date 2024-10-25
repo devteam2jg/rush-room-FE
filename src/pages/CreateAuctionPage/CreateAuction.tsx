@@ -62,6 +62,13 @@ export default function CreateAuction() {
           sourceType="auction"
         />
         <SwiperContentBox
+          labelText="참가자 예산 설정"
+          typeValue="budget"
+          inputType="text"
+          placeholderText="참가자의 예산 제한 금액을 입력해주세요."
+          sourceType="auction"
+        />
+        <SwiperContentBox
           labelText="경매 방을 비공개로 설정하시겠어용 ㅇㅅㅇ?"
           typeValue="isPrivate"
           inputType="checkbox"
