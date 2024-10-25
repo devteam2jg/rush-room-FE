@@ -8,7 +8,8 @@ type SwiperProps =
   | 'description'
   | 'date'
   | 'sellingLimitTime'
-  | 'isPrivate';
+  | 'isPrivate'
+  | 'privateCode';
 type SwiperItemProps = 'itemName' | 'description' | 'price';
 
 interface SwiperContentBoxProps {
@@ -88,36 +89,51 @@ function SwiperContentBox({
         {labelText}
       </Text>
       {inputType === 'checkbox' ? (
-        <Checkbox
-          onChange={handleCheckboxChange}
-          isChecked={getValue() as boolean}
-        />
-      ) : null}
-      {inputType === 'textarea' ? (
-        <Textarea
-          h="200px"
-          size="md"
-          value={getValue() as string}
-          onChange={handleOnChange}
-          placeholder={placeholderText}
-        />
-      ) : null}
-      {inputType === 'text' ? (
-        <Input
-          type={inputType}
-          value={getValue() as string}
-          onChange={handleOnChange}
-          placeholder={placeholderText}
-        />
-      ) : null}
-      {inputType === 'datetime-local' ? (
-        <Input
-          type={inputType}
-          value={getValue() as string}
-          onChange={handleOnChange}
-          placeholder={placeholderText}
-        />
-      ) : null}
+        <>
+          <Checkbox
+            onChange={handleCheckboxChange}
+            isChecked={getValue() as boolean}
+          />
+          {getValue() && (
+            <Input
+              placeholder={placeholderText}
+              value={auctionInfo.privateCode}
+              onChange={(e) => {
+                handleUpdate('privateCode', e.target.value);
+              }}
+            />
+          )}
+        </>
+      ) : (
+        // checkbox가 아닌 다른 input 타입들
+        <>
+          {inputType === 'textarea' && (
+            <Textarea
+              h="200px"
+              size="md"
+              value={getValue() as string}
+              onChange={handleOnChange}
+              placeholder={placeholderText}
+            />
+          )}
+          {inputType === 'text' && (
+            <Input
+              type={inputType}
+              value={getValue() as string}
+              onChange={handleOnChange}
+              placeholder={placeholderText}
+            />
+          )}
+          {inputType === 'datetime-local' && (
+            <Input
+              type={inputType}
+              value={getValue() as string}
+              onChange={handleOnChange}
+              placeholder={placeholderText}
+            />
+          )}
+        </>
+      )}
     </Box>
   );
 }

@@ -20,6 +20,7 @@ const useCreateAuction = () => {
       eventDate: new Date(formData.date).toISOString(),
       sellingLimitTime: Number(formData.sellingLimitTime),
       isPrivate: formData.isPrivate,
+      privateCode: formData.privateCode,
     };
 
     const response = await axiosInstance.post('/auction', data);
