@@ -1,6 +1,6 @@
 import ProtectedRoute from '../components/ProtectedRoute/ProtectedRoute';
 import AuctionDetail from '../pages/AuctionDetailPage/AuctionDetail';
-import Bidding from '../pages/bidPage/bidding';
+import Bidding from '../pages/biddingPage/Bidding';
 import CreateAuction from '../pages/CreateAuctionPage/CreateAuction';
 import CreateItem from '../pages/CreateItemPage/CreateItem';
 
@@ -14,19 +14,31 @@ const auctions = [
     ),
   },
   {
-    path: ':id',
+    path: ':auctionId',
     children: [
       {
         index: true,
-        element: <AuctionDetail />,
+        element: (
+          <ProtectedRoute>
+            <AuctionDetail />
+          </ProtectedRoute>
+        ),
       },
       {
         path: 'create',
-        element: <CreateItem />,
+        element: (
+          <ProtectedRoute>
+            <CreateItem />
+          </ProtectedRoute>
+        ),
       },
       {
-        path: 'bid',
-        element: <Bidding />,
+        path: 'bid/:itemId',
+        element: (
+          <ProtectedRoute>
+            <Bidding />
+          </ProtectedRoute>
+        ),
       },
     ],
   },
