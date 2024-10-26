@@ -15,7 +15,7 @@ interface AuctionStore {
   auctionInfo: AuctionInfo;
   updateField: (
     field: keyof AuctionInfo,
-    value: string | number | boolean
+    value: string | number | boolean | File[] | null
   ) => void;
   resetForm: () => void;
   getFormData: () => Omit<AuctionInfo, 'createdAuctionId'>;
