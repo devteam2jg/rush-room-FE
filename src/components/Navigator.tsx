@@ -30,7 +30,7 @@ export default function Navigator() {
         <Flex
           direction="column"
           align="center"
-          onClick={() => navigate('/auction')}
+          onClick={() => navigate('/overview')}
           cursor="pointer"
         >
           <Image src="images/list_icon.png" alt="경매 리스트" boxSize="24px" />
