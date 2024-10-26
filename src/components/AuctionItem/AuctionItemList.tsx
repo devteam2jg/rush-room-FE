@@ -13,10 +13,17 @@ function AuctionItemList({ item }: ItemsProps) {
     nav(`/auction/${auctionId}/bid/${item.id}`);
   };
 
+  let formattedPrice = '';
+
+  if (item.startPrice / 1000 > 1) {
+    formattedPrice = `${(item.startPrice / 1000).toLocaleString()} 만원`;
+  } else {
+    formattedPrice = `${item.startPrice.toLocaleString()} 원`;
+  }
   return (
     <Grid
       width="100%"
-      templateColumns="10% 20% 15% 25% 20%"
+      templateColumns="15% 25% 30% 20%"
       alignItems="center"
       gap={2}
     >
@@ -29,7 +36,13 @@ function AuctionItemList({ item }: ItemsProps) {
         />
       </GridItem>
       <GridItem>
-        <Text whiteSpace="nowrap" fontSize="15px" fontWeight={700}>
+        <Text
+          marginBottom="10px"
+          whiteSpace="nowrap"
+          fontSize="14px"
+          fontWeight={700}
+          isTruncated
+        >
           {item.title}
         </Text>
         <Text fontSize="13px" mt="-10px">
@@ -39,21 +52,11 @@ function AuctionItemList({ item }: ItemsProps) {
       <GridItem>
         <Text
           whiteSpace="nowrap"
-          fontSize="xs"
           fontWeight={700}
+          fontSize="18px"
           textAlign="center"
         >
-          시작가
-        </Text>
-      </GridItem>
-      <GridItem>
-        <Text
-          whiteSpace="nowrap"
-          fontWeight={700}
-          fontSize="22px"
-          textAlign="start"
-        >
-          {item.startPrice}
+          {formattedPrice}
         </Text>
       </GridItem>
       <GridItem>
