@@ -1,4 +1,3 @@
-import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
 import { ChakraProvider, createStandaloneToast } from '@chakra-ui/react';
@@ -25,7 +24,6 @@ const queryClient = new QueryClient({
       if (query.meta?.data !== undefined) {
         toast({
           title: '실패',
-          // description: `${query.meta?.errorMessage}`,
           description: `문제가 발생했습니다 ${error.message}`,
           status: 'error',
           variant: 'left-accent',
