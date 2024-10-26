@@ -11,7 +11,7 @@ type SwiperProps =
   | 'budget'
   | 'isPrivate'
   | 'privateCode';
-type SwiperItemProps = 'itemName' | 'description' | 'price';
+type SwiperItemProps = 'itemName' | 'description' | 'price' | 'itemPicture';
 
 interface SwiperContentBoxProps {
   labelText: string;
@@ -35,7 +35,7 @@ function SwiperContentBox({
   // 공통된 업데이트 로직 함수
   const handleUpdate = (
     field: SwiperProps | SwiperItemProps,
-    value: string | boolean
+    value: string | boolean | File[] | null
   ) => {
     if (sourceType === 'auction') {
       updateField(field as SwiperProps, value);
@@ -47,6 +47,14 @@ function SwiperContentBox({
   // checkbox 전용 핸들러
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     handleUpdate(typeValue, e.target.checked);
+  };
+
+  const handleFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { files } = e.target;
+    if (files) {
+      const fileArray = Array.from(files);
+      handleUpdate(typeValue, fileArray);
+    }
   };
 
   // 일반 입력값 변경 처리 함수
@@ -106,7 +114,6 @@ function SwiperContentBox({
           )}
         </>
       ) : (
-        // checkbox가 아닌 다른 input 타입들
         <>
           {inputType === 'textarea' && (
             <Textarea
@@ -131,6 +138,14 @@ function SwiperContentBox({
               value={getValue() as string}
               onChange={handleOnChange}
               placeholder={placeholderText}
+            />
+          )}
+          {inputType === 'file' && (
+            <Input
+              type={inputType}
+              onChange={handleFilesChange}
+              placeholder={placeholderText}
+              multiple
             />
           )}
         </>

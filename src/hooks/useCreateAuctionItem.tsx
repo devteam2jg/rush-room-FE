@@ -12,17 +12,25 @@ const useCreateAuctionItem = () => {
   const nav = useNavigate();
 
   const createAuctionItem = async () => {
-    const formData = getFormItemData();
+    const inputData = getFormItemData();
+    const formData = new FormData();
 
-    const data = {
-      title: formData.itemName,
-      description: formData.description,
-      startPrice: Number(formData.price),
-    };
+    inputData.itemPicture?.forEach((file) => {
+      formData.append('images', file);
+    });
+
+    formData.append('title', inputData.itemName);
+    formData.append('description', inputData.description);
+    formData.append('startPrice', `${inputData.price}`);
 
     const response = await axiosInstance.post(
-      `/auction/${auctionId}/auction-item`,
-      data
+      `/auction/${auctionId}/item`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
     );
     return response.data;
   };
@@ -36,6 +44,7 @@ const useCreateAuctionItem = () => {
       nav(-1);
     },
     onError: (error) => {
+      console.log(error);
       showToast('Error', `Item${error}`, 'error');
     },
   });

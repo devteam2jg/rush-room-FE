@@ -1,4 +1,4 @@
-import { HStack, VStack, Text, Button } from '@chakra-ui/react';
+import { HStack, VStack, Text, Button, Image } from '@chakra-ui/react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 interface User {
@@ -12,6 +12,7 @@ interface User {
 // 아이템을 위한 타입
 interface Item {
   id: string;
+  imageUrls: string;
   title: string;
   description: string;
   itemImages: string; // 이미지가 여러 개라면 string[]
@@ -34,6 +35,7 @@ function AuctionItemList({ item }: ItemsProps) {
   };
   return (
     <HStack width="100%" justifyContent="space-between">
+      <Image src={item.imageUrls[0]} />
       <VStack flex="1.3" gap={-10} alignItems="flex-start">
         <Text fontSize="15px" fontWeight={700}>
           {item.title}
