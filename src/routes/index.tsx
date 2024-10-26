@@ -8,6 +8,7 @@ import CreateItem from '../pages/CreateItemPage/CreateItem';
 import ProtectedRoute from '../components/ProtectedRoute/ProtectedRoute';
 import auctions from './auction';
 import TermsOfUse from '../pages/TermsOfUsePage/TermsOfUse';
+import AuctionOverview from '../pages/AuctionOverviewPage/AuctionOverview';
 
 const router = createBrowserRouter([
   {
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
       {
         path: 'auction',
         children: auctions,
+      },
+      {
+        path: 'overview',
+        element: <AuctionOverview />,
       },
     ],
   },
