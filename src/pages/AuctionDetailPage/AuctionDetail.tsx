@@ -6,6 +6,7 @@ import AddAuction from '../../components/AddAuction';
 import AuctionList from '../../components/AuctionList';
 import PrivateCodeModal from '../../components/PrivateCodeModal';
 import AuctionHistoryStore from '../../store/AuctionHistoryStore';
+import PrivateCodeModal from '../../components/PrivateCodeModal';
 
 function AuctionDetail() {
   const { auctionId } = useParams();
