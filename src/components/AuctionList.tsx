@@ -24,6 +24,8 @@ export default function AuctionList() {
     });
   }
 
+  console.log(data);
+
   return (
     <Box p={4} textAlign="center" bg="white">
       <VStack spacing={4} align="flex-start">

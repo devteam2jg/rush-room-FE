@@ -12,7 +12,6 @@ function AuctionItemList({ item }: ItemsProps) {
   const handleEnterAuction = () => {
     nav(`/auction/${auctionId}/bid/${item.id}`);
   };
-
   let formattedPrice = '';
 
   if (item.startPrice / 1000 > 1) {
