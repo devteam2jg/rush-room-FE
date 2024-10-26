@@ -1,7 +1,7 @@
 import { Box, createStandaloneToast, Heading, VStack } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import useAuction from '../hooks/useAuction';
-import AuctionOverviewItemList from './AuctionOverviesItemList';
+import AuctionOverviewItemList from './AuctionOverviewItemList';
 
 interface Auction {
   id: string;
@@ -40,6 +40,7 @@ export default function AuctionOverviewList() {
         </Heading>
         {data.data.map((item: { auctionDto: Auction }) => (
           <AuctionOverviewItemList
+            auctionId={item.auctionDto.id}
             key={item.auctionDto.id}
             item={item.auctionDto}
           />

@@ -1,5 +1,5 @@
-import { HStack, VStack, Text, CircularProgress } from '@chakra-ui/react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { HStack, VStack, Text } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 
 interface Auction {
   id: string;
@@ -13,10 +13,10 @@ interface Auction {
 
 type AuctionProps = {
   item: Auction;
+  auctionId: string;
 };
 
-function AuctionOverviewItemList({ item }: AuctionProps) {
-  const { auctionId } = useParams();
+function AuctionOverviewItemList({ item, auctionId }: AuctionProps) {
   const nav = useNavigate();
 
   const handleEnterAuctionOverview = () => {
@@ -37,7 +37,6 @@ function AuctionOverviewItemList({ item }: AuctionProps) {
       </VStack>
       <Text fontWeight={700} fontSize="18px" flex="1">
         {item.status}
-        <CircularProgress isIndeterminate color="green.300" />
       </Text>
     </HStack>
   );
