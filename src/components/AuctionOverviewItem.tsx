@@ -16,7 +16,7 @@ type AuctionProps = {
   auctionId: string;
 };
 
-function AuctionOverviewItemList({ item, auctionId }: AuctionProps) {
+function AuctionOverviewItem({ item, auctionId }: AuctionProps) {
   const nav = useNavigate();
 
   const handleEnterAuctionOverview = () => {
@@ -42,4 +42,4 @@ function AuctionOverviewItemList({ item, auctionId }: AuctionProps) {
   );
 }
 
-export default AuctionOverviewItemList;
+export default AuctionOverviewItem;
