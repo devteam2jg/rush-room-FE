@@ -1,30 +1,9 @@
-import { HStack, VStack, Text, Button, Image } from '@chakra-ui/react';
+import { Grid, GridItem, Text, Button, Image } from '@chakra-ui/react';
 import { useNavigate, useParams } from 'react-router-dom';
-
-interface User {
-  nickname: string;
-  id: string;
-  email: string;
-  profileUrl: string;
-  thumbnailUrl: string;
-}
-
-// 아이템을 위한 타입
-interface Item {
-  id: string;
-  imageUrls: string;
-  title: string;
-  description: string;
-  itemImages: string; // 이미지가 여러 개라면 string[]
-  startPrice: number;
-  lastPrice: number;
-  isSold: boolean;
-  buyerId: string;
-  postedUser: User;
-}
+import { AuctionItem } from '../../utils/types';
 
 type ItemsProps = {
-  item: Item;
+  item: AuctionItem;
 };
 
 function AuctionItemList({ item }: ItemsProps) {
@@ -33,37 +12,62 @@ function AuctionItemList({ item }: ItemsProps) {
   const handleEnterAuction = () => {
     nav(`/auction/${auctionId}/bid/${item.id}`);
   };
+
   return (
-    <HStack width="100%" justifyContent="space-between">
-      <Image src={item.imageUrls[0]} />
-      <VStack flex="1.3" gap={-10} alignItems="flex-start">
-        <Text fontSize="15px" fontWeight={700}>
+    <Grid
+      width="100%"
+      templateColumns="10% 20% 15% 25% 20%"
+      alignItems="center"
+      gap={2}
+    >
+      <GridItem>
+        <Image
+          boxSize="40px"
+          src={item.imageUrls[0]}
+          objectFit="contain"
+          alt="item cover image"
+        />
+      </GridItem>
+      <GridItem>
+        <Text whiteSpace="nowrap" fontSize="15px" fontWeight={700}>
           {item.title}
         </Text>
-        <Text fontSize="13px">{item.postedUser.nickname}</Text>
-      </VStack>
-      <Text fontSize="xs" flex="0.7" fontWeight={700} textAlign="center">
-        시작가
-      </Text>
-      <Text
-        marginLeft="5px"
-        fontWeight={700}
-        fontSize="22px"
-        flex="1.5"
-        textAlign="start"
-      >
-        {item.startPrice}
-      </Text>
-      <Button
-        backgroundColor="#AA8EBF"
-        color="white"
-        flex="0.5"
-        textAlign="center"
-        onClick={handleEnterAuction}
-      >
-        <Text fontSize="xs">경매참여</Text>
-      </Button>
-    </HStack>
+        <Text fontSize="13px" mt="-10px">
+          {item.postedUser.nickname}
+        </Text>
+      </GridItem>
+      <GridItem>
+        <Text
+          whiteSpace="nowrap"
+          fontSize="xs"
+          fontWeight={700}
+          textAlign="center"
+        >
+          시작가
+        </Text>
+      </GridItem>
+      <GridItem>
+        <Text
+          whiteSpace="nowrap"
+          fontWeight={700}
+          fontSize="22px"
+          textAlign="start"
+        >
+          {item.startPrice}
+        </Text>
+      </GridItem>
+      <GridItem>
+        <Button
+          backgroundColor="#AA8EBF"
+          color="white"
+          width="full"
+          textAlign="center"
+          onClick={handleEnterAuction}
+        >
+          <Text fontSize="xs">경매참여</Text>
+        </Button>
+      </GridItem>
+    </Grid>
   );
 }
 
