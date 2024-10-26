@@ -19,15 +19,10 @@ function ChatInput({ socket }: ChatInputProps) {
   const user = useAuthStore((state) => state.user);
   const { toast } = createStandaloneToast();
   const [messageSent, setMessageSent] = useState('');
-  const [messageList, setMessageList] = useState([]);
+  const [messageList, setMessageList] = useState<Message[]>([]);
   const { auctionId } = useParams();
   const userId = user?.id;
   const isRef = useRef(0);
-
-  socket.on('connect', () => {
-    console.log('Connected to the server');
-    socket.emit('join_auction', auctionId);
-  });
 
   useEffect(() => {
     socket.on('message', (message: Message) => {
@@ -40,11 +35,6 @@ function ChatInput({ socket }: ChatInputProps) {
       console.log('End Connection');
     };
   }, [socket]);
-
-  // socket.on('message', (message) => {
-  //   console.log('message', message);
-  //   // setMessageList((list) => [...list, message]);
-  // });
 
   const generateColorFrom = (): string => {
     const lastThree = userId?.slice(-3);
@@ -61,11 +51,6 @@ function ChatInput({ socket }: ChatInputProps) {
         message: messageSent,
       };
       await socket.emit('message', messageData);
-      // console.log(messageData);
-      // setMessageList((list) => [
-      //   ...list,
-      //   `${messageData.userId} : ${messageData.message}`,
-      // ]);
       console.log(messageList);
     } else {
       toast({
@@ -78,10 +63,6 @@ function ChatInput({ socket }: ChatInputProps) {
       });
     }
   };
-
-  // const handleSendMessage = () => {
-  //   socket.emit('message', { auctionId, userId, message1 });
-  // };
 
   const handleMessageInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMessageSent(e.target.value);
