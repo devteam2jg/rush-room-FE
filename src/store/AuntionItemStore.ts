@@ -5,13 +5,14 @@ interface AuctionItemInfo {
   description: string;
   price: number | undefined;
   auctionItemId: string;
+  itemPicture: File[] | null;
 }
 
 interface AuctionItemStore {
   auctionItemInfo: AuctionItemInfo;
   updateItemField: (
     field: keyof AuctionItemInfo,
-    value: string | number | boolean
+    value: string | number | boolean | File[] | null
   ) => void;
   resetItemForm: () => void;
   getFormItemData: () => AuctionItemInfo;
@@ -22,6 +23,7 @@ const initialState: AuctionItemInfo = {
   description: '',
   price: undefined,
   auctionItemId: '',
+  itemPicture: null,
 };
 
 const useAuctionItemStore = create<AuctionItemStore>((set, get) => ({
