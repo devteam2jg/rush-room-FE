@@ -8,12 +8,14 @@ import {
 } from '@chakra-ui/react';
 import { Socket } from 'socket.io-client';
 import BiddingChat from './BiddingChat';
+import BiddingInTab from './BiddingInTab';
 
 interface BiddingTabProps {
+  SetCurrentBid: (value: number) => void;
   socket: Socket;
 }
 
-function BiddingTab({ socket }: BiddingTabProps) {
+function BiddingTab({ socket, SetCurrentBid }: BiddingTabProps) {
   return (
     <Tabs isFitted position="relative" variant="unstyled">
       <TabList>
@@ -31,7 +33,7 @@ function BiddingTab({ socket }: BiddingTabProps) {
           <BiddingChat socket={socket} />
         </TabPanel>
         <TabPanel>
-          <p>three!</p>
+          <BiddingInTab SetCurrentBid={SetCurrentBid} socket={socket} />
         </TabPanel>
         <TabPanel>
           <p>four!</p>
