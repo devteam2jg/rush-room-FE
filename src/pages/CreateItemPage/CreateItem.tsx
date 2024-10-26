@@ -31,6 +31,13 @@ function CreateItem() {
         onIndexChange={handleIndexChange}
       >
         <SwiperContentBox
+          labelText="물품 사진 등록"
+          typeValue="itemPicture"
+          inputType="file"
+          placeholderText=""
+          sourceType="auctionItem"
+        />
+        <SwiperContentBox
           labelText="판매 물품 제목"
           typeValue="itemName"
           inputType="text"
