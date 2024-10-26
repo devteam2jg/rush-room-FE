@@ -11,7 +11,7 @@ interface AuctionItemStore {
   auctionItemInfo: AuctionItemInfo;
   updateItemField: (
     field: keyof AuctionItemInfo,
-    value: string | number
+    value: string | number | boolean
   ) => void;
   resetItemForm: () => void;
   getFormItemData: () => AuctionItemInfo;

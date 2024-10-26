@@ -6,13 +6,19 @@ interface AuctionInfo {
   date: string;
   sellingLimitTime: number | undefined;
   createdAuctionId: string;
+  privateCode: string;
+  isPrivate: boolean;
+  budget: number | undefined;
 }
 
 interface AuctionStore {
   auctionInfo: AuctionInfo;
-  updateField: (field: keyof AuctionInfo, value: string | number) => void;
+  updateField: (
+    field: keyof AuctionInfo,
+    value: string | number | boolean
+  ) => void;
   resetForm: () => void;
-  getFormData: () => AuctionInfo;
+  getFormData: () => Omit<AuctionInfo, 'createdAuctionId'>;
   getResponse: () => AuctionInfo['createdAuctionId'];
 }
 
@@ -22,6 +28,9 @@ const initialState: AuctionInfo = {
   date: '',
   sellingLimitTime: undefined,
   createdAuctionId: '',
+  privateCode: '',
+  isPrivate: false,
+  budget: undefined,
 };
 
 const useAuctionStore = create<AuctionStore>((set, get) => ({
@@ -38,9 +47,13 @@ const useAuctionStore = create<AuctionStore>((set, get) => ({
       auctionInfo: {
         ...initialState,
         createdAuctionId: state.auctionInfo.createdAuctionId,
+        // isPrivate: state.auctionInfo.isPrivate,
       },
     })),
-  getFormData: () => get().auctionInfo,
+  getFormData: () => {
+    const { createdAuctionId, ...rest } = get().auctionInfo;
+    return rest;
+  },
   getResponse: () => get().auctionInfo.createdAuctionId,
 }));
 

@@ -12,11 +12,16 @@ const useCreateAuction = () => {
   const createAuction = async () => {
     const formData = getFormData();
 
+    console.log(formData);
+
     const data = {
       title: formData.title,
       description: formData.description,
       eventDate: new Date(formData.date).toISOString(),
       sellingLimitTime: Number(formData.sellingLimitTime),
+      isPrivate: formData.isPrivate,
+      privateCode: formData.privateCode,
+      budget: Number(formData.budget),
     };
 
     const response = await axiosInstance.post('/auction', data);
