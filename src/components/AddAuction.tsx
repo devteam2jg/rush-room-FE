@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 export default function AddAuction() {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { auctionId } = useParams();
   return (
     <Box p={4} textAlign="center" bg="white">
       <VStack spacing={4} align="flex-start">
@@ -28,7 +28,7 @@ export default function AddAuction() {
         width="240px"
         height="40px"
         onClick={() => {
-          navigate(`/auction/${id}/create`);
+          navigate(`/auction/${auctionId}/create`);
         }}
       >
         등록하기

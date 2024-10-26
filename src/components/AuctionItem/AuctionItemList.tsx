@@ -27,10 +27,10 @@ type ItemsProps = {
 };
 
 function AuctionItemList({ item }: ItemsProps) {
-  const { id } = useParams();
+  const { auctionId } = useParams();
   const nav = useNavigate();
   const handleEnterAuction = () => {
-    nav(`/auction/${id}/bid`);
+    nav(`/auction/${auctionId}/bid/${item.id}`);
   };
   return (
     <HStack width="100%" justifyContent="space-between">

@@ -5,7 +5,7 @@ import useShowToast from './useShowToast';
 import useAuctionItemStore from '../store/AuntionItemStore';
 
 const useCreateAuctionItem = () => {
-  const { id } = useParams();
+  const { auctionId } = useParams();
   const { getFormItemData, resetItemForm, updateItemField } =
     useAuctionItemStore();
   const showToast = useShowToast();
@@ -21,7 +21,7 @@ const useCreateAuctionItem = () => {
     };
 
     const response = await axiosInstance.post(
-      `/auction/${id}/auction-item`,
+      `/auction/${auctionId}/auction-item`,
       data
     );
     return response.data;

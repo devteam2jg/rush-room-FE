@@ -4,11 +4,11 @@ import axios from 'axios';
 import axiosInstance from '../utils/AxiosInstance';
 
 const useAuctionDetail = () => {
-  const { id } = useParams();
+  const { auctionId } = useParams();
 
   const getAuctionDetail = async () => {
     try {
-      const { data } = await axiosInstance.get(`/auction/${id}`);
+      const { data } = await axiosInstance.get(`/auction/${auctionId}`);
       return data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -31,7 +31,7 @@ const useAuctionDetail = () => {
     }
   };
   return useQuery({
-    queryKey: ['AuctionDetail', id],
+    queryKey: ['AuctionDetail', auctionId],
     queryFn: getAuctionDetail,
     staleTime: 0,
     refetchOnMount: true,
