@@ -38,13 +38,11 @@ const queryClient = new QueryClient({
 });
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <ChakraProvider theme={theme}>
-        <RouterProvider router={router} />
-      </ChakraProvider>
-    </QueryClientProvider>
-  </StrictMode>
+  <QueryClientProvider client={queryClient}>
+    <ChakraProvider theme={theme}>
+      <RouterProvider router={router} />
+    </ChakraProvider>
+  </QueryClientProvider>
 );
 
 export default queryClient;
