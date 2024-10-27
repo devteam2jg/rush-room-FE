@@ -1,22 +1,29 @@
-import { Socket } from 'socket.io-client';
-import { useEffect } from 'react';
-import { Image } from '@chakra-ui/react';
+import { Box, Image } from '@chakra-ui/react';
+import { useRef } from 'react';
+import { Pagination } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
-interface BiddingProp {
-  socket: Socket;
-  auctionId: string | undefined;
-  itemId: string | undefined;
+interface BiddingSessionProps {
+  images: string[];
 }
 
-function BiddingSession({ socket, auctionId, itemId }: BiddingProp) {
-  useEffect(() => {
-    console.log('auctionId : ', auctionId);
-    console.log('itemId : ', itemId);
-  });
+function BiddingSession({ images }: BiddingSessionProps) {
+  const idRef = useRef(0);
   return (
-    <div>
-      <Image src="/images/biditem.png" />
-    </div>
+    <Box backgroundColor="#141517">
+      <Swiper pagination modules={[Pagination]} className="mySwiper">
+        {images.map((image) => (
+          <SwiperSlide key={idRef.current++}>
+            <Image
+              height="35vh"
+              objectFit="cover"
+              margin="0 auto"
+              src={image}
+            />
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    </Box>
   );
 }
 
