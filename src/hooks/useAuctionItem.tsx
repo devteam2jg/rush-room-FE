@@ -38,7 +38,6 @@ const useAuctionItem = () => {
   return useQuery({
     queryKey: ['AuctionItem', auctionId],
     queryFn: getAuctionItem,
-    staleTime: 0,
     refetchOnMount: true,
     refetchOnWindowFocus: true,
     meta: {
