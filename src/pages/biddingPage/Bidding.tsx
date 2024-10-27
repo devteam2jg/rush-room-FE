@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import { io } from 'socket.io-client';
+import { io, Socket } from 'socket.io-client';
 import { createStandaloneToast, Flex } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import BiddingSession from '../../components/Bidding/BiddingSession';
 import useBitItemInfo from '../../hooks/useBidItemInfo';
 import BiddingMidBar from '../../components/Bidding/BiddingMidBar';
@@ -11,11 +11,53 @@ function Bidding() {
   const baseURL = import.meta.env.VITE_APP_SOCKET_URL;
   const nav = useNavigate();
   const { toast } = createStandaloneToast();
-  const socket = io(`${baseURL}/auction-execute`);
   const { auctionId } = useParams();
   const { itemId } = useParams();
   const { data, error, isPending } = useBitItemInfo();
-  const [currentBid, SetCurrentBid] = useState(0);
+  const [currentPrice, setCurrentPrice] = useState(0);
+  const [socket, setSocket] = useState<Socket | null>(null);
+
+  useEffect(() => {
+    // socket 초기화 및 연결
+    const newSocket = io(`${baseURL}/auction-execute`);
+    setSocket(newSocket);
+
+    // 연결 이벤트 리스너
+    newSocket.on('connect', () => {
+      toast({
+        title: '입장',
+        description: '채팅방에 입장하셨습니다.',
+        status: 'success',
+        variant: 'left-accent',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+      newSocket.emit('join_auction', auctionId);
+    });
+
+    // 입찰가 업데이트 이벤트 리스너
+    newSocket.on('bid_updated', (newBid) => {
+      setCurrentPrice(newBid);
+      console.log('bid_updated');
+    });
+
+    // 현재 입찰가 이벤트 리스너
+    newSocket.on('current_bid', (currentBid) => {
+      setCurrentPrice(currentBid);
+    });
+
+    document.body.style.overflow = 'hidden';
+
+    // cleanup 함수
+    return () => {
+      if (newSocket) {
+        newSocket.disconnect();
+        console.log('End Connection from bidding');
+      }
+      document.body.style.overflow = 'auto';
+    };
+  }, []); // 필요한 의존성만 포함
 
   if (isPending) {
     return <div>Loading....</div>;
@@ -33,18 +75,14 @@ function Bidding() {
     });
   }
 
-  socket.on('connect', () => {
-    console.log('Connected to the server');
-    socket.emit('join_auction', auctionId);
-  });
-
   return (
-    <Flex minHeight="100vh" flexDirection="column">
-      <BiddingSession socket={socket} auctionId={auctionId} itemId={itemId} />
-      <BiddingMidBar currentBid={currentBid} />
-      <BiddingTab SetCurrentBid={SetCurrentBid} socket={socket} />
+    <Flex backgroundColor="#212326" flexDirection="column" height="100vh">
+      <BiddingSession images={data?.imageUrls} />
+      <BiddingMidBar currentPrice={currentPrice} />
+      <Flex flex="1" overflow="hidden">
+        <BiddingTab currentPrice={currentPrice} socket={socket} />
+      </Flex>
     </Flex>
   );
 }
-
 export default Bidding;
