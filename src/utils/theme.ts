@@ -50,6 +50,10 @@ const styles = {
       color: mode('gray.800', 'whiteAlpha.900')(props),
       fontFamily: 'Spoqa Han Sans Neo, sans-serif',
     },
+    '::-webkit-scrollbar': {
+      width: '0px',
+      height: '0px',
+    },
   }),
 };
 
