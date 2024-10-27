@@ -14,3 +14,15 @@ export interface AuctionItem {
   isSold: boolean;
   postedUser: User;
 }
+
+export interface AuctionBidItem {
+  id: string;
+  title: string;
+  imageUrls: string[];
+  startPrice: number;
+  isSold: boolean;
+  postedUser: User;
+  buyerId: string;
+  description: string;
+  lastPrice: number;
+}
