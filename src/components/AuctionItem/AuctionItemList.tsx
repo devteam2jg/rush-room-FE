@@ -22,13 +22,13 @@ function AuctionItemList({ item }: ItemsProps) {
   return (
     <Grid
       width="100%"
-      templateColumns="15% 25% 30% 20%"
+      templateColumns="20% 25% 25% 25%"
       alignItems="center"
       gap={2}
     >
       <GridItem>
         <Image
-          boxSize="40px"
+          boxSize="fit"
           src={item.imageUrls[0]}
           objectFit="contain"
           alt="item cover image"
@@ -60,9 +60,10 @@ function AuctionItemList({ item }: ItemsProps) {
       </GridItem>
       <GridItem>
         <Button
+          marginRight="12px"
           backgroundColor="#AA8EBF"
           color="white"
-          width="full"
+          width="80%"
           textAlign="center"
           onClick={handleEnterAuction}
         >

@@ -4,7 +4,12 @@ import useAuctionDetail from '../hooks/useAuctionDetail';
 import AuctionItemList from './AuctionItem/AuctionItemList';
 import { AuctionItem } from '../utils/types';
 
-export default function AuctionList() {
+interface AuctionListProps {
+  headerShow: string;
+  bgColor: string;
+}
+
+export default function AuctionList({ headerShow, bgColor }: AuctionListProps) {
   const nav = useNavigate();
   const { toast } = createStandaloneToast();
   const { data, error, isPending } = useAuctionDetail();
@@ -27,9 +32,14 @@ export default function AuctionList() {
   console.log(data);
 
   return (
-    <Box p={4} textAlign="center" bg="white">
+    <Box p={4} textAlign="center" color="white" bg={bgColor}>
       <VStack spacing={4} align="flex-start">
-        <Heading as="h5" size="xm" textAlign="left">
+        <Heading
+          display={headerShow === 'show' ? 'block' : 'none'}
+          as="h5"
+          size="xm"
+          textAlign="left"
+        >
           경매 물품 리스트
         </Heading>
         {data.items?.map((item: AuctionItem) => (
