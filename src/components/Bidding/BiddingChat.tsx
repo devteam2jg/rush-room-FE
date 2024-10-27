@@ -1,18 +1,16 @@
-import { Flex } from '@chakra-ui/react';
 import { Socket } from 'socket.io-client';
-import Chat from './BidChat/Chat';
+import { Box } from '@chakra-ui/react';
 import ChatInput from './BidChat/ChatInput';
 
 interface BiddingChatProps {
-  socket: Socket;
+  socket: Socket | null;
 }
 
 function BiddingChat({ socket }: BiddingChatProps) {
   return (
-    <Flex height="100%" flexDirection="column">
-      <Chat socket={socket} />
-      <ChatInput socket={socket} />
-    </Flex>
+    <Box>
+      <ChatInput socket={socket} />;
+    </Box>
   );
 }
 
