@@ -11,7 +11,7 @@ function AuctionDetail() {
       <AuctionInfo />
       <AddAuction />
       <Box h={4} />
-      <AuctionList />
+      <AuctionList headerShow="show" bgColor="white" />
     </div>
   );
 }
