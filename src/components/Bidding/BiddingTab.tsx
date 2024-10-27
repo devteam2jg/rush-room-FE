@@ -9,34 +9,70 @@ import {
 import { Socket } from 'socket.io-client';
 import BiddingChat from './BiddingChat';
 import BiddingInTab from './BiddingInTab';
+import BiddingItemDetail from './BiddingItemDetail';
+import AuctionList from '../AuctionList';
 
 interface BiddingTabProps {
-  SetCurrentBid: (value: number) => void;
-  socket: Socket;
+  currentPrice: number;
+  socket: Socket | null;
 }
 
-function BiddingTab({ socket, SetCurrentBid }: BiddingTabProps) {
+function BiddingTab({ currentPrice, socket }: BiddingTabProps) {
   return (
-    <Tabs isFitted position="relative" variant="unstyled">
-      <TabList>
-        <Tab>One</Tab>
-        <Tab>Two</Tab>
-        <Tab>Three</Tab>
-        <Tab>Four</Tab>
+    <Tabs
+      isFitted
+      variant="unstyled"
+      display="flex"
+      flexDirection="column"
+      flex="1"
+    >
+      <TabList backgroundColor="#141517" height="30px" color="#ACACAC">
+        <Tab
+          _selected={{ color: 'white' }}
+          fontSize="13px"
+          fontWeight={700}
+          padding="0"
+        >
+          상품 상세
+        </Tab>
+        <Tab
+          _selected={{ color: 'white' }}
+          fontSize="13px"
+          fontWeight={700}
+          padding="2px 0"
+        >
+          경매 채팅
+        </Tab>
+        <Tab
+          _selected={{ color: 'white' }}
+          fontSize="13px"
+          fontWeight={700}
+          padding="2px 0"
+        >
+          경매 응찰
+        </Tab>
+        <Tab
+          _selected={{ color: 'white' }}
+          fontSize="13px"
+          fontWeight={700}
+          padding="2px 0"
+        >
+          상품 리스트
+        </Tab>
       </TabList>
-      <TabIndicator mt="-1.5px" height="2px" bg="blue.500" borderRadius="1px" />
-      <TabPanels>
-        <TabPanel>
-          <p>one!</p>
+      <TabIndicator mt="-1.5px" height="2px" bg="#B9A5E2" borderRadius="1px" />
+      <TabPanels flex="1" overflow="hidden">
+        <TabPanel height="100%" overflow="auto" color="white">
+          <BiddingItemDetail />
         </TabPanel>
-        <TabPanel>
+        <TabPanel height="100%" overflow="auto">
           <BiddingChat socket={socket} />
         </TabPanel>
-        <TabPanel>
-          <BiddingInTab SetCurrentBid={SetCurrentBid} socket={socket} />
+        <TabPanel height="100%" overflow="auto">
+          <BiddingInTab currentPrice={currentPrice} socket={socket} />
         </TabPanel>
-        <TabPanel>
-          <p>four!</p>
+        <TabPanel padding="0" height="100%" overflow="auto">
+          <AuctionList headerShow="hidden" bgColor="#212326" />;
         </TabPanel>
       </TabPanels>
     </Tabs>
