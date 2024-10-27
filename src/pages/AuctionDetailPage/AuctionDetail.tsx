@@ -9,7 +9,7 @@ function AuctionDetail() {
       <AuctionInfo />
       <AddAuction />
       <Box h={4} />
-      <AuctionList headerShow="show" bgColor="white" />
+      <AuctionList headerShow="show" fontColor="black" bgColor="white" />
     </div>
   );
 }

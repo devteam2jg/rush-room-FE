@@ -72,7 +72,12 @@ function BiddingTab({ currentPrice, socket }: BiddingTabProps) {
           <BiddingInTab currentPrice={currentPrice} socket={socket} />
         </TabPanel>
         <TabPanel padding="0" height="100%" overflow="auto">
-          <AuctionList headerShow="hidden" bgColor="#212326" />;
+          <AuctionList
+            headerShow="hidden"
+            fontColor="white"
+            bgColor="#212326"
+          />
+          ;
         </TabPanel>
       </TabPanels>
     </Tabs>

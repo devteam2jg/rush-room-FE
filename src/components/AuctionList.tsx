@@ -5,11 +5,16 @@ import AuctionItemList from './AuctionItem/AuctionItemList';
 import { AuctionItem } from '../utils/types';
 
 interface AuctionListProps {
+  fontColor: string;
   headerShow: string;
   bgColor: string;
 }
 
-export default function AuctionList({ headerShow, bgColor }: AuctionListProps) {
+export default function AuctionList({
+  fontColor,
+  headerShow,
+  bgColor,
+}: AuctionListProps) {
   const nav = useNavigate();
   const { toast } = createStandaloneToast();
   const { data, error, isPending } = useAuctionDetail();
@@ -32,7 +37,7 @@ export default function AuctionList({ headerShow, bgColor }: AuctionListProps) {
   console.log(data);
 
   return (
-    <Box p={4} textAlign="center" color="white" bg={bgColor}>
+    <Box p={4} textAlign="center" color={fontColor} bg={bgColor}>
       <VStack spacing={4} align="flex-start">
         <Heading
           display={headerShow === 'show' ? 'block' : 'none'}
