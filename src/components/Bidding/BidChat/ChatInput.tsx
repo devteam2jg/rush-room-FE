@@ -107,11 +107,13 @@ function ChatInput({ socket }: ChatInputProps) {
           return (
             <Flex
               textAlign="center"
-              gap="12px"
+              gap="30%"
               marginBottom="12px"
               key={`${messageContent.userId}-${index}`}
             >
-              <Text color={userColor}>{messageContent.nickname}</Text>
+              <Text fontWeight="700" color={userColor}>
+                {messageContent.nickname}
+              </Text>
               <Text color="white">{messageContent.message}</Text>
             </Flex>
           );
@@ -130,11 +132,22 @@ function ChatInput({ socket }: ChatInputProps) {
         width="100%"
       >
         <Input
+          backgroundColor="#2F3034"
+          border="none"
+          height="30px"
           color="#ACACAC"
           value={messageSent}
           onChange={handleMessageInput}
+          placeholder="채팅을 입력해주세요."
         />
-        <Button onClick={handleSendMessage}>전송</Button>
+        <Button
+          backgroundColor="#B9A5E2"
+          color="white"
+          height="30px"
+          onClick={handleSendMessage}
+        >
+          전송
+        </Button>
       </Flex>
     </Flex>
   );
