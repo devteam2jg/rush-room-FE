@@ -1,6 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { Socket } from 'socket.io-client';
 import { useEffect, useRef, useState } from 'react';
+import { nanoid } from 'nanoid';
 import {
   Button,
   Flex,
@@ -119,7 +120,7 @@ function ChatInput({ socket }: ChatInputProps) {
         <Box color="white">{highBidder}</Box>
         {messageList.map((messageContent: Message) => {
           return (
-            <Box key={Date.now()}>
+            <Box key={nanoid()}>
               {messageContent.auctionId ? (
                 <Flex alignItems="center" marginBottom="12px" gap="10%">
                   <Text
