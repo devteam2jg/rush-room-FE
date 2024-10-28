@@ -1,6 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { Socket } from 'socket.io-client';
 import { useEffect, useRef, useState } from 'react';
+import { nanoid } from 'nanoid';
 import {
   Button,
   Flex,
@@ -16,7 +17,7 @@ interface ChatInputProps {
 }
 
 interface Message {
-  auctionId: string;
+  auctionId: string | null;
   userId: string;
   message: string;
   nickname: string;
@@ -27,6 +28,7 @@ function ChatInput({ socket }: ChatInputProps) {
   const { toast } = createStandaloneToast();
   const [messageSent, setMessageSent] = useState('');
   const [messageList, setMessageList] = useState<Message[]>([]);
+  const [highBidder, setHighBidder] = useState<string[]>([]);
   const { auctionId } = useParams();
   const userId = user?.id;
   const endOfMessagesRef = useRef<HTMLDivElement | null>(null);
@@ -44,8 +46,21 @@ function ChatInput({ socket }: ChatInputProps) {
       setMessageList((list) => [...list, message]);
     });
 
+    socket.on('bid_updated', (newBid) => {
+      const highestBidder = {
+        auctionId: null,
+        userId: 'sdaf12',
+        message: `${newBid.toLocaleString()} 크레딧`,
+        nickname: '정글 정소연',
+      };
+      setMessageList((list) => [...list, highestBidder]);
+      endOfMessagesRef.current?.scrollIntoView({ behavior: 'smooth' });
+      console.log('bid_updated');
+    });
+
     return () => {
       socket.off('message');
+      socket.off('bid_updated');
       console.log('socket off');
     };
   }, [socket]);
@@ -96,31 +111,59 @@ function ChatInput({ socket }: ChatInputProps) {
 
   return (
     <Flex flexDirection="column" height="100%">
-      {/* 채팅 메시지 영역 */}
       <Flex
         flex="1"
         overflowY="auto"
         flexDirection="column"
-        paddingBottom="62px" // 입력창 높이 + 여유 공간
+        paddingBottom="62px"
       >
-        {messageList.map((messageContent: Message, index) => {
+        <Box color="white">{highBidder}</Box>
+        {messageList.map((messageContent: Message) => {
           return (
-            <Flex
-              textAlign="center"
-              gap="30%"
-              marginBottom="12px"
-              key={`${messageContent.userId}-${index}`}
-            >
-              <Text fontWeight="700" color={userColor}>
-                {messageContent.nickname}
-              </Text>
-              <Text color="white">{messageContent.message}</Text>
-            </Flex>
+            <Box key={nanoid()}>
+              {messageContent.auctionId ? (
+                <Flex alignItems="center" marginBottom="12px" gap="10%">
+                  <Text
+                    fontSize="xs"
+                    fontWeight="700"
+                    color={userColor}
+                    flexShrink={0}
+                    marginRight="12px"
+                    whiteSpace="nowrap"
+                  >
+                    {messageContent.nickname}
+                  </Text>
+                  <Text fontSize="xs" color="white" wordBreak="break-word">
+                    {messageContent.message}
+                  </Text>
+                </Flex>
+              ) : (
+                <Flex
+                  borderLeft="2px solid #B9A5E2"
+                  borderRadius="0 5px 5px 0"
+                  padding="15px 10px"
+                  backgroundColor="#303238"
+                  fontSize="xm"
+                  flexDirection="column"
+                  color="white"
+                  marginBottom="12px"
+                >
+                  <Text>{messageContent.nickname} 님이</Text>
+                  <Flex>
+                    <Text flexShrink={0} fontWeight="700" color="#B9A5E2">
+                      {messageContent.message}
+                    </Text>
+                    <Text flexShrink={0}>을 입찰하셨어요 👑</Text>
+                  </Flex>
+                </Flex>
+              )}
+            </Box>
           );
         })}
         <Box ref={endOfMessagesRef} />
       </Flex>
       <Flex
+        alignItems="center"
         height="50px"
         backgroundColor="#212326"
         gap="12px"
