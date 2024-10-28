@@ -1,19 +1,18 @@
 import { Box, Image } from '@chakra-ui/react';
-import { useRef } from 'react';
 import { Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { nanoid } from 'nanoid';
 
-interface BiddingSessionProps {
+interface BiddingImageProps {
   images: string[];
 }
 
-function BiddingSession({ images }: BiddingSessionProps) {
-  const idRef = useRef(0);
+function BiddingImage({ images }: BiddingImageProps) {
   return (
     <Box backgroundColor="#141517">
       <Swiper pagination modules={[Pagination]} className="mySwiper">
         {images.map((image) => (
-          <SwiperSlide key={idRef.current++}>
+          <SwiperSlide key={nanoid()}>
             <Image
               height="35vh"
               objectFit="cover"
@@ -27,4 +26,4 @@ function BiddingSession({ images }: BiddingSessionProps) {
   );
 }
 
-export default BiddingSession;
+export default BiddingImage;

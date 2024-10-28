@@ -2,7 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { io, Socket } from 'socket.io-client';
 import { createStandaloneToast, Flex } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import BiddingSession from '../../components/Bidding/BiddingSession';
+import BiddingImage from '../../components/Bidding/BiddingImage';
 import useBidItemInfo from '../../hooks/useBidItemInfo';
 import BiddingMidBar from '../../components/Bidding/BiddingMidBar';
 import BiddingTab from '../../components/Bidding/BiddingTab';
@@ -77,7 +77,7 @@ function Bidding() {
 
   return (
     <Flex backgroundColor="#212326" flexDirection="column" height="100vh">
-      <BiddingSession images={data?.imageUrls} />
+      <BiddingImage images={data?.imageUrls} />
       <BiddingMidBar currentPrice={currentPrice} />
       <Flex flex="1" overflow="hidden">
         <BiddingTab currentPrice={currentPrice} socket={socket} />
