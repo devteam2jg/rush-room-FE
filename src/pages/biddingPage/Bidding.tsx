@@ -3,7 +3,7 @@ import { io, Socket } from 'socket.io-client';
 import { createStandaloneToast, Flex } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import BiddingSession from '../../components/Bidding/BiddingSession';
-import useBitItemInfo from '../../hooks/useBidItemInfo';
+import useBidItemInfo from '../../hooks/useBidItemInfo';
 import BiddingMidBar from '../../components/Bidding/BiddingMidBar';
 import BiddingTab from '../../components/Bidding/BiddingTab';
 
@@ -13,7 +13,7 @@ function Bidding() {
   const { toast } = createStandaloneToast();
   const { auctionId } = useParams();
   const { itemId } = useParams();
-  const { data, error, isPending } = useBitItemInfo();
+  const { data, error, isPending } = useBidItemInfo();
   const [currentPrice, setCurrentPrice] = useState(0);
   const [socket, setSocket] = useState<Socket | null>(null);
 
