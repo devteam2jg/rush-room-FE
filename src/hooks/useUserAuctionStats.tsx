@@ -4,13 +4,12 @@ import { useParams } from 'react-router-dom';
 import axiosInstance from '../utils/AxiosInstance';
 
 const useUserAuctionStats = () => {
-  const { buyerId } = useParams();
-
+  const { userId } = useParams();
   const getUserAuctionStats = async () => {
     try {
-      const { data } = await axiosInstance.get(`/auction/item/`, {
+      const { data } = await axiosInstance.get(`/auction/item`, {
         params: {
-          buyerId,
+          buyerId: userId,
         },
       });
       return data;
@@ -35,7 +34,7 @@ const useUserAuctionStats = () => {
     }
   };
   return useQuery({
-    queryKey: ['UserAuctionStats'],
+    queryKey: ['UserAuctionStats', userId],
     queryFn: getUserAuctionStats,
     staleTime: 0,
     refetchOnMount: true,
