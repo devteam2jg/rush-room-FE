@@ -8,10 +8,10 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import useBitItemInfo from '../../hooks/useBidItemInfo';
+import useBidItemInfo from '../../hooks/useBidItemInfo';
 
 function BiddingItemDetail() {
-  const { data, error, isPending } = useBitItemInfo();
+  const { data, error, isPending } = useBidItemInfo();
   const nav = useNavigate();
   const { toast } = createStandaloneToast();
 

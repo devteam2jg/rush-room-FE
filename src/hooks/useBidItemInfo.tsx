@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import axiosInstance from '../utils/AxiosInstance';
 
-const useBitItemInfo = () => {
+const useBidItemInfo = () => {
   const { auctionId } = useParams();
   const { itemId } = useParams();
 
@@ -44,4 +44,4 @@ const useBitItemInfo = () => {
   });
 };
 
-export default useBitItemInfo;
+export default useBidItemInfo;
