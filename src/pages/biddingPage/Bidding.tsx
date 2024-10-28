@@ -2,8 +2,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { io, Socket } from 'socket.io-client';
 import { createStandaloneToast, Flex } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import BiddingSession from '../../components/Bidding/BiddingSession';
-import useBitItemInfo from '../../hooks/useBidItemInfo';
+import BiddingImage from '../../components/Bidding/BiddingImage';
+import useBidItemInfo from '../../hooks/useBidItemInfo';
 import BiddingMidBar from '../../components/Bidding/BiddingMidBar';
 import BiddingTab from '../../components/Bidding/BiddingTab';
 
@@ -13,7 +13,7 @@ function Bidding() {
   const { toast } = createStandaloneToast();
   const { auctionId } = useParams();
   const { itemId } = useParams();
-  const { data, error, isPending } = useBitItemInfo();
+  const { data, error, isPending } = useBidItemInfo();
   const [currentPrice, setCurrentPrice] = useState(0);
   const [socket, setSocket] = useState<Socket | null>(null);
 
@@ -47,7 +47,7 @@ function Bidding() {
       setCurrentPrice(currentBid);
     });
 
-    document.body.style.overflow = 'hidden';
+    // document.body.style.overflow = 'hidden';
 
     // cleanup 함수
     return () => {
@@ -76,8 +76,13 @@ function Bidding() {
   }
 
   return (
-    <Flex backgroundColor="#212326" flexDirection="column" height="100vh">
-      <BiddingSession images={data?.imageUrls} />
+    <Flex
+      backgroundColor="#212326"
+      flexDirection="column"
+      height="auto"
+      minHeight="100vh"
+    >
+      <BiddingImage images={data?.imageUrls} />
       <BiddingMidBar currentPrice={currentPrice} />
       <Flex flex="1" overflow="hidden">
         <BiddingTab currentPrice={currentPrice} socket={socket} />
