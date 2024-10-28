@@ -13,7 +13,8 @@ import { useNavigate } from 'react-router-dom';
 import useAuctionDetail from '../hooks/useAuctionDetail';
 
 export default function BidItem() {
-  const socket = io('http://192.168.1.22:3000/auction-execute');
+  const baseURL = import.meta.env.VITE_APP_SOCKET_URL;
+  const socket = io(`${baseURL}/auction-execute`);
   const auctionId = 'auction123';
   const nav = useNavigate();
   const { toast } = createStandaloneToast();
