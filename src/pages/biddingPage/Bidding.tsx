@@ -47,7 +47,7 @@ function Bidding() {
       setCurrentPrice(currentBid);
     });
 
-    document.body.style.overflow = 'hidden';
+    // document.body.style.overflow = 'hidden';
 
     // cleanup 함수
     return () => {
@@ -76,7 +76,12 @@ function Bidding() {
   }
 
   return (
-    <Flex backgroundColor="#212326" flexDirection="column" height="100vh">
+    <Flex
+      backgroundColor="#212326"
+      flexDirection="column"
+      height="auto"
+      minHeight="100vh"
+    >
       <BiddingImage images={data?.imageUrls} />
       <BiddingMidBar currentPrice={currentPrice} />
       <Flex flex="1" overflow="hidden">
