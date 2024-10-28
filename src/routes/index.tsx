@@ -9,6 +9,7 @@ import ProtectedRoute from '../components/ProtectedRoute/ProtectedRoute';
 import auctions from './auction';
 import TermsOfUse from '../pages/TermsOfUsePage/TermsOfUse';
 import AuctionOverview from '../pages/AuctionOverviewPage/AuctionOverview';
+import MyPage from '../pages/myPage/myPage';
 
 const router = createBrowserRouter([
   {
@@ -47,6 +48,10 @@ const router = createBrowserRouter([
       {
         path: 'overview',
         element: <AuctionOverview />,
+      },
+      {
+        path: 'myPage/:userId',
+        element: <MyPage />,
       },
     ],
   },
