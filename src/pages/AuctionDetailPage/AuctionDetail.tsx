@@ -15,12 +15,12 @@ function AuctionDetail() {
   }, []);
 
   return (
-    <div>
+    <Box height="100vh">
       <AuctionInfo />
       <AddAuction />
       <Box h={4} />
       <AuctionList headerShow="show" fontColor="black" bgColor="white" />
-    </div>
+    </Box>
   );
 }
 
