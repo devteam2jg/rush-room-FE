@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
-import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
 import axiosInstance from '../utils/AxiosInstance';
 
-const useUserAuctionItem = () => {
+const useUserAuctionStats = () => {
   const { buyerId } = useParams();
 
-  const getUserAuctionItem = async () => {
+  const getUserAuctionStats = async () => {
     try {
       const { data } = await axiosInstance.get(`/auction/item/`, {
         params: {
@@ -35,8 +35,9 @@ const useUserAuctionItem = () => {
     }
   };
   return useQuery({
-    queryKey: ['UserAuctionItem', buyerId],
-    queryFn: getUserAuctionItem,
+    queryKey: ['UserAuctionStats'],
+    queryFn: getUserAuctionStats,
+    staleTime: 0,
     refetchOnMount: true,
     refetchOnWindowFocus: true,
     meta: {
@@ -45,4 +46,4 @@ const useUserAuctionItem = () => {
   });
 };
 
-export default useUserAuctionItem;
+export default useUserAuctionStats;
