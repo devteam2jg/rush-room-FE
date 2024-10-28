@@ -10,6 +10,7 @@ import {
   Flex,
   Heading,
   useDisclosure,
+  Avatar,
   createStandaloneToast,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
@@ -20,7 +21,6 @@ export default function AuctionInfo() {
   const { toast } = createStandaloneToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { data, isPending, error } = useAuctionDetail();
-  const navigate = useNavigate();
 
   if (isPending) {
     return <div>Loading...</div>;
@@ -52,7 +52,7 @@ export default function AuctionInfo() {
         <Button
           bg="white"
           onClick={() => {
-            navigate('/');
+            nav('/');
           }}
         >
           &lt;
@@ -90,6 +90,20 @@ export default function AuctionInfo() {
             <Text fontSize="sm" mb={4} color="gray.600">
               {data.auctionDto.description}
             </Text>
+
+            <Heading as="h5" size="sm" textAlign="left" mb={2}>
+              경매 주최자
+            </Heading>
+            <Flex
+              p={2}
+              gap={6}
+              onClick={() => nav(`/myPage/${data.ownerProfile.id}`)}
+            >
+              <Avatar size="sm" src={data.ownerProfile.profileUrl} />
+              <Text fontSize="sm" mb={4}>
+                {data.ownerProfile.nickname}
+              </Text>
+            </Flex>
             <Heading as="h5" size="sm" textAlign="left" mb={2}>
               경매 시작 일시
             </Heading>
