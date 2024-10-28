@@ -1,8 +1,15 @@
-import { Box, Flex, Image, Text } from '@chakra-ui/react';
+import { Box, Flex, Text } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
+import { IoIosList, IoIosAddCircleOutline } from 'react-icons/io';
+import { MdInput } from 'react-icons/md';
+import { FaRegUserCircle } from 'react-icons/fa';
+import { FiHome } from 'react-icons/fi';
+
+import useAuthStore from '../store/UserAuthStore';
 
 export default function Navigator() {
   const navigate = useNavigate();
+  const user = useAuthStore((state) => state.user);
 
   return (
     <Box
@@ -23,7 +30,7 @@ export default function Navigator() {
           onClick={() => navigate('/')}
           cursor="pointer"
         >
-          <Image src="images/home_icon.png" alt="홈" boxSize="24px" />
+          <FiHome />
           <Text fontSize="xs">홈</Text>
         </Flex>
 
@@ -33,7 +40,7 @@ export default function Navigator() {
           onClick={() => navigate('/overview')}
           cursor="pointer"
         >
-          <Image src="images/list_icon.png" alt="경매 리스트" boxSize="24px" />
+          <IoIosList />
           <Text fontSize="xs">경매 리스트</Text>
         </Flex>
 
@@ -43,7 +50,7 @@ export default function Navigator() {
           onClick={() => navigate('/auction')}
           cursor="pointer"
         >
-          <Image src="images/add_icon.png" alt="새로운 경매" boxSize="24px" />
+          <IoIosAddCircleOutline />
           <Text fontSize="xs">새로운 경매</Text>
         </Flex>
 
@@ -53,21 +60,18 @@ export default function Navigator() {
           onClick={() => navigate('/')}
           cursor="pointer"
         >
-          <Image
-            src="images/participant_icon.png"
-            alt="참여중 경매"
-            boxSize="24px"
-          />
+          <MdInput />
+
           <Text fontSize="xs">참여중 경매</Text>
         </Flex>
 
         <Flex
           direction="column"
           align="center"
-          onClick={() => navigate('/')}
+          onClick={() => navigate(`/myPage/${user?.id}`)}
           cursor="pointer"
         >
-          <Image src="images/mypage_icon.png" alt="마이페이지" boxSize="24px" />
+          <FaRegUserCircle />
           <Text fontSize="xs">마이페이지</Text>
         </Flex>
       </Flex>
