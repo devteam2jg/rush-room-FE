@@ -1,5 +1,6 @@
 import ProtectedRoute from '../components/ProtectedRoute/ProtectedRoute';
 import AuctionDetail from '../pages/AuctionDetailPage/AuctionDetail';
+import AuctionItemDetail from '../pages/AuctionItemDetailPage/AuctionItemDetail';
 import Bidding from '../pages/biddingPage/Bidding';
 import CreateAuction from '../pages/CreateAuctionPage/CreateAuction';
 import CreateItem from '../pages/CreateItemPage/CreateItem';
@@ -37,6 +38,14 @@ const auctions = [
         element: (
           <ProtectedRoute>
             <Bidding />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'details/:itemId',
+        element: (
+          <ProtectedRoute>
+            <AuctionItemDetail />
           </ProtectedRoute>
         ),
       },
