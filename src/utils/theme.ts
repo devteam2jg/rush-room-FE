@@ -50,12 +50,15 @@ const theme = extendTheme({
           fontDisplay: 'swap',
         },
       ],
+      ':root': {
+        '--vh': '100%',
+      },
       '*': {
         boxSizing: 'border-box',
         margin: 0,
       },
       body: {
-        bg: mode('gray.100', '#000')(props),
+        bg: mode('#FCFCFD', '#000')(props),
         color: mode('gray.800', 'whiteAlpha.900')(props),
         fontFamily: 'Spoqa Han Sans Neo, sans-serif',
       },
