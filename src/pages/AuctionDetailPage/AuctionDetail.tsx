@@ -16,7 +16,7 @@ function AuctionDetail() {
   }, []);
 
   return (
-    <Box height="100vh">
+    <Box height="calc(var(--vh, 1vh) * 100)">
       <PrivateCodeModal />
       <AuctionInfo />
       <AddAuction />
