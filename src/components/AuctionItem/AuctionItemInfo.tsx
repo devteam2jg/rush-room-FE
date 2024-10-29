@@ -8,10 +8,11 @@ import {
   Image,
   Text,
 } from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import useBidItemInfo from '../../hooks/useBidItemInfo';
 
 function AuctionItemInfo() {
+  const { auctionId, itemId } = useParams();
   const { data, error, isPending } = useBidItemInfo();
   const nav = useNavigate();
   const { toast } = createStandaloneToast();
@@ -31,6 +32,11 @@ function AuctionItemInfo() {
       isClosable: true,
     });
   }
+
+  const hanldeUpdate = () => {
+    nav(`/auction/${auctionId}/update/${itemId}`);
+    console.log('이동');
+  };
 
   return (
     <Box height="100%" padding="16px" backgroundColor="#212326">
@@ -68,21 +74,21 @@ function AuctionItemInfo() {
         {data.title}
       </Text>
       <Divider marginBottom="12px" borderColor="#323438" />
-      <Box marginBottom="12px" color="#D5D7DB" fontWeight="500">
+      <Box marginBottom="80px" color="#D5D7DB" fontWeight="500">
         <Text fontSize="18px">{data.description}</Text>
       </Box>
       <Flex
-        borderTop="1px solid #323438"
         backgroundColor="#212326"
-        position="fixed"
-        width="100%"
-        padding="16px"
         left={0}
         bottom={0}
-        justifyContent="space-between"
+        position="fixed"
         alignItems="center"
+        borderTop="1px solid #323438"
+        justifyContent="space-between"
+        width="100%"
+        padding="16px"
       >
-        <HStack alignItems="center">
+        <HStack gap="10px" justifyContent="center" alignItems="center">
           <Text
             letterSpacing="10px"
             lineHeight="25px"
@@ -94,9 +100,13 @@ function AuctionItemInfo() {
             <br />
             가격
           </Text>
-          <Text color="#D5D7DB"> 10000원</Text>
+          <Text fontSize="23px" fontWeight="700" color="#D5D7DB">
+            10000원
+          </Text>
         </HStack>
-        <Button>수정하기</Button>
+        <Button backgroundColor="#B9A5E2" onClick={hanldeUpdate}>
+          수정하기
+        </Button>
       </Flex>
     </Box>
   );
