@@ -23,6 +23,7 @@ function SwiperButton({ type, currentIndex, slides, sourceType }: ButtonProps) {
   const mutationItem = useCreateAuctionItem();
   const muationUpdateItem = useUpdateAuctionItem();
   const mutationEditAuction = useEditAuction();
+
   const nav = useNavigate();
 
   const handleToPrevPage = () => {
