@@ -5,6 +5,7 @@ import useShowToast from '../../hooks/useShowToast';
 import useCreateAuction from '../../hooks/useCreateAuction';
 import useCreateAuctionItem from '../../hooks/useCreateAuctionItem';
 import useAuctionItemStore from '../../store/AuntionItemStore';
+import useUpdateAuctionItem from '../../hooks/useUpdateAuctionItem';
 
 interface ButtonProps {
   type: string;
@@ -19,6 +20,7 @@ function SwiperButton({ type, currentIndex, slides, sourceType }: ButtonProps) {
   const showToast = useShowToast();
   const mutation = useCreateAuction();
   const mutationItem = useCreateAuctionItem();
+  const muationUpdateItem = useUpdateAuctionItem();
   const nav = useNavigate();
 
   const handleToPrevPage = () => {
@@ -40,6 +42,8 @@ function SwiperButton({ type, currentIndex, slides, sourceType }: ButtonProps) {
         return;
       }
       mutation.mutate();
+    } else if (sourceType === 'auctionItemFix') {
+      muationUpdateItem.mutate();
     } else {
       if (
         !auctionItemInfo.itemName ||
