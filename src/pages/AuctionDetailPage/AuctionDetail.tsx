@@ -15,7 +15,7 @@ function AuctionDetail() {
   }, []);
 
   return (
-    <Box height="100vh">
+    <Box height="calc(var(--vh, 1vh) * 100)">
       <AuctionInfo />
       <AddAuction />
       <Box h={4} />

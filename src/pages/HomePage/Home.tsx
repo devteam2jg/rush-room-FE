@@ -33,7 +33,7 @@ function Home() {
   };
 
   return (
-    <Box minHeight="100vh" backgroundColor="white">
+    <Box minHeight="calc(var(--vh, 1vh) * 100)" backgroundColor="#FCFCFD">
       <Flex backgroundColor="white" justifyContent="space-between">
         <Image height="50px" src={serviceLogo} />
         <Button backgroundColor="transparent" onClick={handleLogout}>
