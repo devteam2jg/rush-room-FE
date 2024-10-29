@@ -33,11 +33,6 @@ function ChatInput({ socket }: ChatInputProps) {
   const userId = user?.id;
   const endOfMessagesRef = useRef<HTMLDivElement | null>(null);
 
-  const generateColorFrom = (): string => {
-    const lastThree = userId?.slice(-3);
-    return `#${lastThree}${lastThree}`;
-  };
-
   useEffect(() => {
     if (!socket) return undefined; // socket이 없을 때 early return
 
@@ -107,8 +102,6 @@ function ChatInput({ socket }: ChatInputProps) {
     setMessageSent(e.target.value);
   };
 
-  const userColor = generateColorFrom();
-
   return (
     <Flex flexDirection="column" height="100%">
       <Flex
@@ -119,6 +112,8 @@ function ChatInput({ socket }: ChatInputProps) {
       >
         <Box color="white">{highBidder}</Box>
         {messageList.map((messageContent: Message) => {
+          const lastThree = messageContent.userId.slice(-3);
+          const userColor = `#${lastThree}${lastThree}`;
           return (
             <Box key={nanoid()}>
               {messageContent.auctionId ? (
