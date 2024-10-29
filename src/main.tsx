@@ -1,13 +1,13 @@
 import { createRoot } from 'react-dom/client';
-import { RouterProvider } from 'react-router-dom';
-import { ChakraProvider, createStandaloneToast } from '@chakra-ui/react';
+
+import { createStandaloneToast } from '@chakra-ui/react';
 import {
   QueryCache,
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query';
-import router from './routes';
-import theme from './utils/theme';
+
+import App from './App';
 
 const { toast } = createStandaloneToast();
 
@@ -37,9 +37,7 @@ const queryClient = new QueryClient({
 
 createRoot(document.getElementById('root')!).render(
   <QueryClientProvider client={queryClient}>
-    <ChakraProvider theme={theme}>
-      <RouterProvider router={router} />
-    </ChakraProvider>
+    <App />
   </QueryClientProvider>
 );
 
