@@ -10,7 +10,7 @@ function AuctionItemList({ item }: ItemsProps) {
   const { auctionId } = useParams();
   const nav = useNavigate();
   const handleEnterAuction = () => {
-    nav(`/auction/${auctionId}/details/${item.id}`);
+    nav(`/auction/${auctionId}/bid/${item.id}`);
   };
   let formattedPrice = '';
 
