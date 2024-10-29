@@ -10,20 +10,15 @@ function Login() {
   };
   return (
     <Flex
-      bg="white"
+      gap="40px"
       width="100%"
-      height="100vh"
+      height="calc(var(--vh, 1vh) * 100)"
       flexDirection="column"
-      justifyContent="flex-end"
+      justifyContent="center"
       alignItems="center"
     >
       <Image width="157px" src={ServiceLogo} marginBottom="10px" />
-      <Text
-        color="blackAlpha.900"
-        fontWeight={500}
-        textAlign="center"
-        marginBottom="30px"
-      >
+      <Text color="blackAlpha.900" fontWeight={500} textAlign="center">
         간편하게 로그인 하고
         <br />
         다양한 서비스를 이용해보세요.
@@ -38,7 +33,6 @@ function Login() {
           color="#000000d9"
           _hover={{ backgroundColor: '#e6ce00' }}
           leftIcon={<Image src={kakaoLogo} alt="Kakao Logo" boxSize="25px" />}
-          marginBottom="230px"
           onClick={handleKakaoLoginButtonClick}
         >
           <Text fontSize="16px" fontWeight={700}>

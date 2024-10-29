@@ -37,8 +37,15 @@ export default function AuctionList({
   console.log(data);
 
   return (
-    <Box p={4} height="100%" textAlign="center" color={fontColor} bg={bgColor}>
-      <VStack spacing={4} align="flex-start">
+    <Box
+      marginBottom="20vh"
+      p={4}
+      height="100%"
+      textAlign="center"
+      color={fontColor}
+      bg={bgColor}
+    >
+      <VStack justifyContent="center" spacing={4} alignItems="center">
         <Heading
           display={headerShow === 'show' ? 'block' : 'none'}
           as="h5"

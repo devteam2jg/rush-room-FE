@@ -36,6 +36,7 @@ const useBidItemInfo = () => {
   return useQuery({
     queryKey: ['BitItemInfo', itemId],
     queryFn: getBidItemInfo,
+    staleTime: 0,
     refetchOnMount: true,
     refetchOnWindowFocus: true,
     meta: {
