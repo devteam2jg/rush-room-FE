@@ -56,7 +56,7 @@ export default function CreateAuction() {
         />
         <SwiperContentBox
           labelText="날짜"
-          typeValue="date"
+          typeValue="eventDate"
           inputType="datetime-local"
           placeholderText="경매 이벤트의 상세 내용을 입력해주세요."
           sourceType="auction"

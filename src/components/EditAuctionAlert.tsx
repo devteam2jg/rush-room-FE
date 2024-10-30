@@ -10,18 +10,17 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import React from 'react';
-import { useParams } from 'react-router-dom';
-import useEditAuction from '../hooks/useEditAuction';
+import { useNavigate, useParams } from 'react-router-dom';
 
-export default function EditAuction() {
+export default function EditAuctionAlert() {
+  const { auctionId } = useParams();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef<HTMLButtonElement>(null);
-  const { auctionId } = useParams();
-  const mutation = useEditAuction(auctionId);
+  const nav = useNavigate();
 
   const handleEditAuction = () => {
-    mutation.mutate();
-    onClose();
+    nav(`/auction/edit/${auctionId}`);
+    console.log('경매 수정하기');
   };
 
   return (

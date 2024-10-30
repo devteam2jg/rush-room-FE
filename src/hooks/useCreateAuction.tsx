@@ -17,7 +17,7 @@ const useCreateAuction = () => {
     const data = {
       title: formData.title,
       description: formData.description,
-      eventDate: new Date(formData.date).toISOString(),
+      eventDate: new Date(formData.eventDate).toISOString(),
       sellingLimitTime: Number(formData.sellingLimitTime),
       isPrivate: formData.isPrivate,
       privateCode: formData.privateCode,

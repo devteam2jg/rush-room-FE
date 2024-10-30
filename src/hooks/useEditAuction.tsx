@@ -1,11 +1,12 @@
 import { useMutation } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axiosInstance from '../utils/AxiosInstance';
 import useShowToast from './useShowToast';
 import useAuctionStore from '../store/AuctionStore';
 
-const useEditAuction = (auctionId?: string) => {
-  const { getFormData, resetForm, updateField } = useAuctionStore();
+const useEditAuction = () => {
+  const { auctionId } = useParams();
+  const { getFormData, resetForm } = useAuctionStore();
   const showToast = useShowToast();
   const nav = useNavigate();
 
@@ -15,7 +16,7 @@ const useEditAuction = (auctionId?: string) => {
     const data = {
       title: formData.title,
       description: formData.description,
-      eventDate: new Date(formData.date).toISOString(),
+      eventDate: new Date(formData.eventDate).toISOString(),
       sellingLimitTime: Number(formData.sellingLimitTime),
       isPrivate: formData.isPrivate,
       privateCode: formData.privateCode,
@@ -28,11 +29,10 @@ const useEditAuction = (auctionId?: string) => {
 
   return useMutation({
     mutationFn: editAuction,
-    onSuccess: (data) => {
+    onSuccess: () => {
       resetForm();
-      updateField('createdAuctionId', data.createdAuctionId);
       showToast('Success', '경매 수정이 완료되었습니다.', 'success');
-      nav(`/auction/${data.createdAuctionId}`);
+      nav(-1);
     },
     onError: (error) => {
       showToast('Error', `${error}`, 'error');
