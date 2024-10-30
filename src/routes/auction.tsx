@@ -5,6 +5,7 @@ import UpdateItem from '../pages/AuctionItemDetailPage/AuctionItemUpdate';
 import Bidding from '../pages/biddingPage/Bidding';
 import CreateAuction from '../pages/CreateAuctionPage/CreateAuction';
 import CreateItem from '../pages/CreateItemPage/CreateItem';
+import EditAuction from '../pages/EditAuctionPage/EditAuction';
 
 const auctions = [
   {
@@ -12,6 +13,14 @@ const auctions = [
     element: (
       <ProtectedRoute>
         <CreateAuction />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: 'edit/:auctionId',
+    element: (
+      <ProtectedRoute>
+        <EditAuction />
       </ProtectedRoute>
     ),
   },
