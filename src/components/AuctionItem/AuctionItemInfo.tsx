@@ -6,14 +6,24 @@ import {
   Flex,
   HStack,
   Image,
+  Modal,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Text,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { useNavigate, useParams } from 'react-router-dom';
 import useBidItemInfo from '../../hooks/useBidItemInfo';
+import useAuctionItemDelete from '../../hooks/useAuctionItemDelete';
 
 function AuctionItemInfo() {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const { auctionId, itemId } = useParams();
   const { data, error, isPending } = useBidItemInfo();
+  const { deleteAuctionItem } = useAuctionItemDelete();
   const nav = useNavigate();
   const { toast } = createStandaloneToast();
 
@@ -36,6 +46,11 @@ function AuctionItemInfo() {
   const hanldeUpdate = () => {
     nav(`/auction/${auctionId}/update/${itemId}`);
     console.log('이동');
+  };
+
+  const handleDelete = () => {
+    deleteAuctionItem();
+    nav(-1);
   };
 
   return (
@@ -104,10 +119,53 @@ function AuctionItemInfo() {
             10000원
           </Text>
         </HStack>
-        <Button backgroundColor="#B9A5E2" onClick={hanldeUpdate}>
-          수정하기
+        <Button
+          width="75px"
+          color="#D5D7DB"
+          backgroundColor="#B9A5E2"
+          onClick={onOpen}
+        >
+          Edit
         </Button>
       </Flex>
+      <Modal
+        size="xs"
+        blockScrollOnMount
+        isOpen={isOpen}
+        onClose={onClose}
+        isCentered
+      >
+        <ModalOverlay />
+        <ModalContent backgroundColor="#3A383F" height="150px" width="300px">
+          <ModalHeader fontWeight="700" color="#D5D7DB">
+            수정하기
+          </ModalHeader>
+          <ModalCloseButton color="#D5D7DB" />
+          <ModalFooter gap="20px" margin="0 auto">
+            <Button
+              height="50px"
+              width="120px"
+              fontSize="20px"
+              fontWeight="700"
+              backgroundColor="#B9A5E2"
+              color="#D5D7DB"
+              onClick={hanldeUpdate}
+            >
+              수정
+            </Button>
+            <Button
+              fontSize="20px"
+              color="#D5D7DB"
+              height="50px"
+              width="120px"
+              backgroundColor="#886CB5"
+              onClick={handleDelete}
+            >
+              삭제
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 }
