@@ -10,7 +10,6 @@ import auctions from './auction';
 import TermsOfUse from '../pages/TermsOfUsePage/TermsOfUse';
 import AuctionOverview from '../pages/AuctionOverviewPage/AuctionOverview';
 import MyPage from '../pages/myPage/myPage';
-import TestComp from '../components/TestComp';
 import TestingPage from '../pages/TestingPage';
 
 const router = createBrowserRouter([
@@ -30,10 +29,6 @@ const router = createBrowserRouter([
       {
         path: 'login',
         element: <Login />,
-      },
-      {
-        path: 'test',
-        element: <TestComp />,
       },
       {
         path: 'docs/termsuse',

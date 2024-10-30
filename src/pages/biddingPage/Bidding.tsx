@@ -12,7 +12,7 @@ function Bidding() {
   const nav = useNavigate();
   const { toast } = createStandaloneToast();
   const { auctionId } = useParams();
-  const { itemId } = useParams();
+  // const { itemId } = useParams();
   const { data, error, isPending } = useBidItemInfo();
   const [currentPrice, setCurrentPrice] = useState(0);
   const [socket, setSocket] = useState<Socket | null>(null);
