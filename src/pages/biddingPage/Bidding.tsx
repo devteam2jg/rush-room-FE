@@ -12,7 +12,7 @@ function Bidding() {
   const nav = useNavigate();
   const { toast } = createStandaloneToast();
   const { auctionId } = useParams();
-  const { itemId } = useParams();
+  // const { itemId } = useParams();
   const { data, error, isPending } = useBidItemInfo();
   const [currentPrice, setCurrentPrice] = useState(0);
   const [socket, setSocket] = useState<Socket | null>(null);
@@ -33,7 +33,10 @@ function Bidding() {
         isClosable: true,
         position: 'top',
       });
-      newSocket.emit('join_auction', auctionId);
+      const sendAuctionId = {
+        auctionId,
+      };
+      newSocket.emit('join_auction', sendAuctionId);
     });
 
     // 입찰가 업데이트 이벤트 리스너
