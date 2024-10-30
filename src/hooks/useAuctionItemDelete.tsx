@@ -1,14 +1,21 @@
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import axiosInstance from '../utils/AxiosInstance';
+import useShowToast from './useShowToast';
 
 const useAuctionItemDelete = () => {
-  const { itemId } = useParams();
+  const { auctionId, itemId } = useParams();
+  const toast = useShowToast();
 
   const deleteAuctionItem = async () => {
     try {
-      const { data } = await axiosInstance.delete(`/auction/item/${itemId}`);
-      console.log('삭제 완료:', data);
+      const { data } = await axiosInstance.delete(
+        `/auction/${auctionId}/item/${itemId}`
+      );
+      if (data) {
+        toast('Success', '삭제가 완료되었습니다.', 'success');
+      }
+
       return data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
