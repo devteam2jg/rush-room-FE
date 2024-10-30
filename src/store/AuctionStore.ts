@@ -9,6 +9,7 @@ interface AuctionInfo {
   privateCode: string;
   isPrivate: boolean;
   budget: number | undefined;
+  status: string;
 }
 
 interface AuctionStore {
@@ -31,6 +32,7 @@ const initialState: AuctionInfo = {
   privateCode: '',
   isPrivate: false,
   budget: undefined,
+  status: '',
 };
 
 const useAuctionStore = create<AuctionStore>((set, get) => ({
