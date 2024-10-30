@@ -28,7 +28,7 @@ function ChatInput({ socket }: ChatInputProps) {
   const { toast } = createStandaloneToast();
   const [messageSent, setMessageSent] = useState('');
   const [messageList, setMessageList] = useState<Message[]>([]);
-  const [highBidder, setHighBidder] = useState<string[]>([]);
+  // const [highBidder, setHighBidder] = useState<string[]>([]);
   const { auctionId } = useParams();
   const userId = user?.id;
   const endOfMessagesRef = useRef<HTMLDivElement | null>(null);
@@ -110,7 +110,7 @@ function ChatInput({ socket }: ChatInputProps) {
         flexDirection="column"
         paddingBottom="62px"
       >
-        <Box color="white">{highBidder}</Box>
+        {/* <Box color="white">{highBidder}</Box> */}
         {messageList.map((messageContent: Message) => {
           const lastThree = messageContent.userId.slice(-3);
           const userColor = `#${lastThree}${lastThree}`;

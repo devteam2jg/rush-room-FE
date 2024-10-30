@@ -13,7 +13,7 @@ import React from 'react';
 
 export default function DeleteAuction() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const cancelRef = React.useRef();
+  const cancelRef = React.useRef<HTMLButtonElement>(null);
 
   return (
     <>
