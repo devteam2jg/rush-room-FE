@@ -3,7 +3,7 @@ import { create } from 'zustand';
 interface AuctionInfo {
   title: string;
   description: string;
-  date: string;
+  eventDate: string;
   sellingLimitTime: number | undefined;
   createdAuctionId: string;
   privateCode: string;
@@ -25,7 +25,7 @@ interface AuctionStore {
 const initialState: AuctionInfo = {
   title: '',
   description: '',
-  date: '',
+  eventDate: '',
   sellingLimitTime: undefined,
   createdAuctionId: '',
   privateCode: '',
