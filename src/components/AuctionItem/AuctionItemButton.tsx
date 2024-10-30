@@ -24,7 +24,7 @@ function AuctionItemButton({ type, currentIndex }: ButtonProps) {
     if (
       !auctionInfo.title ||
       !auctionInfo.description ||
-      !auctionInfo.date ||
+      !auctionInfo.eventDate ||
       !auctionInfo.sellingLimitTime
     ) {
       showToast('Error', '모든 필드를 입력해 주세요!', 'error');
