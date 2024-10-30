@@ -6,6 +6,7 @@ import useCreateAuction from '../../hooks/useCreateAuction';
 import useCreateAuctionItem from '../../hooks/useCreateAuctionItem';
 import useAuctionItemStore from '../../store/AuntionItemStore';
 import useUpdateAuctionItem from '../../hooks/useUpdateAuctionItem';
+import useEditAuction from '../../hooks/useEditAuction';
 
 interface ButtonProps {
   type: string;
@@ -21,6 +22,7 @@ function SwiperButton({ type, currentIndex, slides, sourceType }: ButtonProps) {
   const mutation = useCreateAuction();
   const mutationItem = useCreateAuctionItem();
   const muationUpdateItem = useUpdateAuctionItem();
+  const mutationEditAuction = useEditAuction();
   const nav = useNavigate();
 
   const handleToPrevPage = () => {
@@ -34,7 +36,7 @@ function SwiperButton({ type, currentIndex, slides, sourceType }: ButtonProps) {
       if (
         !auctionInfo.title ||
         !auctionInfo.description ||
-        !auctionInfo.date ||
+        !auctionInfo.eventDate ||
         !auctionInfo.sellingLimitTime ||
         !auctionInfo.budget
       ) {
@@ -44,6 +46,8 @@ function SwiperButton({ type, currentIndex, slides, sourceType }: ButtonProps) {
       mutation.mutate();
     } else if (sourceType === 'auctionItemFix') {
       muationUpdateItem.mutate();
+    } else if (sourceType === 'editAuction') {
+      mutationEditAuction.mutate();
     } else {
       if (
         !auctionItemInfo.itemName ||

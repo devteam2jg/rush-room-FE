@@ -6,7 +6,7 @@ import useAuctionItemStore from '../../store/AuntionItemStore';
 type SwiperProps =
   | 'title'
   | 'description'
-  | 'date'
+  | 'eventDate'
   | 'sellingLimitTime'
   | 'budget'
   | 'isPrivate'
@@ -18,7 +18,7 @@ interface SwiperContentBoxProps {
   typeValue: SwiperProps | SwiperItemProps;
   inputType: string;
   placeholderText: string;
-  sourceType: 'auction' | 'auctionItem';
+  sourceType: 'auction' | 'auctionItem' | 'editAuction';
 }
 
 function SwiperContentBox({
@@ -38,6 +38,8 @@ function SwiperContentBox({
     value: string | boolean | File[] | null
   ) => {
     if (sourceType === 'auction') {
+      updateField(field as SwiperProps, value);
+    } else if (sourceType === 'editAuction') {
       updateField(field as SwiperProps, value);
     } else {
       updateItemField(field as SwiperItemProps, value);
@@ -63,7 +65,7 @@ function SwiperContentBox({
   ) => {
     const { value } = e.target;
 
-    if (typeValue === 'date') {
+    if (typeValue === 'eventDate') {
       const minDate = new Date(
         Date.now() + 9 * 60 * 1000 - new Date().getTimezoneOffset() * 60000
       )
@@ -71,7 +73,7 @@ function SwiperContentBox({
         .slice(0, 16);
 
       if (value > minDate) {
-        handleUpdate('date', value);
+        handleUpdate('eventDate', value);
       } else {
         showToast(
           'Error',

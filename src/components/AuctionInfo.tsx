@@ -15,8 +15,8 @@ import {
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import useAuctionDetail from '../hooks/useAuctionDetail';
-import EditAuction from './EditAuction';
-import DeleteAuction from './DeleteAuction';
+import EditAuction from './EditAuctionAlert';
+import DeleteAuction from './DeleteAuctionAlert';
 
 export default function AuctionInfo() {
   const nav = useNavigate();
