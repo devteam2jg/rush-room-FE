@@ -11,6 +11,7 @@ import TermsOfUse from '../pages/TermsOfUsePage/TermsOfUse';
 import AuctionOverview from '../pages/AuctionOverviewPage/AuctionOverview';
 import MyPage from '../pages/myPage/myPage';
 import TestComp from '../components/TestComp';
+import TestingPage from '../pages/TestingPage';
 
 const router = createBrowserRouter([
   {
@@ -57,6 +58,10 @@ const router = createBrowserRouter([
       {
         path: 'myPage/:userId',
         element: <MyPage />,
+      },
+      {
+        path: 'test',
+        element: <TestingPage />,
       },
     ],
   },
