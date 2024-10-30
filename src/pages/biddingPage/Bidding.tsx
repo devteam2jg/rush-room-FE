@@ -33,7 +33,10 @@ function Bidding() {
         isClosable: true,
         position: 'top',
       });
-      newSocket.emit('join_auction', auctionId);
+      const sendAuctionId = {
+        auctionId,
+      };
+      newSocket.emit('join_auction', sendAuctionId);
     });
 
     // 입찰가 업데이트 이벤트 리스너
