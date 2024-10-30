@@ -34,8 +34,6 @@ export default function AuctionList({
     });
   }
 
-  console.log(data);
-
   return (
     <Box
       marginBottom="20vh"
