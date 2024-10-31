@@ -11,6 +11,7 @@ import {
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Socket } from 'socket.io-client';
+import useAuthStore from '../../store/UserAuthStore';
 
 interface BiddingInTabProps {
   currentPrice: number;
@@ -21,12 +22,14 @@ function BiddingInTab({ currentPrice, socket }: BiddingInTabProps) {
   const { auctionId } = useParams();
   const { toast } = createStandaloneToast();
   const [bid, setBid] = useState<string>('');
+  const { user } = useAuthStore((state) => state);
 
   const handleSendBid = () => {
     if (bid) {
       const bidForm = {
         auctionId,
         newCurrentBid: Number(bid),
+        nickname: user?.name,
       };
       socket?.emit('new_bid', bidForm);
       console.log('bid_sent', bid);
