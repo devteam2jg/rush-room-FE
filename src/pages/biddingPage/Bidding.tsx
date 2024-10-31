@@ -11,14 +11,23 @@ function Bidding() {
   const baseURL = import.meta.env.VITE_APP_SOCKET_URL;
   const nav = useNavigate();
   const { toast } = createStandaloneToast();
-  const { auctionId } = useParams();
-  // const { itemId } = useParams();
+  const { auctionId, itemId } = useParams();
+
   const { data, error, isPending } = useBidItemInfo();
   const [currentPrice, setCurrentPrice] = useState(0);
   const [socket, setSocket] = useState<Socket | null>(null);
 
+  const handleAskRecordPermission = async () => {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    stream.getTracks().forEach((track) => track.stop());
+  };
+
   useEffect(() => {
     // socket 초기화 및 연결
+    // const newSocket = io(`${baseURL}/auction-execute`, {
+    //   withCredentials: true,
+    // });
+    handleAskRecordPermission();
     const newSocket = io(`${baseURL}/auction-execute`);
     setSocket(newSocket);
 
@@ -35,13 +44,14 @@ function Bidding() {
       });
       const sendAuctionId = {
         auctionId,
+        itemId,
       };
       newSocket.emit('join_auction', sendAuctionId);
     });
 
     // 입찰가 업데이트 이벤트 리스너
     newSocket.on('bid_updated', (newBid) => {
-      setCurrentPrice(newBid);
+      setCurrentPrice(newBid.newCurrentBid);
       console.log('bid_updated');
     });
 
