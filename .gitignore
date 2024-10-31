@@ -109,3 +109,5 @@ sketch
 *.xhtml
 
 .env
+.env.development
+.env.production

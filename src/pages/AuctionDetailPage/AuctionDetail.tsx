@@ -6,6 +6,8 @@ import AddAuction from '../../components/AddAuction';
 import AuctionList from '../../components/AuctionList';
 import AuctionHistoryStore from '../../store/AuctionHistoryStore';
 import useAuctionDetail from '../../hooks/useAuctionDetail';
+import PrivateCodeModal from '../../components/PrivateCodeModal';
+
 
 function AuctionDetail() {
   const { auctionId } = useParams();
@@ -36,6 +38,7 @@ function AuctionDetail() {
 
   return (
     <Box height="calc(var(--vh, 1vh) * 100)">
+      <PrivateCodeModal />
       <AuctionInfo />
       <AddAuction data={data} isOwner={data.readUser.isOwner} />
       <Box h={4} />

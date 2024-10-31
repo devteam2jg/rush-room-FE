@@ -1,7 +1,7 @@
 import { Box, createStandaloneToast, Heading, VStack } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import useAuction from '../hooks/useAuction';
-import AuctionOverviewItemList from './AuctionOverviewItemList';
+import AuctionOverviewItemList from './AuctionOverviewItem';
 
 interface Auction {
   id: string;
