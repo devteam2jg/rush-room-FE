@@ -17,6 +17,7 @@ import { useState } from 'react';
 import useAuctionDetail from '../hooks/useAuctionDetail';
 import useCheckPrivateCode from '../hooks/useCheckPrivateCode';
 import useShowToast from '../hooks/useShowToast';
+import useAuctionStore from '../store/AuctionStore';
 
 function PrivateCodeModal() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -24,8 +25,9 @@ function PrivateCodeModal() {
   const showToast = useShowToast();
   const { toast } = createStandaloneToast();
   const { data, error, isPending } = useAuctionDetail();
-  const [inputPrivateCode, setInputPrivateCode] = useState(); // 비밀번호 상태 관리
+  const [inputPrivateCode, setInputPrivateCode] = useState(''); // 빈 문자열로 초기화
   const mutation = useCheckPrivateCode();
+  const { updateField } = useAuctionStore();
 
   if (isPending) {
     return <div>Loading...!!</div>;
@@ -55,12 +57,16 @@ function PrivateCodeModal() {
 
   handleModalOpen();
 
+  const handlePasswordInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputPrivateCode(e.target.value);
+    updateField('privateCode', e.target.value);
+  };
+
   const handleSubmit = () => {
-    // if (!inputPrivateCode) {
-    //   showToast('Error', '비밀번호를 입력해 주세요!', 'error');
-    //   return;
-    // }
-    // setInputPrivateCode(inputPrivateCode);
+    if (!inputPrivateCode) {
+      showToast('Error', '비밀번호를 입력해 주세요!', 'error');
+      return;
+    }
     mutation.mutate();
   };
 
@@ -73,7 +79,9 @@ function PrivateCodeModal() {
           <FormControl>
             <FormLabel>경매 방의 비밀번호를 입력해주세요</FormLabel>
             <Input
+              type="text"
               value={inputPrivateCode}
+              onChange={handlePasswordInput}
               placeholder="비밀번호를 입력하세요"
             />
           </FormControl>
