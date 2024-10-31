@@ -135,11 +135,25 @@ export default function EditAuction() {
           <Text fontSize="12px" mb="8px">
             경매 방을 비공개로 설정하시겠어용 ㅇㅅㅇ?
           </Text>
-          <Checkbox
-            isChecked={auctionInfo.isPrivate}
-            onChange={(e) => updateField('isPrivate', e.target.checked)}
-            placeholder="비밀번호를 입력해주세요"
-          />
+          {!auctionInfo.isPrivate ? (
+            <Checkbox
+              isChecked={auctionInfo.isPrivate}
+              onChange={(e) => updateField('isPrivate', e.target.checked)}
+              placeholder="비밀번호를 입력해주세요"
+            />
+          ) : (
+            <>
+              <Checkbox
+                isChecked={auctionInfo.isPrivate}
+                onChange={(e) => updateField('isPrivate', e.target.checked)}
+              />
+              <Input
+                value={auctionInfo.privateCode}
+                onChange={(e) => updateField('privateCode', e.target.value)}
+                placeholder="비밀번호를 입력해주세요"
+              />
+            </>
+          )}
         </Box>
       </SwiperForSlide>
       <SwiperButton

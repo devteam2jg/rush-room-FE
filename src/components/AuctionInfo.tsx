@@ -133,7 +133,7 @@ export default function AuctionInfo() {
               초`}
             </Text>
             <Heading as="h5" size="sm" textAlign="left" mb={2}>
-              경매 방 공개 여부
+              경매 방 잠그기
             </Heading>
             <Text fontSize="sm" mb={2} textAlign="center">
               {String(data.auctionDto.isPrivate)}
