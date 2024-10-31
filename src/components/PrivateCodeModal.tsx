@@ -43,7 +43,12 @@ function PrivateCodeModal() {
     });
   }
   const handleModalOpen = () => {
-    if (data.auctionDto.isPrivate && !data.auctionDto.isOwner && !isOpen) {
+    if (
+      !isOpen &&
+      data.auctionDto.isPrivate &&
+      !data.readUser.isOwner &&
+      !data.readUser.endorsed
+    ) {
       onOpen();
     }
   };
@@ -51,41 +56,37 @@ function PrivateCodeModal() {
   handleModalOpen();
 
   const handleSubmit = () => {
-    if (!inputPrivateCode) {
-      showToast('Error', '비밀번호를 입력해 주세요!', 'error');
-      return;
-    }
-    setInputPrivateCode(inputPrivateCode);
+    // if (!inputPrivateCode) {
+    //   showToast('Error', '비밀번호를 입력해 주세요!', 'error');
+    //   return;
+    // }
+    // setInputPrivateCode(inputPrivateCode);
     mutation.mutate();
   };
 
   return (
-    <>
-      <Button onClick={onOpen}>Open Modal</Button>
+    <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>쉿! 비밀 방 입장하기</ModalHeader>
+        <ModalBody pb={6}>
+          <FormControl>
+            <FormLabel>경매 방의 비밀번호를 입력해주세요</FormLabel>
+            <Input
+              value={inputPrivateCode}
+              placeholder="비밀번호를 입력하세요"
+            />
+          </FormControl>
+        </ModalBody>
 
-      <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>쉿! 비밀 방 입장하기</ModalHeader>
-          <ModalBody pb={6}>
-            <FormControl>
-              <FormLabel>경매 방의 비밀번호를 입력해주세요</FormLabel>
-              <Input
-                value={inputPrivateCode}
-                placeholder="비밀번호를 입력하세요"
-              />
-            </FormControl>
-          </ModalBody>
-
-          <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={handleSubmit}>
-              입장하기
-            </Button>
-            <Button onClick={() => nav(-1)}>뒤로가기</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </>
+        <ModalFooter>
+          <Button colorScheme="blue" mr={3} onClick={handleSubmit}>
+            입장하기
+          </Button>
+          <Button onClick={() => nav(-1)}>뒤로가기</Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   );
 }
 export default PrivateCodeModal;
