@@ -11,6 +11,39 @@ const theme = extendTheme({
     heading: `'Spoqa Han Sans Neo', sans-serif`,
     body: `'Spoqa Han Sans Neo', sans-serif`,
   },
+  breakpoints: {
+    sm: '430px', // 480px
+    md: '48em', // 768px
+    lg: '62em', // 992px
+    xl: '80em', // 1280px
+    '2xl': '96em', // 1536px
+  },
+  colors: {
+    mong: {
+      50: '#F4F0FA', // 가장 밝은 버전
+      100: '#E5DBED',
+      200: '#D6C7E8',
+      300: '#C7B2E5',
+      400: '#B9A5E2', // 기본 색상 (primary)
+      500: '#B9A5E2', // 어두운 버전
+      600: '#6E5691',
+      700: '#53406D',
+      800: '#382B49',
+      900: '#1D1524', // 가장 어두운 버전
+    },
+    mongCancle: {
+      50: '#ECEAF1',
+      100: '#DDD9E5',
+      200: '#CEC9DA',
+      300: '#BFB8CE',
+      400: '#B0A7C3',
+      500: '#C3BECF',
+      600: '#928A9E',
+      700: '#6E6679',
+      800: '#4A4354',
+      900: '#272130',
+    },
+  },
   styles: {
     global: (props: GlobalStyles) => ({
       '@font-face': [
