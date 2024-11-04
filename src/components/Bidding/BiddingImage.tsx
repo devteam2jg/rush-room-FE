@@ -31,14 +31,23 @@ function BiddingImage({ images }: BiddingImageProps) {
       <Swiper pagination modules={[Pagination]} className="mySwiper">
         {images.map((image, index) => (
           <SwiperSlide key={nanoid()}>
-            <Image
-              height="35vh"
-              objectFit="cover"
-              margin="0 auto"
-              src={image}
-              cursor="pointer"
-              onClick={() => handleImageClick(index)}
-            />
+            {image.split('.').pop() === 'm3u8' ? (
+              <Box height="35vh" margin="0 auto">
+                <video muted width="100%" controls>
+                  <source src={image} type="video/mp4" />
+                  <track kind="captions" />
+                </video>
+              </Box>
+            ) : (
+              <Image
+                height="35vh"
+                objectFit="cover"
+                margin="0 auto"
+                src={image}
+                cursor="pointer"
+                onClick={() => handleImageClick(index)}
+              />
+            )}
           </SwiperSlide>
         ))}
       </Swiper>
@@ -50,7 +59,6 @@ function BiddingImage({ images }: BiddingImageProps) {
           display="flex"
           alignItems="center"
           justifyContent="center"
-          maxW="100vw"
           h="calc(var(--vh, 1vh) * 100)"
         >
           <ModalCloseButton color="white" zIndex="modal" />
@@ -77,7 +85,6 @@ function BiddingImage({ images }: BiddingImageProps) {
                 <Image
                   src={image}
                   maxH="90vh"
-                  maxW="90vw"
                   objectFit="contain"
                   onClick={(e) => e.stopPropagation()}
                 />
