@@ -24,7 +24,6 @@ function Home() {
     const result = await getLogout();
     if (result.success) {
       logout();
-      // queryClient.removeQueries({ queryKey: ['userInfo'] });
       showToast('로그아웃 성공', result.message, 'success');
       nav('/login');
     } else {
@@ -32,15 +31,10 @@ function Home() {
     }
   };
 
-  const handleRecord = () => {
-    nav('/test');
-  };
-
   return (
     <Box minHeight="calc(var(--vh, 1vh) * 100)" backgroundColor="#FCFCFD">
       <Flex backgroundColor="white" justifyContent="space-between">
         <Image height="50px" src={serviceLogo} />
-        <Button onClick={handleRecord}>녹음페이지로!</Button>
         <Button backgroundColor="transparent" onClick={handleLogout}>
           Logout
         </Button>

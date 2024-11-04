@@ -27,12 +27,19 @@ function AuctionItemList({ item }: ItemsProps) {
       gap={2}
     >
       <GridItem>
-        <Image
-          boxSize="fit"
-          src={item.imageUrls[0]}
-          objectFit="contain"
-          alt="item cover image"
-        />
+        {item.imageUrls[0].split('.').pop() === 'm3u8' ? (
+          <video muted autoPlay width="100%" controls>
+            <source src={item.imageUrls[0]} type="video/mp4" />
+            <track kind="captions" />
+          </video>
+        ) : (
+          <Image
+            boxSize="fit"
+            src={item.imageUrls[0]}
+            objectFit="contain"
+            alt="item cover image"
+          />
+        )}
       </GridItem>
       <GridItem>
         <Text

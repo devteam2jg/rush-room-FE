@@ -13,7 +13,7 @@ export default function Navigator() {
 
   return (
     <Box
-      position="fixed"
+      position="absolute"
       bottom={2}
       left={2}
       right={2}

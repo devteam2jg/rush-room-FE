@@ -8,6 +8,7 @@ import {
 } from '@tanstack/react-query';
 
 import App from './App';
+import './main.css';
 
 const { toast } = createStandaloneToast();
 
