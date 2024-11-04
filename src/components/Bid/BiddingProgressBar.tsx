@@ -7,7 +7,7 @@ interface ProgressProps {
 function BiddingProgressBar({ runtime }: ProgressProps) {
   return runtime <= 30 ? (
     <Progress
-      borderRadius="5px"
+      borderRadius="5.1px"
       width="100%"
       height={{ base: '30px', sm: '45px' }}
       colorScheme="purple"
