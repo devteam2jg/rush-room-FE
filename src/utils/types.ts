@@ -1,3 +1,5 @@
+import { Socket } from 'socket.io-client';
+
 export interface User {
   nickname: string;
   id: string;
@@ -25,4 +27,8 @@ export interface AuctionBidItem {
   buyerId: string;
   description: string;
   lastPrice: number;
+}
+
+export interface SocketProps {
+  socket: Socket | null;
 }
