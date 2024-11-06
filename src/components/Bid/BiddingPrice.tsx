@@ -1,18 +1,10 @@
 import { Flex, Text } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
 
 interface PriceProps {
-  originalPrice: number;
-  currentPrice: number;
+  priceOfItem: number;
 }
 
-function BiddingPrice({ currentPrice, originalPrice }: PriceProps) {
-  const [priceShown, setPriceShown] = useState(0);
-
-  useEffect(() => {
-    setPriceShown(currentPrice);
-  }, [currentPrice]);
-
+function BiddingPrice({ priceOfItem }: PriceProps) {
   return (
     <Flex fontSize={{ base: '13px', md: '20px' }} fontWeight="700">
       <Text
@@ -29,7 +21,7 @@ function BiddingPrice({ currentPrice, originalPrice }: PriceProps) {
         backgroundColor="rgba(21, 21, 21, 0.6)"
         color="#FCFCFD"
       >
-        {priceShown ? priceShown.toLocaleString() : originalPrice}
+        {priceOfItem}
       </Text>
     </Flex>
   );
