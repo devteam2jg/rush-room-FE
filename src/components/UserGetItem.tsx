@@ -1,19 +1,15 @@
 import {
+  Box,
   Button,
   createStandaloneToast,
   Flex,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
   Text,
-  useDisclosure,
+  VStack,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import useUserAuctionStats from '../hooks/useUserAuctionStats';
+import SpringModal from './Modal/SpringModal';
 
 interface AuctionItem {
   id: string;
@@ -22,11 +18,11 @@ interface AuctionItem {
 }
 
 function UserGetItem() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isOpen, setIsOpen] = useState(false);
   const nav = useNavigate();
   const { toast } = createStandaloneToast();
   const { data, error, isPending } = useUserAuctionStats();
-  console.log(data);
+
   if (isPending) {
     return <div>Loading...!!</div>;
   }
@@ -50,7 +46,7 @@ function UserGetItem() {
           justify="space-between"
           p={4}
           borderRadius="md"
-          onClick={onOpen}
+          onClick={() => setIsOpen(!isOpen)}
           cursor="pointer"
         >
           <Flex align="center">
@@ -59,19 +55,17 @@ function UserGetItem() {
           <Text>&gt;</Text>
         </Flex>
       </Button>
-      <Modal onClose={onClose} isOpen={isOpen}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>낙찰 물품 리스트</ModalHeader>
-          <ModalCloseButton />
+
+      <SpringModal isOpen={isOpen} setIsOpen={setIsOpen}>
+        <Box>
+          <Text>낙찰 물품 리스트</Text>
           {data.data.map((item: AuctionItem) => (
-            <ModalBody key={item.id}>{item.title}</ModalBody>
+            <VStack key={item.id}>{item.title}</VStack>
           ))}
-          <ModalFooter>
-            <Button onClick={onClose}>Close</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+
+          <Button onClick={() => setIsOpen(!isOpen)}>Close</Button>
+        </Box>
+      </SpringModal>
     </>
   );
 }
