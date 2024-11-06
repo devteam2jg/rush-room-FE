@@ -6,7 +6,7 @@ import UserParticipantInfo from '../../components/UserParticipantInfo';
 
 export default function MyPage() {
   return (
-    <Box minHeight="calc(var(--vh, 1vh) * 100)">
+    <Box minHeight="calc(var(--vh, 1vh) * 100)" position="relative">
       <Flex
         justifyContent="space-between"
         direction="column"
