@@ -12,15 +12,26 @@ import {
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import DragCloseDrawer from '../Drawer/DragCloseDrawer';
-import useBidItemInfo from '../../hooks/useBidItemInfo';
+import useItemInfo from '../../hooks/Bid/useItemInfo';
 
 interface InfoProps {
+  itemId: string;
+  backupItemId: string;
   setInfoOpen: Dispatch<SetStateAction<boolean>>;
   infoOpen: boolean;
 }
 
-function BiddingInfo({ infoOpen, setInfoOpen }: InfoProps) {
-  const { data, error, isPending } = useBidItemInfo();
+function BiddingInfo({
+  itemId,
+  infoOpen,
+  setInfoOpen,
+  backupItemId,
+}: InfoProps) {
+  console.log('바꿀게?', itemId);
+  const { data, error, isPending } = useItemInfo(
+    itemId ? { itemId } : { itemId: backupItemId }
+  );
+  console.log(data);
   const nav = useNavigate();
   const { toast } = createStandaloneToast();
 
@@ -51,7 +62,7 @@ function BiddingInfo({ infoOpen, setInfoOpen }: InfoProps) {
           <Flex>
             <HStack
               justifyContent="space-between"
-              padding={{ base: '12px', sm: '16px' }}
+              padding={{ base: '12px' }}
               alignItems="center"
               width="100%"
               top={0}
@@ -63,7 +74,7 @@ function BiddingInfo({ infoOpen, setInfoOpen }: InfoProps) {
                 gap={{ base: '10px', sm: '22px' }}
               >
                 <Avatar src={data.postedUser.profileUrl} />
-                <Text fontWeight="700" fontSize={{ base: '18px', sm: '22px' }}>
+                <Text fontWeight="700" fontSize={{ base: '18px', sm: '20px' }}>
                   {data.postedUser.nickname}
                 </Text>
               </Flex>
@@ -81,19 +92,19 @@ function BiddingInfo({ infoOpen, setInfoOpen }: InfoProps) {
         </Box>
         <Box color="#E5E5E5" bg="#222222" overflow="auto" height="40vh">
           <Box padding="12px">
-            <Text fontSize={{ base: '16px', sm: '20px' }} fontWeight="700">
+            <Text fontSize={{ base: '16px', sm: '18px' }} fontWeight="700">
               물품 제목
             </Text>
-            <Text fontSize={{ base: '14px', sm: '18px' }} fontWeight="500">
+            <Text fontSize={{ base: '14px', sm: '16px' }} fontWeight="500">
               {data.title}
             </Text>
           </Box>
           <Box height="12px" bg="#161617" />
           <Box padding="12px">
-            <Text fontSize={{ base: '16px', sm: '20px' }} fontWeight="700">
+            <Text fontSize={{ base: '16px', sm: '18px' }} fontWeight="700">
               물품 상세
             </Text>
-            <Text fontSize={{ base: '14px', sm: '18px' }} fontWeight="500">
+            <Text fontSize={{ base: '14px', sm: '16px' }} fontWeight="500">
               {data.description}
             </Text>
           </Box>

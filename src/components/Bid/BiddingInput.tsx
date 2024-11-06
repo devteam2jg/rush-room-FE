@@ -67,17 +67,17 @@ function BiddingInput({ socket, endOfMessagesRef }: InputProps) {
     <Flex
       padding="0 12px 0 12px"
       alignItems="center"
-      height={{ base: '50px', sm: '70px' }}
+      height={{ base: '50px', sm: '60px' }}
       backgroundColor="transparent"
       width="100%"
     >
       <Input
         focusBorderColor="#886CB5"
-        fontSize={{ base: '13px', sm: '20px' }}
+        fontSize={{ base: '13px', sm: '16px' }}
         marginRight="12px"
         backgroundColor="rgba(20, 20, 20, 0.4)"
         border="none"
-        height={{ base: '30px', sm: '50px' }}
+        height={{ base: '30px', sm: '40px' }}
         color="#FCFCFD"
         value={messageSent}
         onChange={handleMessageInput}
@@ -90,10 +90,10 @@ function BiddingInput({ socket, endOfMessagesRef }: InputProps) {
         }}
       />
       <Button
-        fontSize={{ base: '13px', sm: '20px' }}
+        fontSize={{ base: '13px', sm: '16px' }}
         colorScheme="mong"
         color="#FCFCFD"
-        height={{ base: '30px', sm: '50px' }}
+        height={{ base: '30px', sm: '40px' }}
         onClick={handleSendMessage}
       >
         전송

@@ -1,6 +1,6 @@
 import { Box, Container, Flex, Spinner } from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
-import { Suspense, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { RiMoneyDollarCircleLine } from 'react-icons/ri';
 import { MdOutlineInfo } from 'react-icons/md';
 import { IoListCircleOutline } from 'react-icons/io5';
@@ -10,23 +10,43 @@ import useSocketOnEnter from '../../hooks/Bid/useSocketOnEnter';
 import BiddingPrice from '../../components/Bid/BiddingPrice';
 import BiddingRaise from '../../components/Bid/BiddingRaise';
 import useBidUpdate from '../../hooks/Bid/useBidUpdate';
-import usePriceOnEnter from '../../hooks/Bid/usePriceOnEnter';
+// import usePriceOnEnter from '../../hooks/Bid/usePriceOnEnter';
 import BiddingInfo from '../../components/Bid/BiddingInfo';
 import BiddingItemList from '../../components/Bid/BiddingItemList';
+import useReceiveStart from '../../hooks/Bid/useReceiveStart';
+import SpringModal from '../../components/Modal/SpringModal';
 
 function Bid() {
   const [open, setOpen] = useState(false);
   const [infoOpen, setInfoOpen] = useState(false);
   const [itemOpen, setItemOpen] = useState(false);
-  const { auctionId, itemId } = useParams();
-  const { socket, isConnected } = useSocketOnEnter({
+  const [openResult, setOpenResult] = useState(false);
+  const { auctionId } = useParams();
+  const { socket, isConnected, initialInfo } = useSocketOnEnter({
     auctionId,
-    itemId,
   });
-  const { currentPrice, bidder } = useBidUpdate({ socket });
-  const originalPrice = usePriceOnEnter({ socket });
+  const { currentPrice, bidder, setCurrentPrice } = useBidUpdate({ socket });
+  const { receievedItemId, receievedItemPrice, status } = useReceiveStart({
+    socket,
+  });
 
-  if (!isConnected) {
+  useEffect(() => {
+    if (!initialInfo) return;
+
+    initialInfo.bidPrice = 0;
+    setCurrentPrice(0);
+    console.log('한번 초기화 갈길게요?', currentPrice);
+  }, [receievedItemId]);
+
+  useEffect(() => {
+    if (status === 'READY' || status === 'END') {
+      setOpenResult(true);
+    } else if (status === 'START') {
+      setOpenResult(false);
+    }
+  }, [status]);
+
+  if (!isConnected || !initialInfo) {
     return (
       <Flex height="100vh" justifyContent="center" alignItems="center">
         <Spinner size="xl" />
@@ -34,8 +54,23 @@ function Bid() {
     );
   }
 
+  console.log('조인할 때 다음 아이템 초기가', initialInfo.bidPrice);
+  console.log('다음 아이템 현재가', currentPrice);
+  console.log('다음 아이템 초기가', receievedItemPrice);
+
+  const priceOfItem = Math.max(
+    receievedItemPrice,
+    initialInfo.bidPrice,
+    currentPrice
+  );
+
+  console.log('그래서 결론적으로 주는 가격', priceOfItem);
+
   return (
-    <Box height="100vh" overflow="hidden">
+    <Box position="relative" height="100vh" overflow="hidden">
+      <SpringModal isOpen={openResult} setIsOpen={setOpenResult}>
+        123
+      </SpringModal>
       <Flex
         position="relative"
         justifyContent="center"
@@ -56,17 +91,18 @@ function Bid() {
           <BiddingRaise
             open={open}
             setOpen={setOpen}
-            originalPrice={originalPrice}
-            currentPrice={currentPrice}
+            priceOfItem={priceOfItem}
             socket={socket}
           />
-          <BiddingInfo infoOpen={infoOpen} setInfoOpen={setInfoOpen} />
+          <BiddingInfo
+            itemId={receievedItemId}
+            backupItemId={initialInfo.itemId}
+            infoOpen={infoOpen}
+            setInfoOpen={setInfoOpen}
+          />
           <BiddingItemList itemOpen={itemOpen} setItemOpen={setItemOpen} />
           <Box position="absolute" top={0} left={0}>
-            <BiddingPrice
-              originalPrice={originalPrice}
-              currentPrice={currentPrice}
-            />
+            <BiddingPrice priceOfItem={priceOfItem} />
           </Box>
           <Box
             position="absolute"
