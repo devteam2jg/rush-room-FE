@@ -8,7 +8,6 @@ import AuctionHistoryStore from '../../store/AuctionHistoryStore';
 import useAuctionDetail from '../../hooks/useAuctionDetail';
 import PrivateCodeModal from '../../components/PrivateCodeModal';
 
-
 function AuctionDetail() {
   const { auctionId } = useParams();
   const setLastAuction = AuctionHistoryStore((state) => state.setlastAuction);

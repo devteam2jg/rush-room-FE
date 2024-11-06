@@ -10,7 +10,7 @@ import auctions from './auction';
 import TermsOfUse from '../pages/TermsOfUsePage/TermsOfUse';
 import AuctionOverview from '../pages/AuctionOverviewPage/AuctionOverview';
 import MyPage from '../pages/myPage/myPage';
-import TestingPage from '../pages/TestingPage';
+import RTCTestPage from '../pages/RTCTestPage';
 
 const router = createBrowserRouter([
   {
@@ -55,8 +55,8 @@ const router = createBrowserRouter([
         element: <MyPage />,
       },
       {
-        path: 'test',
-        element: <TestingPage />,
+        path: 'test/:auctionId',
+        element: <RTCTestPage />,
       },
     ],
   },

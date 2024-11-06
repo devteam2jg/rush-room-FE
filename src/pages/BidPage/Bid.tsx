@@ -15,6 +15,7 @@ import BiddingInfo from '../../components/Bid/BiddingInfo';
 import BiddingItemList from '../../components/Bid/BiddingItemList';
 import useReceiveStart from '../../hooks/Bid/useReceiveStart';
 import SpringModal from '../../components/Modal/SpringModal';
+import useAuctionDetail from '../../hooks/useAuctionDetail';
 
 function Bid() {
   const [open, setOpen] = useState(false);
@@ -29,6 +30,7 @@ function Bid() {
   const { receievedItemId, receievedItemPrice, status } = useReceiveStart({
     socket,
   });
+  const { data, error, isPending } = useAuctionDetail();
 
   useEffect(() => {
     if (!initialInfo) return;
@@ -45,6 +47,18 @@ function Bid() {
       setOpenResult(false);
     }
   }, [status]);
+
+  if (isPending) {
+    return <div>Loading..</div>;
+  }
+
+  if (error) {
+    console.log(error);
+  }
+
+  const { isOwner } = data.readUser;
+
+  console.log(isOwner);
 
   if (!isConnected || !initialInfo) {
     return (
@@ -85,7 +99,7 @@ function Bid() {
           maxW="container.md"
         >
           <Suspense fallback={<Spinner />}>
-            <BiddingStream />
+            <BiddingStream isOwner={isOwner} />
           </Suspense>
 
           <BiddingRaise
