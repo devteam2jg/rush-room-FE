@@ -8,7 +8,6 @@ import AuctionHistoryStore from '../../store/AuctionHistoryStore';
 import useAuctionDetail from '../../hooks/useAuctionDetail';
 import PrivateCodeModal from '../../components/PrivateCodeModal';
 
-
 function AuctionDetail() {
   const { auctionId } = useParams();
   const setLastAuction = AuctionHistoryStore((state) => state.setlastAuction);
@@ -37,12 +36,16 @@ function AuctionDetail() {
   }
 
   return (
-    <Box height="calc(var(--vh, 1vh) * 100)">
-      <PrivateCodeModal />
+    <Box height="calc(var(--vh, 1vh) * 100)" position="relative" bg="#282828">
+      <PrivateCodeModal
+        isPrivate={data.auctionDto.isPrivate}
+        isOwner={data.readUser.isOwner}
+        endorsed={data.readUser.endorsed}
+      />
       <AuctionInfo />
       <AddAuction data={data} isOwner={data.readUser.isOwner} />
-      <Box h={4} />
-      <AuctionList headerShow="show" fontColor="black" bgColor="white" />
+      <Box h={4} bgColor="#161617" />
+      <AuctionList headerShow="show" fontColor="white" bgColor="#282828" />
     </Box>
   );
 }
