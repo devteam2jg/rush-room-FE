@@ -45,7 +45,7 @@ function BiddingInput({ socket, endOfMessagesRef }: InputProps) {
       message: messageSent,
     };
 
-    socket.emit('message', messageData);
+    socket.emit('USER_MESSAGE', messageData);
     console.log('보낸다');
     setMessageSent('');
     endOfMessagesRef.current?.scrollIntoView({ behavior: 'smooth' });

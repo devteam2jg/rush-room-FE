@@ -10,10 +10,20 @@ enum AuctionStatus {
   UNKNOWN = 'UNKNOWN',
 }
 
+interface WinnerProps {
+  bidPrice: number;
+  itemId: string;
+  name: string | null;
+  title: string;
+  type: string;
+}
+
 const useReceiveStart = ({ socket }: SocketProps) => {
   const [receievedItemId, setReceievedItemId] = useState('');
   const [receievedItemPrice, setReceievedItemPrice] = useState(0);
   const [status, setStatus] = useState<AuctionStatus>(AuctionStatus.UNKNOWN);
+  const [winnerInfo, setWinnerInfo] = useState<WinnerProps | null>(null);
+  const [sellerId, setSellerId] = useState('');
   const nav = useNavigate();
 
   useEffect(() => {
@@ -23,6 +33,7 @@ const useReceiveStart = ({ socket }: SocketProps) => {
       const { type, itemId, bidPrice } = response;
 
       if (type === 'BID_READY') {
+        setSellerId(response.sellerId);
         setStatus((prevStatus) =>
           prevStatus !== AuctionStatus.READY ? AuctionStatus.READY : prevStatus
         );
@@ -33,6 +44,8 @@ const useReceiveStart = ({ socket }: SocketProps) => {
           prevStatus !== AuctionStatus.START ? AuctionStatus.START : prevStatus
         );
       } else if (type === 'BID_END') {
+        console.log('끝났단다', response);
+        setWinnerInfo(response);
         setReceievedItemId(itemId);
         setStatus((prevStatus) =>
           prevStatus !== AuctionStatus.END ? AuctionStatus.END : prevStatus
@@ -50,7 +63,7 @@ const useReceiveStart = ({ socket }: SocketProps) => {
     };
   }, [socket]);
 
-  return { receievedItemId, receievedItemPrice, status };
+  return { receievedItemId, receievedItemPrice, status, winnerInfo, sellerId };
 };
 
 export default useReceiveStart;

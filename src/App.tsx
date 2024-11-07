@@ -1,9 +1,12 @@
 import { Box, ChakraProvider, Flex } from '@chakra-ui/react';
 import { RouterProvider } from 'react-router-dom';
 import { useEffect } from 'react';
+import JSConfetti from 'js-confetti';
 import theme from './utils/theme';
 import router from './routes';
 import './App.css';
+
+export const conteffi = new JSConfetti();
 
 function App() {
   function setScreenSize() {

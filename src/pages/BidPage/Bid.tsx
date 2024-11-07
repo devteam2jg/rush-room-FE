@@ -1,8 +1,18 @@
-import { Box, Container, Flex, Spinner } from '@chakra-ui/react';
+import {
+  Box,
+  Container,
+  Flex,
+  HStack,
+  Image,
+  Spinner,
+  Text,
+  VStack,
+} from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
 import { Suspense, useEffect, useState } from 'react';
 import { RiMoneyDollarCircleLine } from 'react-icons/ri';
 import { MdOutlineInfo } from 'react-icons/md';
+import { keyframes } from '@emotion/react';
 import { IoListCircleOutline } from 'react-icons/io5';
 import BiddingStream from '../../components/Bid/BiddingStream';
 import BiddingChatting from '../../components/Bid/BiddingChatting';
@@ -16,21 +26,59 @@ import BiddingItemList from '../../components/Bid/BiddingItemList';
 import useReceiveStart from '../../hooks/Bid/useReceiveStart';
 import SpringModal from '../../components/Modal/SpringModal';
 import useAuctionDetail from '../../hooks/useAuctionDetail';
+import { conteffi } from '../../App';
+import Winner from '../../assets/images/winner.png';
+import Cry from '../../assets/images/cry.png';
+import useAuthStore from '../../store/UserAuthStore';
 
 function Bid() {
   const [open, setOpen] = useState(false);
   const [infoOpen, setInfoOpen] = useState(false);
   const [itemOpen, setItemOpen] = useState(false);
   const [openResult, setOpenResult] = useState(false);
+  const [openReady, setOpenReady] = useState(false);
+  const [isOwner, setIsOwner] = useState(false);
   const { auctionId } = useParams();
   const { socket, isConnected, initialInfo } = useSocketOnEnter({
     auctionId,
   });
   const { currentPrice, bidder, setCurrentPrice } = useBidUpdate({ socket });
-  const { receievedItemId, receievedItemPrice, status } = useReceiveStart({
-    socket,
-  });
+  const { sellerId, receievedItemId, receievedItemPrice, status, winnerInfo } =
+    useReceiveStart({
+      socket,
+    });
   const { data, error, isPending } = useAuctionDetail();
+  const user = useAuthStore((state) => state.user);
+
+  console.log('sellerId', sellerId);
+
+  const blinkAnimation = keyframes`
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+`;
+
+  const handleConffeti = () => {
+    conteffi.addConfetti({
+      confettiColors: [
+        '#ff0a54',
+        '#ff477e',
+        '#ff7096',
+        '#ff85a1',
+        '#fbb1bd',
+        '#f9bec7',
+      ],
+      confettiRadius: 5,
+      confettiNumber: 500,
+    });
+  };
+
+  const handleSadConffeti = () => {
+    conteffi.addConfetti({
+      emojis: ['😢', '🥲', '😭', '🥺'],
+      emojiSize: 80,
+      confettiNumber: 30,
+    });
+  };
 
   useEffect(() => {
     if (!initialInfo) return;
@@ -41,12 +89,31 @@ function Bid() {
   }, [receievedItemId]);
 
   useEffect(() => {
-    if (status === 'READY' || status === 'END') {
+    if (status === 'END') {
       setOpenResult(true);
+      setOpen(false);
+      setInfoOpen(false);
+      setItemOpen(false);
+      if (winnerInfo?.name) {
+        handleConffeti();
+      }
+      if (!winnerInfo?.name) {
+        handleSadConffeti();
+      }
     } else if (status === 'START') {
+      setOpenReady(false);
+    } else if (status === 'READY') {
       setOpenResult(false);
+      setOpenReady(true);
     }
   }, [status]);
+
+  console.log('판매자', data);
+
+  useEffect(() => {
+    setIsOwner(data?.readUser.isOwner && sellerId === user?.id);
+    console.log('판매자이신가요 당신?', isOwner);
+  }, [sellerId]);
 
   if (isPending) {
     return <div>Loading..</div>;
@@ -56,13 +123,17 @@ function Bid() {
     console.log(error);
   }
 
-  const { isOwner } = data.readUser;
+  console.log('winnerInfo', winnerInfo);
 
   console.log(isOwner);
 
   if (!isConnected || !initialInfo) {
     return (
-      <Flex height="100vh" justifyContent="center" alignItems="center">
+      <Flex
+        height="calc(var(--vh, 1vh) * 100)"
+        justifyContent="center"
+        alignItems="center"
+      >
         <Spinner size="xl" />
       </Flex>
     );
@@ -81,9 +152,123 @@ function Bid() {
   console.log('그래서 결론적으로 주는 가격', priceOfItem);
 
   return (
-    <Box position="relative" height="100vh" overflow="hidden">
-      <SpringModal isOpen={openResult} setIsOpen={setOpenResult}>
-        123
+    <Box
+      position="relative"
+      width="100%"
+      height="calc(var(--vh, 1vh) * 100)"
+      overflow="hidden"
+    >
+      <SpringModal p="" isOpen={openResult} setIsOpen={setOpenResult}>
+        <VStack
+          alignItems="center"
+          justifyContent="space-evenly"
+          bg="#222222"
+          height="calc(var(--vh, 1vh) * 100)"
+          width="100%"
+          color="white"
+        >
+          {winnerInfo?.name ? (
+            <VStack
+              alignItems="center"
+              height="50%"
+              gap={3}
+              justifyContent="space-between"
+            >
+              <Text fontWeight="700" fontSize={{ base: '16px', sm: '30px' }}>
+                축하합니다 !🥳
+              </Text>
+              <Text>팽팽한 경쟁을 뚫고 낙찰 되셨습니다!</Text>
+              <Image width={{ base: '150px', sm: '200px' }} src={Winner} />
+              <HStack>
+                <Text
+                  fontSize={{ base: '16px', sm: '20px' }}
+                  color="#886CB5"
+                  fontWeight="700"
+                >
+                  {winnerInfo?.name} 님이
+                </Text>
+                <Text>{winnerInfo?.bidPrice} </Text>
+                <Text>크레딧에</Text>
+              </HStack>
+              <Text fontSize={{ base: '18px', sm: '20px' }} color="#FF8C00">
+                {winnerInfo?.title}
+              </Text>
+              <Text>낙찰 받으셨습니다!</Text>
+            </VStack>
+          ) : (
+            <VStack height="70%" justifyContent="space-between">
+              <Text fontWeight="700" fontSize={{ base: '16px', sm: '30px' }}>
+                입찰자가 없습니다...🥲
+              </Text>
+              <HStack fontSize={{ base: '17px', sm: '18px' }}>
+                <Text fontWeight="700" color="#A60029">
+                  누구도
+                </Text>
+                <Text> 입찰 하지 않았습니다..</Text>
+              </HStack>
+              <Image width={{ base: '90px', sm: '200px' }} src={Cry} />
+              <HStack fontSize={{ base: '18px', sm: '20px' }}>
+                <Text fontWeight="700" color="#F1D849">
+                  판매자님
+                </Text>
+                <Text>힘내세요..</Text>
+              </HStack>
+              <Text fontSize={{ base: '18px', sm: '20px' }} color="#FF8C00">
+                {winnerInfo?.title}
+              </Text>
+              <Text>판매자님께 돌려드릴게요..</Text>
+            </VStack>
+          )}
+          <Box
+            fontSize={{ base: '16px', sm: '20px' }}
+            animation={`${blinkAnimation} 1.5s ease-in-out infinite`}
+          >
+            <Text>잠시 후 다음 아이템 경매가 시작 됩니다..</Text>
+          </Box>
+        </VStack>
+      </SpringModal>
+      <SpringModal p="" isOpen={openReady} setIsOpen={setOpenReady}>
+        <VStack
+          alignItems="center"
+          justifyContent="space-evenly"
+          bg="#222222"
+          height="calc(var(--vh, 1vh) * 100)"
+          width="100%"
+          color="white"
+        >
+          <VStack
+            alignItems="center"
+            height="50%"
+            gap={3}
+            justifyContent="space-between"
+          >
+            <Text>다음 경매를 준비 중 이예요!</Text>
+            <Text
+              animation={`${blinkAnimation} 1.5s ease-in-out infinite`}
+              fontWeight="700"
+              fontSize={{ base: '150px', sm: '200px' }}
+            >
+              🙏
+            </Text>
+            <HStack>
+              <Text
+                fontSize={{ base: '16px', sm: '20px' }}
+                color="#886CB5"
+                fontWeight="700"
+              >
+                잠시만
+              </Text>
+              <Text>기다려 주시면 금방 넘어갈게요!</Text>
+            </HStack>
+          </VStack>
+
+          <Box
+            fontSize={{ base: '16px', sm: '20px' }}
+            animation={`${blinkAnimation} 1.5s ease-in-out infinite`}
+          >
+            <Text>곧 다음 아이템 경매가 시작 됩니다..</Text>
+          </Box>
+        </VStack>
       </SpringModal>
       <Flex
         position="relative"

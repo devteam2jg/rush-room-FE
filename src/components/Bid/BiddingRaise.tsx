@@ -160,7 +160,7 @@ function BiddingRaise({ socket, priceOfItem, open, setOpen }: RaiseProps) {
                 <Box display={{ base: 'block', sm: 'none' }}>
                   <BiTimer fontSize="20px" />
                 </Box>
-                <Text>{maxRange}</Text>
+                <Text>{priceOfItem + maxRange}</Text>
               </Flex>
             </Button>
           </Box>
@@ -176,7 +176,7 @@ function BiddingRaise({ socket, priceOfItem, open, setOpen }: RaiseProps) {
             color="#FDFDFC"
             zIndex={2}
           >
-            입찰하기 {minRange}
+            입찰하기 {priceOfItem + minRange}
           </Button>
         </Box>
       </VStack>

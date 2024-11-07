@@ -37,7 +37,7 @@ interface TestProps {
 }
 
 function RTCTestPage({ isOwner }: TestProps) {
-  const { auctionId } = useParams();
+  const { auctionId, isTest } = useParams();
   const [screenProducer, setScreenProducer] = useState<Producer | null>(null);
   const [socket, setSocket] = useState<Socket | null>(null);
   const [joined, setJoined] = useState(false);
@@ -79,13 +79,19 @@ function RTCTestPage({ isOwner }: TestProps) {
     };
   }, []);
 
+  console.log(joined);
+
   useEffect(() => {
     setRoomId(auctionId);
     if (auctionId && socket) {
       console.log('입장할게요?', auctionId);
       joinRoom();
+
+      if (joined && isTest === 'true') {
+        startCamera();
+      }
     }
-  }, [socket]);
+  }, [socket, joined]);
 
   const createDevice = async (rtpCapabilities: RtpCapabilities) => {
     const newDevice = new Device();
@@ -373,7 +379,7 @@ function RTCTestPage({ isOwner }: TestProps) {
           videoElement.srcObject = remoteStream;
           videoElement.autoplay = true;
           videoElement.style.width = '100%'; // 가로 크기를 자동으로 설정
-          videoElement.style.height = '100vh'; // 세로 크기를 화면에 맞게 설정
+          videoElement.style.height = 'calc(var(--vh, 1vh) * 100)'; // 세로 크기를 화면에 맞게 설정
           videoElement.style.objectFit = 'cover';
         } else if (consumer.kind === 'audio') {
           const audioElement = audioRef.current;

@@ -36,7 +36,7 @@ const useSocketOnEnter = ({ auctionId }: SocketProps) => {
     console.log('들어온사람', user?.id);
     console.log('들어온사람', user?.name);
 
-    newSocket.emit('join_auction', sendAuctionId);
+    newSocket.emit('JOIN', sendAuctionId);
 
     const sendonEnter = {
       auctionId,

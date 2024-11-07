@@ -24,20 +24,20 @@ function BiddingChatting({ socket, currentPrice, bidder }: ChatProps) {
   useEffect(() => {
     if (!socket) return undefined;
 
-    socket.on('message', (message: Message) => {
+    socket.on('USER_MESSAGE', (message: Message) => {
       console.log('receieved-message', message);
       setMessageList((list) => [...list, message]);
     });
 
     return () => {
-      socket.off('message');
+      socket.off('USER_MESSAGE');
     };
   }, [socket]);
 
   useEffect(() => {
     if (!socket) return;
 
-    if (bidder) {
+    if (bidder && currentPrice) {
       const highestBidder: Message = {
         auctionId: '',
         userId: 'bidderid',
