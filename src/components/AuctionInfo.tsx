@@ -1,29 +1,27 @@
 import {
   Box,
   Button,
-  Drawer,
-  DrawerBody,
-  DrawerContent,
-  DrawerHeader,
-  DrawerOverlay,
   Text,
   Flex,
   Heading,
-  useDisclosure,
   Avatar,
+  VStack,
   createStandaloneToast,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import useAuctionDetail from '../hooks/useAuctionDetail';
 import EditAuction from './EditAuctionAlert';
 import DeleteAuction from './DeleteAuctionAlert';
+import DragCloseDrawer from './Drawer/DragCloseDrawer';
+// import useAuction from '../hooks/useAuction';
 
 export default function AuctionInfo() {
   const nav = useNavigate();
   const { toast } = createStandaloneToast();
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const { data, isPending, error } = useAuctionDetail();
-
+  const [isOpen, setIsOpen] = useState(false);
+  console.log(data);
   if (isPending) {
     return <div>Loading...</div>;
   }
@@ -39,6 +37,7 @@ export default function AuctionInfo() {
       isClosable: true,
     });
   }
+
   const date = new Date(data.auctionDto.eventDate);
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
@@ -48,44 +47,62 @@ export default function AuctionInfo() {
   const seconds = String(date.getSeconds()).padStart(2, '0');
 
   return (
-    <Box bg="white" shadow="md">
-      <Flex h={16} alignItems="center" justifyContent="space-between">
-        <Button
-          bg="white"
-          onClick={() => {
-            nav('/');
-          }}
-        >
-          &lt;
-        </Button>
+    <>
+      <Box bg="#282828" shadow="md" position="relative" maxHeight="100%vh">
+        <Flex h={16} alignItems="center" justifyContent="space-between">
+          <Button
+            bgColor="transparent"
+            color="white"
+            onClick={() => {
+              nav(-1);
+            }}
+          >
+            &lt;
+          </Button>
 
-        <Box flex="1" />
+          <Box flex="1" />
 
-        <Button
-          fontSize="md"
-          fontWeight="bold"
-          variant="ghost"
-          textAlign="right"
-          onClick={onOpen}
-        >
-          경매 정보
-        </Button>
-        <Box />
-      </Flex>
-      <Drawer placement="bottom" onClose={onClose} isOpen={isOpen}>
-        <DrawerOverlay />
-        <DrawerContent borderRadius="2xl" p="4">
-          <DrawerHeader borderBottomWidth="1px" fontSize="lg">
-            <Flex alignItems="center" justifyContent="space-between" w="100%">
-              경매 정보
-              <Flex gap={2}>
-                <EditAuction />
-                <DeleteAuction />
-              </Flex>
-            </Flex>
-          </DrawerHeader>
+          <Button
+            color="white"
+            fontSize="md"
+            fontWeight="bold"
+            variant="ghost"
+            textAlign="right"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            경매 정보
+          </Button>
+          <Box />
+        </Flex>
+      </Box>
 
-          <DrawerBody>
+      <DragCloseDrawer
+        h="h-full"
+        heightValue="80vh"
+        open={isOpen}
+        setOpen={setIsOpen}
+      >
+        <Flex alignItems="center" justifyContent="space-between" w="100%">
+          <Button
+            color="white"
+            bgColor="transparent"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            &lt;
+          </Button>
+          <Flex gap={2}>
+            <EditAuction />
+            <DeleteAuction />
+          </Flex>
+        </Flex>
+        <Box p="4" bgColor="#282828" fontSize="lg">
+          <VStack
+            width="100%"
+            height="100%"
+            pt={3}
+            color="white"
+            bgColor="#282828"
+          >
             <Heading as="h5" size="sm" textAlign="left" mb={2}>
               경매 이벤트 명
             </Heading>
@@ -144,9 +161,9 @@ export default function AuctionInfo() {
             <Text fontSize="sm" mb={2} textAlign="center">
               {data.auctionDto?.privateCode}
             </Text>
-          </DrawerBody>
-        </DrawerContent>
-      </Drawer>
-    </Box>
+          </VStack>
+        </Box>
+      </DragCloseDrawer>
+    </>
   );
 }
