@@ -9,7 +9,7 @@ function BiddingProgressBar({ runtime }: ProgressProps) {
     <Progress
       borderRadius="5px"
       width="100%"
-      height={{ base: '30px', sm: '45px' }}
+      height={{ base: '40px', sm: '50px' }}
       colorScheme="purple"
       backgroundColor="#B9A5E2"
       position="absolute"

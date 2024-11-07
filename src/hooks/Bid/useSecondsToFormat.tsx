@@ -1,9 +1,13 @@
-const useSecondsToFormat = (seconds: number): string => {
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-  const remainingSeconds = seconds % 60;
+interface FormatProps {
+  currentTime: number;
+}
 
-  return seconds > 30
+const useSecondsToFormat = ({ currentTime }: FormatProps) => {
+  const hours = Math.floor(currentTime / 3600);
+  const minutes = Math.floor((currentTime % 3600) / 60);
+  const remainingSeconds = currentTime % 60;
+
+  return currentTime > 30
     ? `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`
     : `${String(remainingSeconds).padStart(2, '0')}`;
 };

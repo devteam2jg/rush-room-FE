@@ -7,16 +7,17 @@ const useBidUpdate = ({ socket }: SocketProps) => {
 
   useEffect(() => {
     if (!socket) return undefined;
-    socket?.on('bid_updated', (newBid) => {
-      setCurrentPrice(newBid.newCurrentBid);
-      setBidder(newBid.nickname);
-      console.log('bid_updated');
+    socket?.on('PRICE_UPDATE', (priceData) => {
+      setCurrentPrice(priceData.bidPrice);
+      setBidder(priceData.bidderNickname);
+      console.log('PRICE_UPDATE');
     });
     return () => {
-      socket?.off('bid_updated');
+      socket?.off('PRICE_UPDATE');
+      console.log('PRICE_UPDATE 소켓 끄기');
     };
   }, [socket]);
-  return { currentPrice, bidder };
+  return { currentPrice, bidder, setCurrentPrice };
 };
 
 export default useBidUpdate;
