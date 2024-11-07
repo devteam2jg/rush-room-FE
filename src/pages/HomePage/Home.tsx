@@ -91,11 +91,6 @@ function Home() {
             </VStack>
             <Example />
           </Box>
-
-          {/* <NewHome /> */}
-
-          {/* <SquishyCard /> */}
-
           <Navigator />
         </Box>
       </Flex>
