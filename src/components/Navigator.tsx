@@ -17,13 +17,13 @@ export default function Navigator() {
       bottom={2}
       left={2}
       right={2}
-      bg="white"
+      bg="#282828"
       boxShadow="2xl"
       border="2px solid"
       borderColor="gray.100"
       borderRadius={15}
     >
-      <Flex justify="space-around" align="center" p={2}>
+      <Flex justify="space-around" align="center" p={2} color="white">
         <Flex
           direction="column"
           align="center"

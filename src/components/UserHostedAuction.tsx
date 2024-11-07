@@ -62,7 +62,7 @@ function UserHostedAuction() {
 
       <SpringModal isOpen={isOpen} setIsOpen={setIsOpen}>
         <Box>
-          <Text>주최 경매 리스트</Text>
+          <Text color="white">주최 경매 리스트</Text>
           {data.data.map((item: { auctionDto: Auction }) => (
             <VStack key={item.auctionDto.id}>{item.auctionDto.title}</VStack>
           ))}

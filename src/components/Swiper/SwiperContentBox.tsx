@@ -96,7 +96,7 @@ function SwiperContentBox({
 
   return (
     <Box margin="0 auto" width="90vw" height="60vh">
-      <Text fontSize="12px" mb="8px">
+      <Text fontSize="12px" mb="8px" color="white">
         {labelText}
       </Text>
       {inputType === 'checkbox' ? (

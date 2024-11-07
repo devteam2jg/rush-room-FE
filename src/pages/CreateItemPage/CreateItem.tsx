@@ -12,7 +12,13 @@ function CreateItem() {
     setCurrentIndex(index);
   };
   return (
-    <Container padding="0" minW="320px" maxW="container.lg">
+    <Container
+      padding="0"
+      minW="320px"
+      maxW="container.lg"
+      height="calc(var(--vh, 1vh) * 100)"
+      bg="#282828"
+    >
       <SwiperButton
         type="prev"
         currentIndex={currentIndex}
@@ -20,7 +26,7 @@ function CreateItem() {
         sourceType="auctionItem"
       />
       <Box marginLeft="20px" marginBottom="30px">
-        <Text fontSize="20px" fontWeight={700}>
+        <Text fontSize="20px" fontWeight={700} color="white">
           등록할 물품의
           <br />
           정보를 입력해 주세요

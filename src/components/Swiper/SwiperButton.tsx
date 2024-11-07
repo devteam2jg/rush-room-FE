@@ -69,6 +69,8 @@ function SwiperButton({ type, currentIndex, slides, sourceType }: ButtonProps) {
             id="custom-prev"
             m={2}
             display={currentIndex ? 'block' : 'none'}
+            backgroundColor="transparent"
+            color="white"
           >
             &lt;
           </Button>
@@ -76,6 +78,8 @@ function SwiperButton({ type, currentIndex, slides, sourceType }: ButtonProps) {
             onClick={handleToPrevPage}
             m={2}
             display={currentIndex ? 'none' : 'block'}
+            backgroundColor="transparent"
+            color="white"
           >
             &lt;
           </Button>

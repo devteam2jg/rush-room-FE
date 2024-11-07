@@ -58,7 +58,7 @@ function UserGetItem() {
 
       <SpringModal isOpen={isOpen} setIsOpen={setIsOpen}>
         <Box>
-          <Text>낙찰 물품 리스트</Text>
+          <Text color="white">낙찰 물품 리스트</Text>
           {data.data.map((item: AuctionItem) => (
             <VStack key={item.id}>{item.title}</VStack>
           ))}

@@ -15,7 +15,14 @@ export default function CreateAuction() {
   };
 
   return (
-    <Container padding="0" minW="320px" maxW="container.lg">
+    <Container
+      height="calc(var(--vh, 1vh) * 100)"
+      bg="#282828"
+      padding="0"
+      minW="320px"
+      maxW="container.lg"
+      bgColor="#282828"
+    >
       <SwiperButton
         type="prev"
         currentIndex={currentIndex}
@@ -23,7 +30,7 @@ export default function CreateAuction() {
         sourceType="auction"
       />
       <Box marginLeft="20px" marginBottom="30px">
-        <Text fontSize="20px" fontWeight={700}>
+        <Text fontSize="20px" fontWeight={700} color="white">
           경매 방 생성을 위해
           <br />
           필요한 정보를 입력해 주세요.
