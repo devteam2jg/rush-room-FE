@@ -1,4 +1,10 @@
-import { Box, createStandaloneToast, Heading, VStack } from '@chakra-ui/react';
+import {
+  Box,
+  createStandaloneToast,
+  Divider,
+  Heading,
+  VStack,
+} from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import useAuction from '../hooks/useAuction';
 import AuctionOverviewItemList from './AuctionOverviewItem';
@@ -33,11 +39,12 @@ export default function AuctionOverviewList() {
     });
   }
   return (
-    <Box p={4} textAlign="center" bg="white">
+    <Box height="100%" p={4} textAlign="center" bg="#282828">
       <VStack spacing={4} align="flex-start">
-        <Heading as="h5" size="xm" textAlign="left">
+        <Heading as="h5" size="xm" textAlign="left" color="white">
           경매 목록 리스트
         </Heading>
+        <Divider />
         {data.data.map((item: { auctionDto: Auction }) => (
           <AuctionOverviewItemList
             auctionId={item.auctionDto.id}

@@ -1,19 +1,15 @@
 import {
+  Box,
   Button,
   Flex,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  useDisclosure,
   Text,
+  VStack,
   createStandaloneToast,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import useAuction from '../hooks/useAuction';
+import SpringModal from './Modal/SpringModal';
 
 interface Auction {
   id: string;
@@ -26,7 +22,7 @@ interface Auction {
 }
 
 function UserHostedAuction() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isOpen, setIsOpen] = useState(false);
   const nav = useNavigate();
   const { toast } = createStandaloneToast();
   const { data, error, isPending } = useAuction();
@@ -48,8 +44,15 @@ function UserHostedAuction() {
 
   return (
     <>
-      <Button onClick={onOpen}>
-        <Flex align="center" justify="space-between" p={4} borderRadius="md">
+      <Button>
+        <Flex
+          align="center"
+          justify="space-between"
+          p={4}
+          borderRadius="md"
+          onClick={() => setIsOpen(!isOpen)}
+          cursor="pointer"
+        >
           <Flex align="center">
             <Text fontSize="md">주최 경매 리스트</Text>
           </Flex>
@@ -57,21 +60,15 @@ function UserHostedAuction() {
         </Flex>
       </Button>
 
-      <Modal onClose={onClose} isOpen={isOpen}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>주최 경매 리스트</ModalHeader>
-          <ModalCloseButton />
+      <SpringModal isOpen={isOpen} setIsOpen={setIsOpen}>
+        <Box>
+          <Text color="white">주최 경매 리스트</Text>
           {data.data.map((item: { auctionDto: Auction }) => (
-            <ModalBody key={item.auctionDto.id}>
-              {item.auctionDto.title}
-            </ModalBody>
+            <VStack key={item.auctionDto.id}>{item.auctionDto.title}</VStack>
           ))}
-          <ModalFooter>
-            <Button onClick={onClose}>Close</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+          <Button onClick={() => setIsOpen(!isOpen)}>Close</Button>
+        </Box>
+      </SpringModal>
     </>
   );
 }

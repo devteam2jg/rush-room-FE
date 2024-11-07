@@ -29,7 +29,7 @@ function App() {
         >
           123
         </Box>
-        <Box width="100%" margin={{ base: '0 auto', lg: '0' }} maxWidth="430px">
+        <Box margin={{ base: '0 auto', lg: '0' }} width="100%" maxWidth="430px">
           <RouterProvider router={router} />
         </Box>
       </Flex>

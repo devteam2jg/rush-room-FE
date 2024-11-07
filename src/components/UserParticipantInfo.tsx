@@ -5,7 +5,7 @@ import UserGetItem from './UserGetItem';
 function UserParticipantInfo() {
   return (
     <Box
-      bg="white"
+      bg="#282828"
       p={6}
       borderRadius="lg"
       boxShadow="2xl"
@@ -13,7 +13,7 @@ function UserParticipantInfo() {
       w="80%"
       maxW="md"
     >
-      <Heading as="h3" size="md" mb={4} color="gray.700">
+      <Heading as="h3" size="md" mb={4} color="white">
         경매 참여 정보
       </Heading>
       <VStack spacing={4} align="stretch">
