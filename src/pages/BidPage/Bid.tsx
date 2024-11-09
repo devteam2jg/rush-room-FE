@@ -1,133 +1,63 @@
 import {
   Box,
   Container,
+  createStandaloneToast,
   Flex,
   HStack,
-  Image,
   Spinner,
-  Text,
   VStack,
 } from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
-import { Suspense, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { RiMoneyDollarCircleLine } from 'react-icons/ri';
 import { MdOutlineInfo } from 'react-icons/md';
-import { keyframes } from '@emotion/react';
 import { IoListCircleOutline } from 'react-icons/io5';
 import BiddingStream from '../../components/Bid/BiddingStream';
 import BiddingChatting from '../../components/Bid/BiddingChatting';
-import useSocketOnEnter from '../../hooks/Bid/useSocketOnEnter';
-import BiddingPrice from '../../components/Bid/BiddingPrice';
+import useOnEnterBid from '../../hooks/Bid/useOnEnterBid';
+import BiddingTimePriceInfo from '../../components/Bid/BiddingTimePriceInfo';
 import BiddingRaise from '../../components/Bid/BiddingRaise';
-import useBidUpdate from '../../hooks/Bid/useBidUpdate';
-// import usePriceOnEnter from '../../hooks/Bid/usePriceOnEnter';
 import BiddingInfo from '../../components/Bid/BiddingInfo';
 import BiddingItemList from '../../components/Bid/BiddingItemList';
-import useReceiveStart from '../../hooks/Bid/useReceiveStart';
-import SpringModal from '../../components/Modal/SpringModal';
-import useAuctionDetail from '../../hooks/useAuctionDetail';
-import { conteffi } from '../../App';
-import Winner from '../../assets/images/winner.png';
-import Cry from '../../assets/images/cry.png';
-import useAuthStore from '../../store/UserAuthStore';
+import useSocketStore from '../../store/useSocketStore';
+import BiddingControlModalOnState from '../../components/Bid/BiddingControlModalOnState';
+import useConnectOnEnter from '../../hooks/Bid/useConnectOnEnter';
+import BidHeader from '../../components/Bid/BidHeader';
+import BiddingTime from '../../components/Bid/BiddingTime';
 
 function Bid() {
+  const { auctionId } = useParams();
+  useConnectOnEnter({ auctionId });
+  const socket = useSocketStore((state) => state.socket);
   const [open, setOpen] = useState(false);
   const [infoOpen, setInfoOpen] = useState(false);
   const [itemOpen, setItemOpen] = useState(false);
-  const [openResult, setOpenResult] = useState(false);
-  const [openReady, setOpenReady] = useState(false);
-  const [isOwner, setIsOwner] = useState(false);
-  const { auctionId } = useParams();
-  const { socket, isConnected, initialInfo } = useSocketOnEnter({
-    auctionId,
-  });
-  const { currentPrice, bidder, setCurrentPrice } = useBidUpdate({ socket });
-  const { sellerId, receievedItemId, receievedItemPrice, status, winnerInfo } =
-    useReceiveStart({
-      socket,
-    });
-  const { data, error, isPending } = useAuctionDetail();
-  const user = useAuthStore((state) => state.user);
+  const [isVisible, setIsVisible] = useState(true);
 
-  console.log('sellerId', sellerId);
+  const { isConnected, initialInfo } = useOnEnterBid({ auctionId });
 
-  const blinkAnimation = keyframes`
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-`;
-
-  const handleConffeti = () => {
-    conteffi.addConfetti({
-      confettiColors: [
-        '#ff0a54',
-        '#ff477e',
-        '#ff7096',
-        '#ff85a1',
-        '#fbb1bd',
-        '#f9bec7',
-      ],
-      confettiRadius: 5,
-      confettiNumber: 500,
-    });
-  };
-
-  const handleSadConffeti = () => {
-    conteffi.addConfetti({
-      emojis: ['😢', '🥲', '😭', '🥺'],
-      emojiSize: 80,
-      confettiNumber: 30,
-    });
-  };
+  const { toast } = createStandaloneToast();
 
   useEffect(() => {
-    if (!initialInfo) return;
+    if (!socket) return undefined;
 
-    initialInfo.bidPrice = 0;
-    setCurrentPrice(0);
-    console.log('한번 초기화 갈길게요?', currentPrice);
-  }, [receievedItemId]);
+    socket.on('ALERT', (response) => {
+      toast({
+        title: '알람띄울거임',
+        description: response.message,
+        status: 'error',
+        variant: 'left-accent',
+        duration: 3000,
+        isClosable: true,
+      });
+    });
 
-  useEffect(() => {
-    if (status === 'END') {
-      setOpenResult(true);
-      setOpen(false);
-      setInfoOpen(false);
-      setItemOpen(false);
-      if (winnerInfo?.name) {
-        handleConffeti();
-      }
-      if (!winnerInfo?.name) {
-        handleSadConffeti();
-      }
-    } else if (status === 'START') {
-      setOpenReady(false);
-    } else if (status === 'READY') {
-      setOpenResult(false);
-      setOpenReady(true);
-    }
-  }, [status]);
+    return () => {
+      socket.off('ALERT');
+    };
+  }, [socket]);
 
-  console.log('판매자', data);
-
-  useEffect(() => {
-    setIsOwner(data?.readUser.isOwner && sellerId === user?.id);
-    console.log('판매자이신가요 당신?', isOwner);
-  }, [sellerId]);
-
-  if (isPending) {
-    return <div>Loading..</div>;
-  }
-
-  if (error) {
-    console.log(error);
-  }
-
-  console.log('winnerInfo', winnerInfo);
-
-  console.log(isOwner);
-
-  if (!isConnected || !initialInfo) {
+  if (!isConnected) {
     return (
       <Flex
         height="calc(var(--vh, 1vh) * 100)"
@@ -139,18 +69,6 @@ function Bid() {
     );
   }
 
-  console.log('조인할 때 다음 아이템 초기가', initialInfo.bidPrice);
-  console.log('다음 아이템 현재가', currentPrice);
-  console.log('다음 아이템 초기가', receievedItemPrice);
-
-  const priceOfItem = Math.max(
-    receievedItemPrice,
-    initialInfo.bidPrice,
-    currentPrice
-  );
-
-  console.log('그래서 결론적으로 주는 가격', priceOfItem);
-
   return (
     <Box
       position="relative"
@@ -158,119 +76,8 @@ function Bid() {
       height="calc(var(--vh, 1vh) * 100)"
       overflow="hidden"
     >
-      <SpringModal p="" isOpen={openResult} setIsOpen={setOpenResult}>
-        <VStack
-          alignItems="center"
-          justifyContent="space-evenly"
-          bg="#222222"
-          height="calc(var(--vh, 1vh) * 100)"
-          width="100%"
-          color="white"
-        >
-          {winnerInfo?.name ? (
-            <VStack
-              alignItems="center"
-              height="50%"
-              gap={3}
-              justifyContent="space-between"
-            >
-              <Text fontWeight="700" fontSize={{ base: '16px', sm: '30px' }}>
-                축하합니다 !🥳
-              </Text>
-              <Text>팽팽한 경쟁을 뚫고 낙찰 되셨습니다!</Text>
-              <Image width={{ base: '150px', sm: '200px' }} src={Winner} />
-              <HStack>
-                <Text
-                  fontSize={{ base: '16px', sm: '20px' }}
-                  color="#886CB5"
-                  fontWeight="700"
-                >
-                  {winnerInfo?.name} 님이
-                </Text>
-                <Text>{winnerInfo?.bidPrice} </Text>
-                <Text>크레딧에</Text>
-              </HStack>
-              <Text fontSize={{ base: '18px', sm: '20px' }} color="#FF8C00">
-                {winnerInfo?.title}
-              </Text>
-              <Text>낙찰 받으셨습니다!</Text>
-            </VStack>
-          ) : (
-            <VStack height="70%" justifyContent="space-between">
-              <Text fontWeight="700" fontSize={{ base: '16px', sm: '30px' }}>
-                입찰자가 없습니다...🥲
-              </Text>
-              <HStack fontSize={{ base: '17px', sm: '18px' }}>
-                <Text fontWeight="700" color="#A60029">
-                  누구도
-                </Text>
-                <Text> 입찰 하지 않았습니다..</Text>
-              </HStack>
-              <Image width={{ base: '90px', sm: '200px' }} src={Cry} />
-              <HStack fontSize={{ base: '18px', sm: '20px' }}>
-                <Text fontWeight="700" color="#F1D849">
-                  판매자님
-                </Text>
-                <Text>힘내세요..</Text>
-              </HStack>
-              <Text fontSize={{ base: '18px', sm: '20px' }} color="#FF8C00">
-                {winnerInfo?.title}
-              </Text>
-              <Text>판매자님께 돌려드릴게요..</Text>
-            </VStack>
-          )}
-          <Box
-            fontSize={{ base: '16px', sm: '20px' }}
-            animation={`${blinkAnimation} 1.5s ease-in-out infinite`}
-          >
-            <Text>잠시 후 다음 아이템 경매가 시작 됩니다..</Text>
-          </Box>
-        </VStack>
-      </SpringModal>
-      <SpringModal p="" isOpen={openReady} setIsOpen={setOpenReady}>
-        <VStack
-          alignItems="center"
-          justifyContent="space-evenly"
-          bg="#222222"
-          height="calc(var(--vh, 1vh) * 100)"
-          width="100%"
-          color="white"
-        >
-          <VStack
-            alignItems="center"
-            height="50%"
-            gap={3}
-            justifyContent="space-between"
-          >
-            <Text>다음 경매를 준비 중 이예요!</Text>
-            <Text
-              animation={`${blinkAnimation} 1.5s ease-in-out infinite`}
-              fontWeight="700"
-              fontSize={{ base: '150px', sm: '200px' }}
-            >
-              🙏
-            </Text>
-            <HStack>
-              <Text
-                fontSize={{ base: '16px', sm: '20px' }}
-                color="#886CB5"
-                fontWeight="700"
-              >
-                잠시만
-              </Text>
-              <Text>기다려 주시면 금방 넘어갈게요!</Text>
-            </HStack>
-          </VStack>
-
-          <Box
-            fontSize={{ base: '16px', sm: '20px' }}
-            animation={`${blinkAnimation} 1.5s ease-in-out infinite`}
-          >
-            <Text>곧 다음 아이템 경매가 시작 됩니다..</Text>
-          </Box>
-        </VStack>
-      </SpringModal>
       <Flex
+        zIndex={1}
         position="relative"
         justifyContent="center"
         alignItems="center"
@@ -283,25 +90,55 @@ function Bid() {
           width="100%"
           maxW="container.md"
         >
-          <Suspense fallback={<Spinner />}>
-            <BiddingStream isOwner={isOwner} />
-          </Suspense>
+          <BiddingControlModalOnState
+            setOpen={setOpen}
+            setInfoOpen={setInfoOpen}
+            setItemOpen={setItemOpen}
+          />
+
+          <Box
+            width="100%"
+            height="100%"
+            onClick={() => setIsVisible(!isVisible)}
+            zIndex={0}
+          >
+            <BiddingStream />
+          </Box>
 
           <BiddingRaise
             open={open}
             setOpen={setOpen}
-            priceOfItem={priceOfItem}
-            socket={socket}
+            initialBudget={initialInfo?.budget}
+            initialItemPrice={initialInfo?.bidPrice}
           />
           <BiddingInfo
-            itemId={receievedItemId}
-            backupItemId={initialInfo.itemId}
+            initialItemId={initialInfo?.itemId}
             infoOpen={infoOpen}
             setInfoOpen={setInfoOpen}
           />
           <BiddingItemList itemOpen={itemOpen} setItemOpen={setItemOpen} />
-          <Box position="absolute" top={0} left={0}>
-            <BiddingPrice priceOfItem={priceOfItem} />
+          <Box
+            display={isVisible ? 'block' : 'none'}
+            position="absolute"
+            p={4}
+            top={0}
+            left={0}
+            width="100%"
+            bgGradient="linear(to-t, transparent, #141517 )"
+          >
+            <VStack justifyContent="center" alignItems="start">
+              <BidHeader initialItemId={initialInfo?.itemId} />
+              <HStack
+                width="100%"
+                alignItems="start"
+                justifyContent="space-between"
+              >
+                <BiddingTimePriceInfo
+                  initialItemPrice={initialInfo?.bidPrice}
+                />
+                <BiddingTime />
+              </HStack>
+            </VStack>
           </Box>
           <Box
             position="absolute"
@@ -336,6 +173,7 @@ function Bid() {
             </Flex>
           </Box>
           <Box
+            display={isVisible ? 'block' : 'none'}
             bgGradient="linear(to-t, #141517, transparent)"
             height="40%"
             width="100%"
@@ -343,11 +181,7 @@ function Bid() {
             bottom={0}
             left={0}
           >
-            <BiddingChatting
-              bidder={bidder}
-              currentPrice={currentPrice}
-              socket={socket}
-            />
+            <BiddingChatting />
           </Box>
         </Container>
       </Flex>
