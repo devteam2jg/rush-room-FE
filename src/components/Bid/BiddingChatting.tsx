@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { Box, Flex, Text } from '@chakra-ui/react';
 import { nanoid } from 'nanoid';
-import { SocketProps } from '../../utils/types';
 import BiddingInput from './BiddingInput';
+import useSocketStore from '../../store/useSocketStore';
+import { PriceData } from './BiddingTimePriceInfo';
 
 interface Message {
   auctionId: string;
@@ -11,52 +12,63 @@ interface Message {
   nickname: string;
 }
 
-interface ChatProps extends SocketProps {
-  bidder: string;
-  currentPrice: number;
-}
-
-function BiddingChatting({ socket, currentPrice, bidder }: ChatProps) {
+function BiddingChatting() {
   const [messageList, setMessageList] = useState<Message[]>([]);
+  const [bidder, setBidder] = useState('');
+  const [currentBid, setCurrentBid] = useState(0);
+  const socket = useSocketStore((state) => state.socket);
 
-  const endOfMessagesRef = useRef<HTMLDivElement | null>(null);
+  const messageContainerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (!socket) return undefined;
 
+    const handleChatPriceBidderRecieve = (priceData: PriceData) => {
+      setCurrentBid(priceData.bidPrice);
+      setBidder(priceData.bidderNickname);
+    };
+
     socket.on('USER_MESSAGE', (message: Message) => {
-      console.log('receieved-message', message);
       setMessageList((list) => [...list, message]);
     });
 
+    socket?.on('PRICE_UPDATE', handleChatPriceBidderRecieve);
+
     return () => {
       socket.off('USER_MESSAGE');
+      socket.off('PRICE_UPDATE', handleChatPriceBidderRecieve);
     };
   }, [socket]);
 
   useEffect(() => {
     if (!socket) return;
 
-    if (bidder && currentPrice) {
+    if (bidder && currentBid) {
       const highestBidder: Message = {
         auctionId: '',
         userId: 'bidderid',
-        message: `${currentPrice.toLocaleString()} 크레딧`,
+        message: `${currentBid.toLocaleString()} 크레딧`,
         nickname: bidder,
       };
       setMessageList((list) => [...list, highestBidder]);
-      endOfMessagesRef.current?.scrollIntoView({ behavior: 'smooth' });
-      console.log('bid_updated without socket');
     }
-  }, [currentPrice]);
+  }, [currentBid]);
+
+  useEffect(() => {
+    if (messageContainerRef.current) {
+      messageContainerRef.current.scrollTop =
+        messageContainerRef.current.scrollHeight;
+    }
+  }, [messageList.length]);
 
   return (
     <>
       <Box
         width="100%"
         padding="12px 12px 0 12px"
-        height={{ base: 'calc(100% - 50px)', md: 'calc(100% - 70px)' }}
+        height={{ base: 'calc(100% - 50px)', sm: 'calc(100% - 60px)' }}
         overflowY="auto"
+        ref={messageContainerRef}
       >
         <Flex flexDirection="column" justifyContent="end">
           {messageList.map((messageContent: Message) => {
@@ -109,14 +121,9 @@ function BiddingChatting({ socket, currentPrice, bidder }: ChatProps) {
             );
           })}
         </Flex>
-        <Box
-          ref={endOfMessagesRef}
-          backgroundColor="transparent"
-          height={{ base: '20px', sm: '40px' }}
-        />
       </Box>
       <Box width="100%" position="absolute" bottom={0} left={0}>
-        <BiddingInput endOfMessagesRef={endOfMessagesRef} socket={socket} />
+        <BiddingInput socket={socket} />
       </Box>
     </>
   );
