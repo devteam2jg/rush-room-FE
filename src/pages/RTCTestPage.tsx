@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { io, Socket } from 'socket.io-client';
 import { Device } from 'mediasoup-client';
 import {
   DtlsParameters,
@@ -11,8 +10,8 @@ import {
   TransportOptions,
 } from 'mediasoup-client/lib/types';
 import { useParams } from 'react-router-dom';
-
-const SERVER_URL = 'http://192.168.1.28:3000/sfu';
+import { Image } from '@chakra-ui/react';
+import VideoSocketStore from '../store/VideoSocketStore';
 
 interface JoinRoomResponse {
   sendTransportOptions: TransportOptions;
@@ -34,64 +33,96 @@ interface MediaProducers {
 
 interface TestProps {
   isOwner: boolean;
+  cameraOff: boolean;
 }
 
-function RTCTestPage({ isOwner }: TestProps) {
-  const { auctionId, isTest } = useParams();
+function RTCTestPage({ isOwner, cameraOff }: TestProps) {
+  const socket = VideoSocketStore((state) => state.socket);
+  const { auctionId } = useParams();
   const [screenProducer, setScreenProducer] = useState<Producer | null>(null);
-  const [socket, setSocket] = useState<Socket | null>(null);
   const [joined, setJoined] = useState(false);
-  const [roomId, setRoomId] = useState<String | undefined>('');
   const [peers, setPeers] = useState<any[]>([]);
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
+  const [isVideo, setIsVideo] = useState(false);
   const [isSeller, setIsSeller] = useState(false);
+  const [agreed, setAgreed] = useState(false);
   const sendTransportRef = useRef<Transport | null>(null);
   const mediaProducers = useRef<MediaProducers>({} as MediaProducers);
   const localVideoRef = useRef<HTMLVideoElement | null>(null);
   const deviceRef = useRef<Device | null>(null);
   const recvTransportRef = useRef<Transport | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [lastReceivedEvent, setLastReceivedEvent] = useState<string>('');
+
   useEffect(() => {
-    const newSocket = io(SERVER_URL);
+    if (!socket) {
+      console.log('Socket not initialized, skipping event registration');
+      return undefined;
+    }
 
-    newSocket.on('connect', () => {
-      console.log('Connected to server:', newSocket.id);
-      setSocket(newSocket);
-    });
+    console.log('Registering event listeners, socket ID:', socket.id);
 
-    newSocket.on('new-peer', ({ peerId }) => {
+    // Debug listener registration
+    const onSellerAgreedResponse = (response) => {
+      console.log('Received seller-agreed-response:', response);
+      setLastReceivedEvent('seller-agreed-response');
+      setAgreed(response.isAgreed);
+    };
+
+    const onNewPeer = ({ peerId }) => {
+      console.log('Received new-peer event:', peerId);
+      setLastReceivedEvent('new-peer');
       setPeers((prevPeers) => [...prevPeers, peerId]);
-    });
+    };
 
-    newSocket.on('peer-left', ({ peerId }) => {
+    const onPeerLeft = ({ peerId }) => {
+      console.log('Received peer-left event:', peerId);
+      setLastReceivedEvent('peer-left');
       setPeers((prevPeers) => prevPeers.filter((id) => id !== peerId));
-    });
+    };
 
-    newSocket.on('stop-producer', () => {
-      console.log('------------stop producer-----------');
+    const onStopProducer = () => {
+      console.log('Received stop-producer event');
+      setLastReceivedEvent('stop-producer');
       stopCamera();
-    });
+    };
+
+    // Register all event listeners
+    socket.on('seller-agreed-response', onSellerAgreedResponse);
+    socket.on('new-peer', onNewPeer);
+    socket.on('peer-left', onPeerLeft);
+    socket.on('stop-producer', onStopProducer);
+
+    if (auctionId && !joined) {
+      console.log('Attempting to join room:', auctionId);
+      joinRoom();
+    }
 
     return () => {
-      newSocket.close();
-      newSocket.disconnect();
-      setSocket(null);
+      console.log('끊어');
+      stopCamera();
+      socket.off('new-peer');
+      socket.off('peer-left');
+      socket.off('stop-producer');
+      socket.off('seller-agreed-response');
     };
-  }, []);
+  }, [socket]);
 
   console.log(joined);
 
   useEffect(() => {
-    setRoomId(auctionId);
-    if (auctionId && socket) {
-      console.log('입장할게요?', auctionId);
-      joinRoom();
-
-      if (joined && isTest === 'true') {
-        startCamera();
-      }
+    if (joined && isOwner && agreed) {
+      console.log('카메라를 켜요 제발');
+      startCamera();
     }
-  }, [socket, joined]);
+  }, [agreed]);
+
+  useEffect(() => {
+    setAgreed(false);
+    if (cameraOff) {
+      stopCamera();
+    }
+  }, [cameraOff]);
 
   const createDevice = async (rtpCapabilities: RtpCapabilities) => {
     const newDevice = new Device();
@@ -117,7 +148,7 @@ function RTCTestPage({ isOwner }: TestProps) {
           socket?.emit('connect-transport', {
             transportId: newSendTransport.id,
             dtlsParameters,
-            roomId,
+            roomId: auctionId,
             peerId: socket?.id,
           });
           callback();
@@ -144,7 +175,7 @@ function RTCTestPage({ isOwner }: TestProps) {
               transportId: newSendTransport.id,
               kind,
               rtpParameters,
-              roomId,
+              roomId: auctionId,
               peerId: socket?.id,
             },
             (producerId) => {
@@ -172,7 +203,7 @@ function RTCTestPage({ isOwner }: TestProps) {
         socket?.emit('connect-transport', {
           transportId: newRecvTransport.id,
           dtlsParameters,
-          roomId,
+          roomId: auctionId,
           peerId: socket?.id,
         });
         callback();
@@ -192,12 +223,14 @@ function RTCTestPage({ isOwner }: TestProps) {
   };
 
   const joinRoom = () => {
-    if (!socket || !roomId) return;
+    console.log('------socket', socket);
+    if (!socket || !auctionId) return;
     console.log('거 드가쇼');
     socket.emit(
       'join-room',
-      { roomId, peerId: socket.id },
+      { roomId: auctionId, peerId: socket.id },
       async (response: JoinRoomResponse) => {
+        console.log('여기는 오나?');
         if (response.error) {
           console.error('Error joining room:', response.error);
           return;
@@ -233,6 +266,7 @@ function RTCTestPage({ isOwner }: TestProps) {
           await consume(producerInfo);
         }
 
+        console.log('방에 들어갈게요?');
         setJoined(true);
       }
     );
@@ -272,6 +306,8 @@ function RTCTestPage({ isOwner }: TestProps) {
   const startCamera = async () => {
     if (!sendTransportRef.current) return;
 
+    stopPrevProducer();
+
     console.log('New Creater-----');
     /* produce audio */
     const audioTrack = await getLocalAudioStreamAndTrack();
@@ -281,7 +317,6 @@ function RTCTestPage({ isOwner }: TestProps) {
 
     // setAudioProducer(newAudioProducer);
     mediaProducers.current.audioProducer = newAudioProducer;
-
     /* produce video */
     const stream = await navigator.mediaDevices.getUserMedia({
       video: {
@@ -312,6 +347,7 @@ function RTCTestPage({ isOwner }: TestProps) {
     if (localStream) {
       localStream.getTracks().forEach((track) => track.stop());
       setLocalStream(null);
+      setIsVideo(false);
     }
     if (localVideoRef.current) {
       localVideoRef.current.srcObject = null;
@@ -346,7 +382,7 @@ function RTCTestPage({ isOwner }: TestProps) {
       {
         transportId: recvTransport.id,
         producerId,
-        roomId,
+        roomId: auctionId,
         peerId: socket.id,
         rtpCapabilities: device.rtpCapabilities,
       },
@@ -424,21 +460,16 @@ function RTCTestPage({ isOwner }: TestProps) {
   };
 
   const stopPrevProducer = () => {
-    socket.emit('stop-prev-producer', { roomId });
+    socket.emit('stop-prev-producer', { roomId: auctionId });
   };
 
   return (
-    <div>
+    <div style={{ width: '100%', height: '100%' }}>
       <div style={{ display: 'none' }}>
-        <h2>Room: {roomId || '-'}</h2>
+        <h2>Room: {auctionId || '-'}</h2>
         {!joined ? (
           <div>
-            <input
-              type="text"
-              placeholder="Room ID"
-              value={roomId}
-              onChange={(e) => setRoomId(e.target.value)}
-            />
+            <input type="text" placeholder="Room ID" value={auctionId} />
             <button onClick={joinRoom}>Join Room</button>
           </div>
         ) : (
@@ -465,18 +496,32 @@ function RTCTestPage({ isOwner }: TestProps) {
           <div id="remote-media" />
         </div>
       </div>
-
-      <audio ref={audioRef}>
-        <track />
-      </audio>
-      <video
-        ref={localVideoRef}
-        autoPlay
-        playsInline
-        muted
-        width="360"
-        height="640"
-      />
+      {agreed ? (
+        <div>
+          <audio ref={audioRef}>
+            <track />
+          </audio>
+          <video
+            ref={localVideoRef}
+            autoPlay
+            playsInline
+            muted
+            style={{
+              width: '100%',
+              height: 'calc(var(--vh, 1vh) * 100)',
+              objectFit: 'cover',
+            }}
+          />
+        </div>
+      ) : (
+        <Image
+          display="block"
+          width="100%"
+          height="100%"
+          src="/images/back_temp.jpeg"
+          objectFit="cover"
+        />
+      )}
     </div>
   );
 }
