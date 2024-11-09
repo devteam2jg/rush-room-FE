@@ -1,4 +1,4 @@
-import { Box, createStandaloneToast } from '@chakra-ui/react';
+import { Box, createStandaloneToast, Spinner } from '@chakra-ui/react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import AuctionInfo from '../../components/AuctionInfo';
@@ -20,7 +20,7 @@ function AuctionDetail() {
   }, []);
 
   if (isPending) {
-    return <div>Loading...</div>;
+    return <Spinner />;
   }
 
   if (error) {

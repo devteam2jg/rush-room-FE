@@ -4,16 +4,16 @@ import axios from 'axios';
 import axiosInstance from '../../utils/AxiosInstance';
 
 interface ItemProps {
-  itemId: string;
+  reciecvedId: string | undefined;
 }
 
-const useItemInfo = ({ itemId }: ItemProps) => {
+const useItemInfo = ({ reciecvedId }: ItemProps) => {
   const { auctionId } = useParams();
 
   const getBidItemInfo = async () => {
     try {
       const { data } = await axiosInstance.get(
-        `/auction/${auctionId}/item/${itemId}`
+        `/auction/${auctionId}/item/${reciecvedId}`
       );
       return data;
     } catch (error) {
@@ -37,7 +37,7 @@ const useItemInfo = ({ itemId }: ItemProps) => {
     }
   };
   return useQuery({
-    queryKey: ['BitItemInfo', itemId],
+    queryKey: ['BitItemInfo', reciecvedId],
     queryFn: getBidItemInfo,
     staleTime: 0,
     refetchOnMount: true,

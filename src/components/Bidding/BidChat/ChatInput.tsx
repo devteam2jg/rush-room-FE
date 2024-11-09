@@ -41,7 +41,6 @@ function ChatInput({ socket }: ChatInputProps) {
     if (!socket) return undefined;
 
     socket.on('message', (message: Message) => {
-      console.log('received-message', message);
       setMessageList((list) => [...list, message]);
     });
 
@@ -54,14 +53,12 @@ function ChatInput({ socket }: ChatInputProps) {
       };
       setMessageList((list) => [...list, highestBidder]);
       endOfMessagesRef.current?.scrollIntoView({ behavior: 'smooth' });
-      console.log('bid_updated');
     });
 
     return () => {
       socket.off('message');
       socket.off('bid_updated');
       // socket.off('audioPlay');
-      console.log('socket off');
     };
   }, [socket]);
 
@@ -92,7 +89,6 @@ function ChatInput({ socket }: ChatInputProps) {
             .connect(gainNode)
             .connect(audioContext.destination);
           source.start();
-          console.log('받았으니까 재생할게요');
         });
       });
     });
@@ -153,7 +149,6 @@ function ChatInput({ socket }: ChatInputProps) {
         mediaStream.current.getTracks().forEach((track) => {
           track.stop();
         });
-        console.log('녹음 종료 할게? 끊을게?');
       }
     } else {
       try {
@@ -166,7 +161,6 @@ function ChatInput({ socket }: ChatInputProps) {
         mediaRecorder.current.ondataavailable = (e: BlobEvent) => {
           if (e.data.size > 0) {
             // chunks.current.push(e.data);
-            console.log('보낼게?');
             const audioSendData = {
               data: e.data,
               auctionId,

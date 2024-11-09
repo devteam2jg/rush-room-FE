@@ -55,8 +55,8 @@ const router = createBrowserRouter([
         element: <MyPage />,
       },
       {
-        path: 'test/:auctionId/:isTest',
-        element: <RTCTestPage isOwner />,
+        path: 'test',
+        element: <RTCTestPage />,
       },
     ],
   },
