@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Device } from 'mediasoup-client';
 import {
+  Consumer,
   DtlsParameters,
   MediaKind,
   Producer,
@@ -11,6 +12,7 @@ import {
 } from 'mediasoup-client/lib/types';
 import { useParams } from 'react-router-dom';
 import { Image } from '@chakra-ui/react';
+import { log } from 'console';
 import VideoSocketStore from '../store/VideoSocketStore';
 
 interface JoinRoomResponse {
@@ -24,11 +26,17 @@ interface JoinRoomResponse {
     kind: string;
   }[];
   error?: string;
+  isAgreed: boolean;
 }
 
 interface MediaProducers {
   videoProducer: Producer | null;
   audioProducer: Producer | null;
+}
+
+interface MediaConsumers {
+  videoConsumer: Consumer | null;
+  audioConsumer: Consumer | null;
 }
 
 interface TestProps {
@@ -50,9 +58,15 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
   const mediaProducers = useRef<MediaProducers>({} as MediaProducers);
   const localVideoRef = useRef<HTMLVideoElement | null>(null);
   const deviceRef = useRef<Device | null>(null);
+  const mediaConsumers = useRef<MediaConsumers>({
+    videoConsumer: null,
+    audioConsumer: null,
+  });
   const recvTransportRef = useRef<Transport | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [lastReceivedEvent, setLastReceivedEvent] = useState<string>('');
+
+  console.log('agreed', agreed);
 
   useEffect(() => {
     if (!socket) {
@@ -87,7 +101,22 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
       stopCamera();
     };
 
+    const onStopConsumer = () => {
+      console.log('3. stop consumer-----', mediaConsumers.current);
+      if (mediaConsumers.current) {
+        mediaConsumers.current.videoConsumer?.close();
+        mediaConsumers.current.audioConsumer?.close();
+        mediaConsumers.current = { videoConsumer: null, audioConsumer: null };
+      }
+    };
+
+    const onDisagreedCamera = (response) => {
+      setAgreed(response.isAgreed);
+    };
+
     // Register all event listeners
+    socket.on('seller-disagreed-camera-response', onDisagreedCamera);
+    socket.on('stop-consumer', onStopConsumer);
     socket.on('seller-agreed-response', onSellerAgreedResponse);
     socket.on('new-peer', onNewPeer);
     socket.on('peer-left', onPeerLeft);
@@ -99,8 +128,10 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
     }
 
     return () => {
+      setIsVideo(false);
       console.log('끊어');
       stopCamera();
+      socket.off('stop-consumer');
       socket.off('new-peer');
       socket.off('peer-left');
       socket.off('stop-producer');
@@ -108,7 +139,9 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
     };
   }, [socket]);
 
-  console.log(joined);
+  console.log('joined', joined);
+  console.log('isOwner', isOwner);
+  console.log('agreed', agreed);
 
   useEffect(() => {
     if (joined && isOwner && agreed) {
@@ -242,7 +275,10 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
           rtpCapabilities,
           peerIds,
           existingProducers,
+          isAgreed,
         } = response;
+
+        setAgreed(isAgreed);
 
         // Device 생성 및 로드
         const newDevice = await createDevice(rtpCapabilities);
@@ -303,29 +339,42 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
     });
   };
 
-  const startCamera = async () => {
+  const startProducing = async () => {
     if (!sendTransportRef.current) return;
-
-    stopPrevProducer();
 
     console.log('New Creater-----');
     /* produce audio */
-    const audioTrack = await getLocalAudioStreamAndTrack();
-    const newAudioProducer = await sendTransportRef.current.produce({
-      track: audioTrack,
-    });
 
-    // setAudioProducer(newAudioProducer);
-    mediaProducers.current.audioProducer = newAudioProducer;
     /* produce video */
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: {
-        width: { ideal: 720 }, // 원하는 가로 해상도
-        height: { ideal: 1280 }, // 원하는 세로 해상도
-      },
-    });
-    setLocalStream(stream);
+    let stream;
+    navigator.mediaDevices
+      .getUserMedia({
+        video: {
+          width: { ideal: 720 }, // 원하는 가로 해상도
+          height: { ideal: 1280 }, // 원하는 세로 해상도
+        },
+      })
+      .then((gotStream) => {
+        setLocalStream(gotStream);
+        stream = gotStream;
+      })
+      .catch((reason) => {
+        socket?.emit('seller-disagreed-camera', { roomId: auctionId });
+      });
+    // const stream = await navigator.mediaDevices.getUserMedia({
+    //   video: {
+    //     width: { ideal: 720 }, // 원하는 가로 해상도
+    //     height: { ideal: 1280 }, // 원하는 세로 해상도
+    //   },
+    // });
 
+    // if (!stream) {
+    //   console.log('거절@@@');
+    //   return;
+    // }
+
+    setLocalStream(stream);
+    if (!stream) return;
     if (localVideoRef.current) {
       localVideoRef.current.srcObject = stream;
     }
@@ -341,6 +390,13 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
     setIsSeller(true);
 
     console.log('영상틀었다요');
+    const audioTrack = await getLocalAudioStreamAndTrack();
+    const newAudioProducer = await sendTransportRef.current.produce({
+      track: audioTrack,
+    });
+
+    // setAudioProducer(newAudioProducer);
+    mediaProducers.current.audioProducer = newAudioProducer;
   };
 
   const stopCamera = () => {
@@ -367,6 +423,7 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
   const handleNewProducer = async ({ producerId, peerId, kind }) => {
     console.log(`New producer: ${producerId} from ${peerId} of kind ${kind}`);
     // stopCamera();
+    setIsVideo(true);
     await consume({ producerId, peerId, kind });
   };
 
@@ -400,6 +457,8 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
           kind: consumerData.kind,
           rtpParameters: consumerData.rtpParameters,
         });
+        if (kind === 'video') mediaConsumers.current.videoConsumer = consumer;
+        if (kind === 'audio') mediaConsumers.current.audioConsumer = consumer;
 
         // Consumer를 resume합니다.
         await consumer.resume();
@@ -459,8 +518,24 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
     }
   };
 
-  const stopPrevProducer = () => {
-    socket.emit('stop-prev-producer', { roomId: auctionId });
+  const startCamera = () => {
+    console.log(
+      '1. start camera and stop prev producer============',
+      auctionId
+    );
+    socket.emit(
+      'stop-prev-producer',
+      { roomId: auctionId, peerId: socket.id },
+      (response: boolean) => {
+        console.log('stop prev producer response+++++++++++++', response);
+        if (!response) {
+          console.log('2. No prev producer============', auctionId);
+          return;
+        }
+        console.log('2. prev prod stopped============', auctionId);
+        startProducing();
+      }
+    );
   };
 
   return (
@@ -489,39 +564,33 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
           <h2>Local Video</h2>
         </div>
         <div>
-          <button onClick={stopPrevProducer}>turn off the other</button>
-        </div>
-        <div>
           <h2>Remote Media</h2>
           <div id="remote-media" />
         </div>
       </div>
-      {agreed ? (
-        <div>
-          <audio ref={audioRef}>
-            <track />
-          </audio>
-          <video
-            ref={localVideoRef}
-            autoPlay
-            playsInline
-            muted
-            style={{
-              width: '100%',
-              height: 'calc(var(--vh, 1vh) * 100)',
-              objectFit: 'cover',
-            }}
-          />
-        </div>
-      ) : (
-        <Image
-          display="block"
-          width="100%"
-          height="100%"
-          src="/images/back_temp.jpeg"
-          objectFit="cover"
+      <div style={{ display: agreed && isVideo ? 'block' : 'none' }}>
+        <audio ref={audioRef}>
+          <track />
+        </audio>
+        <video
+          ref={localVideoRef}
+          autoPlay
+          playsInline
+          muted
+          style={{
+            width: '100%',
+            height: 'calc(var(--vh, 1vh) * 100)',
+            objectFit: 'cover',
+          }}
         />
-      )}
+      </div>
+      <Image
+        display={agreed && isVideo ? 'none' : 'block'}
+        width="100%"
+        height="100%"
+        src="/images/back_temp.jpeg"
+        objectFit="cover"
+      />
     </div>
   );
 }

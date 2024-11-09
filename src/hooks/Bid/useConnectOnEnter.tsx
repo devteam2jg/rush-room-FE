@@ -49,6 +49,7 @@ const useConnectOnEnter = ({ auctionId }: SocketProps) => {
     });
 
     return () => {
+      videoSocketRef.current?.emit('leave-room', { roomId: auctionId });
       setSocket(null);
       setVideoSocket(null);
       setSocketIsConnected(false);
