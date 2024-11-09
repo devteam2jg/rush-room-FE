@@ -6,7 +6,7 @@ interface TimeProps {
 }
 
 function BiddingSetRaceTime({ currentTime }: TimeProps) {
-  const timeText = useSecondsToFormat({ currentTime });
+  const timeText = useSecondsToFormat({ currentTime, thirtyMatters: true });
 
   return currentTime > 30 ? (
     <Text
