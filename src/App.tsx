@@ -1,4 +1,4 @@
-import { Box, ChakraProvider, Flex } from '@chakra-ui/react';
+import { Box, ChakraProvider, Flex, Image } from '@chakra-ui/react';
 import { RouterProvider } from 'react-router-dom';
 import { useEffect } from 'react';
 import theme from './utils/theme';
@@ -18,17 +18,26 @@ function App() {
       <Flex
         margin="0 auto"
         maxWidth="1280px"
+        alignItems="center"
         justifyContent="space-around"
         flexDirection={{ base: 'column', lg: 'row' }}
+        bg="#161717"
       >
-        <Box
+        {/* <Box
           display={{ base: 'none', lg: 'block' }}
           width="500px"
           height="500px"
           bg="red"
         >
           123
-        </Box>
+        </Box> */}
+        <Image
+          src="public/images/qr.svg"
+          alt="QR code"
+          display={{ base: 'none', lg: 'block' }}
+          width="500px"
+          height="500px"
+        />
         <Box margin={{ base: '0 auto', lg: '0' }} width="100%" maxWidth="430px">
           <RouterProvider router={router} />
         </Box>
