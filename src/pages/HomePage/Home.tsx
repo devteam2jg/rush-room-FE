@@ -1,14 +1,11 @@
 import { Box, Button, Flex, Heading, Image, VStack } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import { IoIosLogOut } from 'react-icons/io';
 import useAuthStore from '../../store/UserAuthStore';
 import axiosInstance from '../../utils/AxiosInstance';
 import useShowToast from '../../hooks/useShowToast';
 import Navigator from '../../components/Navigator';
 import Guide from '../../components/Guide';
 import serviceLogo from '../../assets/images/serviceLogo.png';
-import NewHome from '../../components/NewHome';
-import SquishyCard from '../../components/SquishyCard';
 import Example from '../../components/TiltCard';
 
 function Home() {
@@ -41,7 +38,7 @@ function Home() {
     <Box
       minHeight="calc(var(--vh, 1vh) * 100)"
       height="100%"
-      backgroundColor="#282828"
+      backgroundColor="#222222"
       position="relative"
       width="100%"
     >
@@ -53,7 +50,7 @@ function Home() {
         backgroundColor="#161717"
       >
         <Flex w="100%" justifyContent="space-between" align="center">
-          <Image height="50px" src={serviceLogo} />
+          <Image height="50px" src={serviceLogo} onClick={() => nav('/')} />
           <Button
             backgroundColor="transparent"
             onClick={handleLogout}
@@ -65,7 +62,6 @@ function Home() {
               borderRadius="10px"
             /> */}
             LOG OUT
-            {/* <IoIosLogOut /> */}
           </Button>
         </Flex>
 

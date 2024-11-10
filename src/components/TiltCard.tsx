@@ -49,7 +49,7 @@ function TiltCard() {
   const handleClick = () => {
     setTimeout(() => {
       nav('/overview');
-    }, 500);
+    }, 1500);
   };
 
   return (
@@ -68,18 +68,23 @@ function TiltCard() {
         style={{
           transform: 'translateZ(75px)',
           transformStyle: 'preserve-3d',
+          backgroundImage: 'url(images/home.jpg)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
         }}
         className="absolute grid bg-white shadow-lg inset-4 place-content-center rounded-xl"
       >
-        <FiMousePointer
+        {/* <FiMousePointer
           style={{
             transform: 'translateZ(75px)',
           }}
           className="mx-auto text-4xl"
-        />
+        /> */}
         <p
           style={{
             transform: 'translateZ(50px)',
+            color: 'black',
           }}
           className="text-2xl font-bold text-center"
         >
