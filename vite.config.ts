@@ -1,20 +1,23 @@
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 
-// https://vitejs.dev/config/
-/* --DEV SERVER -- */
-export default defineConfig({
-  plugins: [react()],
-  base: 'https://dev.rushroom.kr/', // prod server에는 'dev.' 떼면 끝. 그리고 .env.production 파일에서도 .dev 다 떼면 됨
-  build: {
-    chunkSizeWarningLimit: 1600,
-    manifest: true,
-    rollupOptions: {
-      input: {
-        main: './index.html',
+export default defineConfig(({ mode }) => {
+  // 환경 변수 로드
+  const env = loadEnv(mode, process.cwd(), '');
+
+  return {
+    plugins: [react()],
+    base: env.VITE_APP_API_BASE_URL || 'https://dev.rushroom.kr/', // 환경변수가 없을 경우 기본값 사용
+    build: {
+      chunkSizeWarningLimit: 1600,
+      manifest: true,
+      rollupOptions: {
+        input: {
+          main: './index.html',
+        },
       },
     },
-  },
+  };
 });
 
 /* -- LOCAL DEV SERVER -- */
