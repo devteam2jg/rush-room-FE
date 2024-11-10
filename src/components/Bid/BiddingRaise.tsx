@@ -7,45 +7,79 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { BiTimer } from 'react-icons/bi';
-import { SocketProps } from '../../utils/types';
 import useAuthStore from '../../store/UserAuthStore';
 import BiddingSetRaceTime from './BiddingSetRaceTime';
 import BiddingProgressBar from './BiddingProgressBar';
-// import BiddingPercentageRaise from './BiddingPercentageRaise';
 import DragCloseDrawer from '../Drawer/DragCloseDrawer';
 import useCurrentTime from '../../hooks/Bid/useCurrentTime';
+import { PriceData } from './BiddingTimePriceInfo';
+import useSocketStore from '../../store/useSocketStore';
 
-interface RaiseProps extends SocketProps {
+interface RaiseProps {
+  initialBudget: number | undefined;
+  initialItemPrice: number | undefined;
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
-  priceOfItem: number;
 }
 
-function BiddingRaise({ socket, priceOfItem, open, setOpen }: RaiseProps) {
-  const currentBudget = 300000;
+function BiddingRaise({
+  open,
+  setOpen,
+  initialItemPrice,
+  initialBudget,
+}: RaiseProps) {
   const { auctionId } = useParams();
   const { toast } = createStandaloneToast();
-  // const [bid, setBid] = useState<string>('');
+  const socket = useSocketStore((state) => state.socket);
   const { user } = useAuthStore((state) => state);
-  // const [isOpen, setIsOpen] = useState(false);
   const currentTime = useCurrentTime({ socket });
+  const [raisedPrice, setRaisedPrice] = useState(0);
+  const [budget, setBudget] = useState<number | undefined>(0);
 
-  const digitCount = Math.floor(Math.log10(priceOfItem) + 1);
+  const digitCount = Math.floor(Math.log10(raisedPrice) + 1);
   const minRange = 10 ** (digitCount - 1) * 0.1;
   const maxRange = (10 ** digitCount / 2) * 0.5;
 
-  // const handleSendBid = () => {
-  //   // setBid('');
-  // };
+  useEffect(() => {
+    if (!socket) return undefined;
+
+    if (!budget) {
+      setBudget(initialBudget);
+    }
+
+    if (!raisedPrice && initialItemPrice) {
+      setRaisedPrice(initialItemPrice);
+    }
+
+    const handlePriceRaiseRecieve = (priceData: PriceData) => {
+      setRaisedPrice(priceData.bidPrice);
+      setBudget(priceData.budget);
+    };
+
+    const handleRaiseItemPrice = (response: any) => {
+      const { type } = response;
+      if (type === 'BID_START') {
+        setRaisedPrice(response.bidPrice);
+      }
+    };
+
+    socket?.on('PRICE_UPDATE', handlePriceRaiseRecieve);
+
+    socket.on('NOTIFICATION', handleRaiseItemPrice);
+
+    return () => {
+      socket?.off('PRICE_UPDATE', handlePriceRaiseRecieve);
+      socket?.off('NOTIFICATION', handleRaiseItemPrice);
+    };
+  }, [socket]);
 
   const handleMinRaise = () => {
-    const bid = priceOfItem + minRange;
-    console.log('이거 보낼랑께', bid);
-    if (Number(bid) > currentBudget) {
+    const bid = raisedPrice + minRange;
+    if (budget && Number(bid) > budget) {
       toast({
         title: '실패',
         description: '예산을 초과했습니다',
@@ -63,7 +97,6 @@ function BiddingRaise({ socket, priceOfItem, open, setOpen }: RaiseProps) {
         bidderNickname: user?.name,
       };
       socket?.emit('new_bid', bidForm);
-      console.log('bid_sent', bid);
     } else {
       toast({
         title: '실패',
@@ -77,9 +110,8 @@ function BiddingRaise({ socket, priceOfItem, open, setOpen }: RaiseProps) {
   };
 
   const handleMaxRaise = () => {
-    const bid = priceOfItem + maxRange;
-    console.log('이거 보낼랑께', bid);
-    if (Number(bid) > currentBudget) {
+    const bid = raisedPrice + maxRange;
+    if (budget && Number(bid) > budget) {
       toast({
         title: '실패',
         description: '예산을 초과했습니다',
@@ -97,7 +129,6 @@ function BiddingRaise({ socket, priceOfItem, open, setOpen }: RaiseProps) {
         bidderNickname: user?.name,
       };
       socket?.emit('new_bid', bidForm);
-      console.log('bid_sent', bid);
     } else {
       toast({
         title: '실패',
@@ -134,13 +165,13 @@ function BiddingRaise({ socket, priceOfItem, open, setOpen }: RaiseProps) {
           <HStack justifyContent="space-between" width={{ base: '220px' }}>
             <Text>보유 크레딧 </Text>
             <Text fontWeight="700" color="#F1D849">
-              {currentBudget.toLocaleString()} 원
+              {budget?.toLocaleString()} 원
             </Text>
           </HStack>
           <HStack justifyContent="space-between" width={{ base: '220px' }}>
             <Text>현재 경매가</Text>
             <Text fontWeight="700" color="#FF8C00">
-              {priceOfItem.toLocaleString()}원
+              {raisedPrice.toLocaleString()}원
             </Text>
           </HStack>
         </VStack>
@@ -160,7 +191,7 @@ function BiddingRaise({ socket, priceOfItem, open, setOpen }: RaiseProps) {
                 <Box display={{ base: 'block', sm: 'none' }}>
                   <BiTimer fontSize="20px" />
                 </Box>
-                <Text>{maxRange}</Text>
+                <Text>{raisedPrice + maxRange}</Text>
               </Flex>
             </Button>
           </Box>
@@ -176,7 +207,7 @@ function BiddingRaise({ socket, priceOfItem, open, setOpen }: RaiseProps) {
             color="#FDFDFC"
             zIndex={2}
           >
-            입찰하기 {minRange}
+            입찰하기 {raisedPrice + minRange}
           </Button>
         </Box>
       </VStack>

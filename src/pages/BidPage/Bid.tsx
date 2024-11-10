@@ -1,77 +1,117 @@
-import { Box, Container, Flex, Spinner } from '@chakra-ui/react';
+import {
+  Box,
+  Container,
+  createStandaloneToast,
+  Flex,
+  HStack,
+  Spinner,
+  VStack,
+} from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
-import { Suspense, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { RiMoneyDollarCircleLine } from 'react-icons/ri';
 import { MdOutlineInfo } from 'react-icons/md';
 import { IoListCircleOutline } from 'react-icons/io5';
 import BiddingStream from '../../components/Bid/BiddingStream';
 import BiddingChatting from '../../components/Bid/BiddingChatting';
-import useSocketOnEnter from '../../hooks/Bid/useSocketOnEnter';
-import BiddingPrice from '../../components/Bid/BiddingPrice';
+import useOnEnterBid from '../../hooks/Bid/useOnEnterBid';
+import BiddingTimePriceInfo from '../../components/Bid/BiddingTimePriceInfo';
 import BiddingRaise from '../../components/Bid/BiddingRaise';
-import useBidUpdate from '../../hooks/Bid/useBidUpdate';
-// import usePriceOnEnter from '../../hooks/Bid/usePriceOnEnter';
 import BiddingInfo from '../../components/Bid/BiddingInfo';
 import BiddingItemList from '../../components/Bid/BiddingItemList';
-import useReceiveStart from '../../hooks/Bid/useReceiveStart';
-import SpringModal from '../../components/Modal/SpringModal';
+import useSocketStore from '../../store/useSocketStore';
+import BiddingControlModalOnState from '../../components/Bid/BiddingControlModalOnState';
+import useConnectOnEnter from '../../hooks/Bid/useConnectOnEnter';
+import BidHeader from '../../components/Bid/BidHeader';
+import BiddingTime from '../../components/Bid/BiddingTime';
 
 function Bid() {
+  const { auctionId } = useParams();
+  useConnectOnEnter({ auctionId });
+  const socket = useSocketStore((state) => state.socket);
   const [open, setOpen] = useState(false);
   const [infoOpen, setInfoOpen] = useState(false);
   const [itemOpen, setItemOpen] = useState(false);
-  const [openResult, setOpenResult] = useState(false);
-  const { auctionId } = useParams();
-  const { socket, isConnected, initialInfo } = useSocketOnEnter({
-    auctionId,
-  });
-  const { currentPrice, bidder, setCurrentPrice } = useBidUpdate({ socket });
-  const { receievedItemId, receievedItemPrice, status } = useReceiveStart({
-    socket,
-  });
+  const [isVisible, setIsVisible] = useState(true);
+
+  const { isConnected, initialInfo } = useOnEnterBid({ auctionId });
+
+  const { toast } = createStandaloneToast();
 
   useEffect(() => {
-    if (!initialInfo) return;
+    if (!socket) return undefined;
 
-    initialInfo.bidPrice = 0;
-    setCurrentPrice(0);
-    console.log('한번 초기화 갈길게요?', currentPrice);
-  }, [receievedItemId]);
+    socket.on('ALERT', (response) => {
+      toast.closeAll();
 
-  useEffect(() => {
-    if (status === 'READY' || status === 'END') {
-      setOpenResult(true);
-    } else if (status === 'START') {
-      setOpenResult(false);
-    }
-  }, [status]);
+      console.log(response);
 
-  if (!isConnected || !initialInfo) {
+      const { type } = response;
+      let backgroundColor;
+
+      switch (type) {
+        case 'RED':
+          console.log('오팬무', type);
+          backgroundColor = '#EDA28C';
+          break;
+        case 'YELLOW':
+          console.log('오팬무', type);
+          backgroundColor = '#EDD68C';
+          break;
+        case 'GREEN':
+          console.log('오팬무', type);
+          backgroundColor = '#8CED8F';
+          break;
+        case 'BLUE':
+          console.log('오팬무', type);
+          backgroundColor = '#8CB6ED';
+          break;
+        default:
+          backgroundColor = '#C49CF1';
+      }
+
+      toast({
+        position: 'top',
+        title: '알림',
+        description: response.message,
+        variant: 'left-accent',
+        duration: 3000,
+        isClosable: true,
+        containerStyle: {
+          maxWidth: '80%',
+          color: '#FCFCFD',
+          backgroundColor,
+          borderRadius: '15px',
+        },
+      });
+    });
+
+    return () => {
+      socket.off('ALERT');
+    };
+  }, [socket]);
+
+  if (!isConnected) {
     return (
-      <Flex height="100vh" justifyContent="center" alignItems="center">
+      <Flex
+        height="calc(var(--vh, 1vh) * 100)"
+        justifyContent="center"
+        alignItems="center"
+      >
         <Spinner size="xl" />
       </Flex>
     );
   }
 
-  console.log('조인할 때 다음 아이템 초기가', initialInfo.bidPrice);
-  console.log('다음 아이템 현재가', currentPrice);
-  console.log('다음 아이템 초기가', receievedItemPrice);
-
-  const priceOfItem = Math.max(
-    receievedItemPrice,
-    initialInfo.bidPrice,
-    currentPrice
-  );
-
-  console.log('그래서 결론적으로 주는 가격', priceOfItem);
-
   return (
-    <Box position="relative" height="100vh" overflow="hidden">
-      <SpringModal isOpen={openResult} setIsOpen={setOpenResult}>
-        123
-      </SpringModal>
+    <Box
+      position="relative"
+      width="100%"
+      height="calc(var(--vh, 1vh) * 100)"
+      overflow="hidden"
+    >
       <Flex
+        zIndex={1}
         position="relative"
         justifyContent="center"
         alignItems="center"
@@ -84,25 +124,55 @@ function Bid() {
           width="100%"
           maxW="container.md"
         >
-          <Suspense fallback={<Spinner />}>
+          <BiddingControlModalOnState
+            setOpen={setOpen}
+            setInfoOpen={setInfoOpen}
+            setItemOpen={setItemOpen}
+          />
+
+          <Box
+            width="100%"
+            height="100%"
+            onClick={() => setIsVisible(!isVisible)}
+            zIndex={0}
+          >
             <BiddingStream />
-          </Suspense>
+          </Box>
 
           <BiddingRaise
             open={open}
             setOpen={setOpen}
-            priceOfItem={priceOfItem}
-            socket={socket}
+            initialBudget={initialInfo?.budget}
+            initialItemPrice={initialInfo?.bidPrice}
           />
           <BiddingInfo
-            itemId={receievedItemId}
-            backupItemId={initialInfo.itemId}
+            initialItemId={initialInfo?.itemId}
             infoOpen={infoOpen}
             setInfoOpen={setInfoOpen}
           />
           <BiddingItemList itemOpen={itemOpen} setItemOpen={setItemOpen} />
-          <Box position="absolute" top={0} left={0}>
-            <BiddingPrice priceOfItem={priceOfItem} />
+          <Box
+            display={isVisible ? 'block' : 'none'}
+            position="absolute"
+            p={4}
+            top={0}
+            left={0}
+            width="100%"
+            bgGradient="linear(to-t, transparent, #141517 )"
+          >
+            <VStack justifyContent="center" alignItems="start">
+              <BidHeader initialItemId={initialInfo?.itemId} />
+              <HStack
+                width="100%"
+                alignItems="start"
+                justifyContent="space-between"
+              >
+                <BiddingTimePriceInfo
+                  initialItemPrice={initialInfo?.bidPrice}
+                />
+                <BiddingTime />
+              </HStack>
+            </VStack>
           </Box>
           <Box
             position="absolute"
@@ -137,6 +207,7 @@ function Bid() {
             </Flex>
           </Box>
           <Box
+            display={isVisible ? 'block' : 'none'}
             bgGradient="linear(to-t, #141517, transparent)"
             height="40%"
             width="100%"
@@ -144,11 +215,7 @@ function Bid() {
             bottom={0}
             left={0}
           >
-            <BiddingChatting
-              bidder={bidder}
-              currentPrice={currentPrice}
-              socket={socket}
-            />
+            <BiddingChatting />
           </Box>
         </Container>
       </Flex>

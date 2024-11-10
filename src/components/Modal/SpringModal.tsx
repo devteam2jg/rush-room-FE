@@ -5,9 +5,10 @@ interface Props {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   children: ReactNode;
+  p: string;
 }
 
-function SpringModal({ isOpen, setIsOpen, children }: Props) {
+function SpringModal({ isOpen, setIsOpen, children, p }: Props) {
   return (
     <AnimatePresence>
       {isOpen && (
@@ -16,7 +17,7 @@ function SpringModal({ isOpen, setIsOpen, children }: Props) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={() => setIsOpen(false)}
-          className="absolute inset-0 z-50 grid p-8 overflow-y-scroll cursor-pointer bg-slate-900/20 backdrop-blur place-items-center"
+          className={`bg-slate-900/20 backdrop-blur ${p} absolute inset-0 z-50 grid place-items-center overflow-y-scroll cursor-pointer`}
         >
           <motion.div
             initial={{ scale: 0, rotate: '12.5deg' }}

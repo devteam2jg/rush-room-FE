@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "vite build",
+    "build:staging": "vite build --mode staging",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "preview": "vite preview",
@@ -19,6 +20,8 @@
     "@tanstack/react-query": "^5.59.15",
     "axios": "^1.7.7",
     "framer-motion": "^11.11.9",
+    "js-confetti": "^0.12.0",
+    "mediasoup-client": "^3.7.17",
     "nanoid": "^5.0.7",
     "qrcode.react": "^4.1.0",
     "react": "^18.3.1",

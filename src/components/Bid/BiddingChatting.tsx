@@ -1,125 +1,114 @@
-import { useEffect, useRef, useState } from 'react';
-import { Box, Flex, Text } from '@chakra-ui/react';
+import { memo, useEffect, useRef, useState, useCallback } from 'react';
+import { Box, Flex } from '@chakra-ui/react';
 import { nanoid } from 'nanoid';
-import { SocketProps } from '../../utils/types';
 import BiddingInput from './BiddingInput';
+import useSocketStore from '../../store/useSocketStore';
+import { PriceData, Message } from '../../utils/types';
+import BiddingChatMessage from './BiddingChatMessage';
 
-interface Message {
-  auctionId: string;
-  userId: string;
-  message: string;
-  nickname: string;
+declare global {
+  interface Window {
+    addTestMessage: (message: string, nickname?: string) => void;
+    addMultipleTestMessages: (count: number) => void;
+    getMessageList: () => Message[];
+    clearMessages: () => void;
+  }
 }
 
-interface ChatProps extends SocketProps {
-  bidder: string;
-  currentPrice: number;
+const MESSAGE_LIMIT = 1000;
+
+interface MessageWithUuid extends Message {
+  uuid: string;
 }
 
-function BiddingChatting({ socket, currentPrice, bidder }: ChatProps) {
-  const [messageList, setMessageList] = useState<Message[]>([]);
+function BiddingChatting() {
+  const [messageList, setMessageList] = useState<MessageWithUuid[]>([]);
+  const [bidder, setBidder] = useState('');
+  const [currentBid, setCurrentBid] = useState(0);
+  const socket = useSocketStore((state) => state.socket);
+  const messageContainerRef = useRef<HTMLDivElement | null>(null);
 
-  const endOfMessagesRef = useRef<HTMLDivElement | null>(null);
+  const addMessage = useCallback((newMessage: Message) => {
+    const newMessageWithUuid = { ...newMessage, uuid: nanoid() };
+    setMessageList((prev) => {
+      const updatedList = [...prev, newMessageWithUuid];
+
+      if (updatedList.length > MESSAGE_LIMIT) {
+        console.log(
+          `메시지 정리: ${updatedList.length - MESSAGE_LIMIT}개 제거`
+        );
+        return updatedList.slice(-MESSAGE_LIMIT);
+      }
+
+      return updatedList;
+    });
+  }, []);
+
+  const handleChatPriceBidderRecieve = useCallback((priceData: PriceData) => {
+    setCurrentBid(priceData.bidPrice);
+    setBidder(priceData.bidderNickname);
+  }, []);
+
+  const scrollToBottom = useCallback(() => {
+    if (messageContainerRef.current) {
+      messageContainerRef.current.scrollTop =
+        messageContainerRef.current.scrollHeight;
+    }
+  }, []);
 
   useEffect(() => {
     if (!socket) return undefined;
 
-    socket.on('message', (message: Message) => {
-      console.log('receieved-message', message);
-      setMessageList((list) => [...list, message]);
-    });
+    socket.on('USER_MESSAGE', addMessage);
+    socket.on('PRICE_UPDATE', handleChatPriceBidderRecieve);
 
     return () => {
-      socket.off('message');
+      socket.off('USER_MESSAGE');
+      socket.off('PRICE_UPDATE', handleChatPriceBidderRecieve);
     };
-  }, [socket]);
+  }, [socket, addMessage, handleChatPriceBidderRecieve]);
 
   useEffect(() => {
     if (!socket) return;
 
-    if (bidder) {
+    if (bidder && currentBid) {
       const highestBidder: Message = {
         auctionId: '',
         userId: 'bidderid',
-        message: `${currentPrice.toLocaleString()} 크레딧`,
+        message: `${currentBid.toLocaleString()} 크레딧`,
         nickname: bidder,
       };
-      setMessageList((list) => [...list, highestBidder]);
-      endOfMessagesRef.current?.scrollIntoView({ behavior: 'smooth' });
-      console.log('bid_updated without socket');
+      addMessage(highestBidder);
     }
-  }, [currentPrice]);
+  }, [currentBid, bidder, socket, addMessage]);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messageList.length, scrollToBottom]);
 
   return (
     <>
       <Box
+        ref={messageContainerRef}
         width="100%"
         padding="12px 12px 0 12px"
-        height={{ base: 'calc(100% - 50px)', md: 'calc(100% - 70px)' }}
+        height={{ base: 'calc(100% - 50px)', sm: 'calc(100% - 60px)' }}
         overflowY="auto"
       >
         <Flex flexDirection="column" justifyContent="end">
-          {messageList.map((messageContent: Message) => {
-            const lastThree = messageContent.userId.slice(-3);
-            const userColor = `#${lastThree}${lastThree}`;
-            return (
-              <Box key={nanoid()}>
-                {messageContent.auctionId ? (
-                  <Flex alignItems="center" marginBottom="12px" gap="10%">
-                    <Text
-                      fontSize={{ base: '13px', sm: '18px' }}
-                      fontWeight="700"
-                      color={userColor}
-                      flexShrink={0}
-                      marginRight="12px"
-                      whiteSpace="nowrap"
-                    >
-                      {messageContent.nickname}
-                    </Text>
-                    <Text
-                      fontSize={{ base: '13px', sm: '18px' }}
-                      fontWeight="600"
-                      color="#FCFCFD"
-                      wordBreak="break-word"
-                    >
-                      {messageContent.message}
-                    </Text>
-                  </Flex>
-                ) : (
-                  <Flex
-                    borderLeft="2px solid #B9A5E2"
-                    borderRadius="0 5px 5px 0"
-                    padding="15px 10px"
-                    backgroundColor="rgba(20, 20, 20, 0.4)"
-                    fontSize={{ base: '13px', sm: '18px' }}
-                    flexDirection="column"
-                    color="#FCFCFD"
-                    marginBottom="12px"
-                  >
-                    <Text>{messageContent.nickname} 님이</Text>
-                    <Flex>
-                      <Text flexShrink={0} fontWeight="700" color="#B9A5E2">
-                        {messageContent.message}
-                      </Text>
-                      <Text flexShrink={0}>을 입찰하셨어요 👑</Text>
-                    </Flex>
-                  </Flex>
-                )}
-              </Box>
-            );
-          })}
+          {messageList.map((messageContent) => (
+            <BiddingChatMessage
+              key={messageContent.uuid}
+              messageContent={messageContent}
+            />
+          ))}
         </Flex>
-        <Box
-          ref={endOfMessagesRef}
-          backgroundColor="transparent"
-          height={{ base: '20px', sm: '40px' }}
-        />
       </Box>
       <Box width="100%" position="absolute" bottom={0} left={0}>
-        <BiddingInput endOfMessagesRef={endOfMessagesRef} socket={socket} />
+        <BiddingInput socket={socket} />
       </Box>
     </>
   );
 }
 
-export default BiddingChatting;
+export default memo(BiddingChatting);

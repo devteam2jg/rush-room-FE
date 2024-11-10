@@ -1,14 +1,10 @@
-import { RefObject, useState } from 'react';
+import { useState } from 'react';
 import { Button, createStandaloneToast, Flex, Input } from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
 import useAuthStore from '../../store/UserAuthStore';
 import { SocketProps } from '../../utils/types';
 
-interface InputProps extends SocketProps {
-  endOfMessagesRef: RefObject<HTMLElement>;
-}
-
-function BiddingInput({ socket, endOfMessagesRef }: InputProps) {
+function BiddingInput({ socket }: SocketProps) {
   const user = useAuthStore((state) => state.user);
   const [messageSent, setMessageSent] = useState('');
   const { toast } = createStandaloneToast();
@@ -45,16 +41,13 @@ function BiddingInput({ socket, endOfMessagesRef }: InputProps) {
       message: messageSent,
     };
 
-    socket.emit('message', messageData);
-    console.log('보낸다');
+    socket.emit('USER_MESSAGE', messageData);
     setMessageSent('');
-    endOfMessagesRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const handleInputEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && !e.nativeEvent.isComposing) {
       e.preventDefault();
-      console.log('엔터를 누르셨군요?');
       handleSendMessage();
     }
   };

@@ -57,7 +57,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'test',
-        element: <TestingPage />,
+        element: <RTCTestPage />,
       },
       {
         path: 'newhome',

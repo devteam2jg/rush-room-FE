@@ -1,6 +1,7 @@
 import { Grid, GridItem, Text, Button, Image } from '@chakra-ui/react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AuctionItem } from '../../utils/types';
+import useFormatPrice from '../../hooks/Bid/useFormatPrice';
 
 type ItemsProps = {
   item: AuctionItem;
@@ -12,13 +13,6 @@ function AuctionItemList({ item }: ItemsProps) {
   const handleEnterAuction = () => {
     nav(`/auction/${auctionId}/bid/${item.id}`);
   };
-  let formattedPrice = '';
-
-  if (item.startPrice / 1000 > 1) {
-    formattedPrice = `${(item.startPrice / 1000).toLocaleString()} 만원`;
-  } else {
-    formattedPrice = `${item.startPrice.toLocaleString()} 원`;
-  }
   return (
     <Grid
       width="100%"
@@ -62,7 +56,7 @@ function AuctionItemList({ item }: ItemsProps) {
           fontSize="18px"
           textAlign="center"
         >
-          {formattedPrice}
+          {useFormatPrice(item.startPrice)}
         </Text>
       </GridItem>
       <GridItem>

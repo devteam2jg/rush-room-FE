@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import {
   Avatar,
   Box,
@@ -10,30 +10,43 @@ import {
   Spinner,
   Text,
 } from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import DragCloseDrawer from '../Drawer/DragCloseDrawer';
 import useItemInfo from '../../hooks/Bid/useItemInfo';
+import useSocketStore from '../../store/useSocketStore';
 
 interface InfoProps {
-  itemId: string;
-  backupItemId: string;
+  initialItemId: string | undefined;
   setInfoOpen: Dispatch<SetStateAction<boolean>>;
   infoOpen: boolean;
 }
 
-function BiddingInfo({
-  itemId,
-  infoOpen,
-  setInfoOpen,
-  backupItemId,
-}: InfoProps) {
-  console.log('바꿀게?', itemId);
+function BiddingInfo({ initialItemId, infoOpen, setInfoOpen }: InfoProps) {
+  const [reciecvedId, setRecievedId] = useState('');
+  const { auctionId } = useParams();
+  const socket = useSocketStore((state) => state.socket);
   const { data, error, isPending } = useItemInfo(
-    itemId ? { itemId } : { itemId: backupItemId }
+    reciecvedId ? { reciecvedId } : { reciecvedId: initialItemId }
   );
-  console.log(data);
   const nav = useNavigate();
   const { toast } = createStandaloneToast();
+
+  useEffect(() => {
+    if (!auctionId || !socket) return undefined;
+
+    const hanldItemIdRecieve = (response: any) => {
+      const { type } = response;
+      if (type === 'BID_START') {
+        setRecievedId(response.itemId);
+      }
+    };
+
+    socket.on('NOTIFICATION', hanldItemIdRecieve);
+
+    return () => {
+      socket.off('NOTIFICATION', hanldItemIdRecieve);
+    };
+  }, [socket]);
 
   if (isPending) {
     return <Spinner />;
@@ -90,7 +103,12 @@ function BiddingInfo({
           </Flex>
           <Divider borderColor="#494949" />
         </Box>
-        <Box color="#E5E5E5" bg="#222222" overflow="auto" height="40vh">
+        <Box
+          color="#E5E5E5"
+          bg="#222222"
+          overflow="auto"
+          height="calc(40vh - 48px)"
+        >
           <Box padding="12px">
             <Text fontSize={{ base: '16px', sm: '18px' }} fontWeight="700">
               물품 제목
