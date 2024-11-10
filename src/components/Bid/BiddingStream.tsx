@@ -40,6 +40,12 @@ function BiddingStream() {
   }, [sellerId]);
 
   useEffect(() => {
+    if (confirmed) {
+      setIsOpen(false);
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
     if (!socket) return undefined;
 
     const handleSellerId = (response: any) => {
@@ -52,10 +58,24 @@ function BiddingStream() {
       } else if (type === 'BID_END') {
         setCameraOff(true);
         setConfirmed(false);
+      } else if (type === 'CAMERA_REQUEST') {
+        console.log('너 꺼래 켜라');
+        setIsOwner(true);
+        setIsOpen(true);
       }
     };
 
     socket.on('NOTIFICATION', handleSellerId);
+
+    const sendCameraRequest = {
+      auctionId,
+      type: 'CAMERA',
+      userId: user?.id,
+    };
+
+    socket.emit('CONTEXT', sendCameraRequest);
+
+    console.log('야 나 주인이니?');
 
     return () => {
       socket.off('NOTIFICATION', handleSellerId);

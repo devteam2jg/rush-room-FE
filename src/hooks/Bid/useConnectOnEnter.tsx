@@ -15,12 +15,13 @@ const useConnectOnEnter = ({ auctionId }: SocketProps) => {
   const setVideoSocket = VideoSocketStore((state) => state.setSocket);
   const setVideoIsConnected = VideoSocketStore((state) => state.setIsConnected);
   const baseURL = import.meta.env.VITE_APP_SOCKET_URL;
+  const GAME_SERVER_URL = `${baseURL}/game`;
   const MEDIA_SERVER_URL = `${baseURL}/media`;
 
   useEffect(() => {
     if (!auctionId) return undefined;
 
-    const newSocket = io(`${baseURL}/game`, {
+    const newSocket = io(GAME_SERVER_URL, {
       path: '/game/socket.io',
     });
     const newVideoSocket = io(MEDIA_SERVER_URL, {

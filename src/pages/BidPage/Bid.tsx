@@ -42,13 +42,47 @@ function Bid() {
     if (!socket) return undefined;
 
     socket.on('ALERT', (response) => {
+      toast.closeAll();
+
+      console.log(response);
+
+      const { type } = response;
+      let backgroundColor;
+
+      switch (type) {
+        case 'RED':
+          console.log('오팬무', type);
+          backgroundColor = '#EDA28C';
+          break;
+        case 'YELLOW':
+          console.log('오팬무', type);
+          backgroundColor = '#EDD68C';
+          break;
+        case 'GREEN':
+          console.log('오팬무', type);
+          backgroundColor = '#8CED8F';
+          break;
+        case 'BLUE':
+          console.log('오팬무', type);
+          backgroundColor = '#8CB6ED';
+          break;
+        default:
+          backgroundColor = '#C49CF1';
+      }
+
       toast({
-        title: '알람띄울거임',
+        position: 'top',
+        title: '알림',
         description: response.message,
-        status: 'error',
         variant: 'left-accent',
         duration: 3000,
         isClosable: true,
+        containerStyle: {
+          maxWidth: '80%',
+          color: '#FCFCFD',
+          backgroundColor,
+          borderRadius: '15px',
+        },
       });
     });
 

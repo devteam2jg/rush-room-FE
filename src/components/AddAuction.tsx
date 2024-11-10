@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { AuctionItem } from '../utils/types';
 import useUpdateAuctionStatus from '../hooks/useUpdateAuctionStatus';
 import useAuctionStore from '../store/AuctionStore';
+import axiosInstance from '../utils/AxiosInstance';
 
 interface Data {
   data: {
@@ -23,13 +24,21 @@ export default function AddAuction({ data, isOwner }: Data) {
   const { updateField } = useAuctionStore();
 
   // 시작하기 눌렀을 때 동작하는 함수
-  const handleStartAuction = () => {
+  const handleStartAuction = async () => {
     if (data.items && data.items.length > 0) {
       setIsStarted(true);
       updateField('status', data.auctionDto.status);
       mutationUpdateStatus.mutate();
     } else {
       console.error('아이템이 생성되지 않습니다.');
+    }
+    try {
+      const { data: dataBE } = await axiosInstance.get(
+        `/game/start/${auctionId}`
+      );
+      console.log(dataBE);
+    } catch (error) {
+      console.log(error);
     }
   };
 

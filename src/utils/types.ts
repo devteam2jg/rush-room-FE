@@ -32,3 +32,15 @@ export interface AuctionBidItem {
 export interface SocketProps {
   socket: Socket | null;
 }
+
+export interface Message {
+  auctionId: string;
+  userId: string;
+  message: string;
+  nickname: string;
+}
+
+export interface PriceData {
+  bidPrice: number;
+  bidderNickname: string;
+}

@@ -339,28 +339,49 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
     });
   };
 
+  const getStream = async () => {
+    let stream;
+
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          width: { ideal: 720 },
+          height: { ideal: 1280 },
+        },
+      });
+
+      setLocalStream(stream);
+      return stream; // 성공 시 stream 반환
+    } catch (error) {
+      console.log('카메라 켜기 싫대요', error);
+      socket?.emit('seller-disagreed-camera', { roomId: auctionId });
+    }
+  };
+
   const startProducing = async () => {
     if (!sendTransportRef.current) return;
 
     console.log('New Creater-----');
+
+    const stream = await getStream();
     /* produce audio */
 
     /* produce video */
-    let stream;
-    navigator.mediaDevices
-      .getUserMedia({
-        video: {
-          width: { ideal: 720 }, // 원하는 가로 해상도
-          height: { ideal: 1280 }, // 원하는 세로 해상도
-        },
-      })
-      .then((gotStream) => {
-        setLocalStream(gotStream);
-        stream = gotStream;
-      })
-      .catch((reason) => {
-        socket?.emit('seller-disagreed-camera', { roomId: auctionId });
-      });
+    // let stream;
+    // navigator.mediaDevices
+    //   .getUserMedia({
+    //     video: {
+    //       width: { ideal: 720 }, // 원하는 가로 해상도
+    //       height: { ideal: 1280 }, // 원하는 세로 해상도
+    //     },
+    //   })
+    //   .then((gotStream) => {
+    //     setLocalStream(gotStream);
+    //     stream = gotStream;
+    //   })
+    //   .catch((reason) => {
+    //     socket?.emit('seller-disagreed-camera', { roomId: auctionId });
+    //   });
     // const stream = await navigator.mediaDevices.getUserMedia({
     //   video: {
     //     width: { ideal: 720 }, // 원하는 가로 해상도
@@ -372,31 +393,30 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
     //   console.log('거절@@@');
     //   return;
     // }
+    if (stream) {
+      if (localVideoRef.current) {
+        localVideoRef.current.srcObject = stream;
+      }
 
-    setLocalStream(stream);
-    if (!stream) return;
-    if (localVideoRef.current) {
-      localVideoRef.current.srcObject = stream;
+      const videoTrack = stream.getVideoTracks()[0];
+
+      // 비디오 Producer 생성
+      const newVideoProducer = await sendTransportRef.current.produce({
+        track: videoTrack,
+      });
+      // setVideoProducer(newVideoProducer);
+      mediaProducers.current.videoProducer = newVideoProducer;
+      setIsSeller(true);
+
+      console.log('영상틀었다요');
+      const audioTrack = await getLocalAudioStreamAndTrack();
+      const newAudioProducer = await sendTransportRef.current.produce({
+        track: audioTrack,
+      });
+
+      // setAudioProducer(newAudioProducer);
+      mediaProducers.current.audioProducer = newAudioProducer;
     }
-
-    const videoTrack = stream.getVideoTracks()[0];
-
-    // 비디오 Producer 생성
-    const newVideoProducer = await sendTransportRef.current.produce({
-      track: videoTrack,
-    });
-    // setVideoProducer(newVideoProducer);
-    mediaProducers.current.videoProducer = newVideoProducer;
-    setIsSeller(true);
-
-    console.log('영상틀었다요');
-    const audioTrack = await getLocalAudioStreamAndTrack();
-    const newAudioProducer = await sendTransportRef.current.produce({
-      track: audioTrack,
-    });
-
-    // setAudioProducer(newAudioProducer);
-    mediaProducers.current.audioProducer = newAudioProducer;
   };
 
   const stopCamera = () => {
@@ -568,7 +588,7 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
           <div id="remote-media" />
         </div>
       </div>
-      <div style={{ display: agreed && isVideo ? 'block' : 'none' }}>
+      <div style={{ display: agreed ? 'block' : 'none' }}>
         <audio ref={audioRef}>
           <track />
         </audio>
@@ -585,7 +605,7 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
         />
       </div>
       <Image
-        display={agreed && isVideo ? 'none' : 'block'}
+        display={agreed ? 'none' : 'block'}
         width="100%"
         height="100%"
         src="/images/back_temp.jpeg"

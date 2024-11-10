@@ -25,7 +25,7 @@ const useUpdateAuctionStatus = () => {
     mutationFn: UpdateAuctionStatus,
     onSuccess: () => {
       showToast('Success', '경매가 시작되었습니다.', 'success');
-      nav(`/auction/${auctionId}/bid/${itemId}`);
+      // nav(`/auction/${auctionId}/bid/${itemId}`);
     },
     onError: (error) => {
       showToast('Error', `${error}`, 'error');
