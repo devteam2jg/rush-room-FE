@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { io, Socket } from 'socket.io-client';
 import useSocketStore from '../../store/useSocketStore';
 import VideoSocketStore from '../../store/VideoSocketStore';
@@ -15,37 +15,49 @@ const useConnectOnEnter = ({ auctionId }: SocketProps) => {
   const setVideoSocket = VideoSocketStore((state) => state.setSocket);
   const setVideoIsConnected = VideoSocketStore((state) => state.setIsConnected);
   const baseURL = import.meta.env.VITE_APP_SOCKET_URL;
-  const SERVER_URL = 'https://sfu.rushroom.kr/sfu';
+  const MEDIA_SERVER_URL = `${baseURL}/media`;
 
   useEffect(() => {
     if (!auctionId) return undefined;
 
-    const newSocket = io(`${baseURL}/auction-execute`);
-    const newVideoSocket = io(SERVER_URL);
+    const newSocket = io(`${baseURL}/game`, {
+      path: '/game/socket.io',
+    });
+    const newVideoSocket = io(MEDIA_SERVER_URL, {
+      path: '/media/socket.io',
+    });
 
     newSocket?.on('connect', () => {
       // setIsConnected(true);
       socketRef.current = newSocket;
       setSocket(newSocket);
       setSocketIsConnected(true);
-      console.log('Socket connected', newSocket);
+      console.log('Game Socket connected', newSocket.id);
+    });
+
+    newSocket.on('connect_error', (error) => {
+      console.log('Game Socket connect_error:', error);
     });
 
     newVideoSocket.on('connect', () => {
       videoSocketRef.current = newVideoSocket;
       setVideoSocket(newVideoSocket);
       setVideoIsConnected(true);
-      console.log('Connected to server:', newSocket.id);
+      console.log('Stream Connected to server:', newVideoSocket.id);
+    });
+
+    newVideoSocket.on('connect_error', (error) => {
+      console.log('Stream Socket connect_error:', error);
     });
 
     newSocket?.on('disconnect', (reason) => {
       setSocketIsConnected(false);
-      console.log('Socket disconnected', reason);
+      console.log('Game Socket disconnected', reason);
     });
 
     newVideoSocket?.on('disconnect', (reason) => {
       setVideoIsConnected(false);
-      console.log('Video Socket disconnected', reason);
+      console.log('Stream Video Socket disconnected', reason);
     });
 
     return () => {
