@@ -22,6 +22,7 @@ export default function Navigator() {
       border="2px solid"
       borderColor="gray.100"
       borderRadius={15}
+      zIndex={1000}
     >
       <Flex justify="space-around" align="center" p={2} color="white">
         <Flex
