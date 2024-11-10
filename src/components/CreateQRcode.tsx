@@ -9,10 +9,11 @@ function CreateQRcode() {
       <h1>QR CODE</h1>
       <QRCodeCanvas
         className="border-4 border-primary rounded-xl"
-        fgColor="#B9A5E2"
         size={200}
-        onClick={() => nav('/')}
-        value="/"
+        onClick={() => nav('/newhome')}
+        value="URL주소"
+        bgColor="#161717"
+        fgColor="#B9A5E2"
       />
     </section>
   );

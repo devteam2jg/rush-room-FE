@@ -10,7 +10,8 @@ import auctions from './auction';
 import TermsOfUse from '../pages/TermsOfUsePage/TermsOfUse';
 import AuctionOverview from '../pages/AuctionOverviewPage/AuctionOverview';
 import MyPage from '../pages/myPage/myPage';
-import RTCTestPage from '../pages/RTCTestPage';
+import TestingPage from '../pages/TestingPage';
+import NewHome from '../pages/NewHomePage/NewHome';
 
 const router = createBrowserRouter([
   {
@@ -57,6 +58,10 @@ const router = createBrowserRouter([
       {
         path: 'test',
         element: <RTCTestPage />,
+      },
+      {
+        path: 'newhome',
+        element: <NewHome />,
       },
     ],
   },

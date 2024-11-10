@@ -1,16 +1,19 @@
-import { Image, Flex } from '@chakra-ui/react';
+import { Image, Flex, Box } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 import Navigator from '../../components/Navigator';
 import serviceLogo from '../../assets/images/serviceLogo.png';
 import AuctionOverviewList from '../../components/AuctionOverviewList';
 
 export default function AuctionOverview() {
+  const nav = useNavigate();
+
   return (
-    <>
-      <Flex backgroundColor="white" justifyContent="space-between">
-        <Image height="50px" src={serviceLogo} />
+    <Box height="calc(var(--vh, 1vh) * 100)" position="relative">
+      <Flex backgroundColor="#161717" justifyContent="space-between">
+        <Image height="50px" src={serviceLogo} onClick={() => nav('/')} />
       </Flex>
       <AuctionOverviewList />
       <Navigator />
-    </>
+    </Box>
   );
 }

@@ -9,7 +9,8 @@
     "build:staging": "vite build --mode staging",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "clean": "rm -rf node_modules/.vite"
   },
   "dependencies": {
     "@chakra-ui/react": "^2.10.3",

@@ -28,7 +28,7 @@ function UserAuctionStats() {
     });
   }
   return (
-    <Box w="100%" p={6} backgroundColor="#886CB5">
+    <Box w="100%" p={6} backgroundColor="#222222">
       <Flex justifyContent="space-between" alignItems="center" mb={4}>
         <Text fontSize="lg" fontWeight="bold" color="white">
           경매 주최 횟수
@@ -38,7 +38,7 @@ function UserAuctionStats() {
         </Text>
       </Flex>
       <Flex justifyContent="space-between">
-        <VStack bg="#C9B0F1" borderRadius="md" p={4} w="30%" align="center">
+        <VStack bg="#282828" borderRadius="md" p={4} w="30%" align="center">
           <Text fontSize="sm" fontWeight="bold" color="white">
             낙찰
           </Text>
@@ -47,7 +47,7 @@ function UserAuctionStats() {
           </Text>
         </VStack>
         <VStack
-          bg="#C9B0F1"
+          bg="#282828"
           borderRadius="md"
           p={4}
           w="30%"
@@ -60,7 +60,7 @@ function UserAuctionStats() {
             5
           </Text>
         </VStack>
-        <VStack bg="#C9B0F1" borderRadius="md" p={4} w="30%">
+        <VStack bg="#282828" borderRadius="md" p={4} w="30%">
           <Text fontSize="sm" fontWeight="bold" color="white">
             최고 금액 갱신
           </Text>

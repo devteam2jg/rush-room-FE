@@ -37,6 +37,7 @@ function UserProfile() {
         alignItems="center"
         justifyContent="space-between"
         boxShadow="md"
+        borderBottomRadius="2xl"
       >
         <Heading as="h1" size="lg" fontWeight="900">
           {data.name}

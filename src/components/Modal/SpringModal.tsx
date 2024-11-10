@@ -24,7 +24,7 @@ function SpringModal({ isOpen, setIsOpen, children, p }: Props) {
             animate={{ scale: 1, rotate: '0deg' }}
             exit={{ scale: 0, rotate: '0deg' }}
             onClick={(e) => e.stopPropagation()}
-            className="rounded-lg w-full max-w-lg shadow-xl cursor-default relative overflow-hidden"
+            className="relative w-full max-w-lg overflow-hidden rounded-lg shadow-xl cursor-default"
           >
             {children}
           </motion.div>

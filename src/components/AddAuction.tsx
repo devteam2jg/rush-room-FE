@@ -43,11 +43,11 @@ export default function AddAuction({ data, isOwner }: Data) {
   };
 
   return (
-    <Box p={4} textAlign="center" bg="white">
+    <Box p={4} textAlign="center" bg="#282828">
       {isOwner ? (
         <>
           <VStack spacing={4} align="flex-start">
-            <Heading as="h1" size="ms" textAlign="left">
+            <Heading as="h1" size="ms" textAlign="left" color="white">
               경매 대기 중이에요. <br />
               준비가 되었다면 경매를 시작해주세요.
             </Heading>
@@ -101,7 +101,7 @@ export default function AddAuction({ data, isOwner }: Data) {
       ) : (
         <>
           <VStack spacing={4} align="flex-start">
-            <Heading as="h1" size="ms" textAlign="left">
+            <Heading as="h1" size="ms" textAlign="left" color="white">
               등록된 물품이 없어요. <br />
               버튼을 눌러 등록해 보세요.
             </Heading>
