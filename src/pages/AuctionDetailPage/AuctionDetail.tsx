@@ -36,7 +36,12 @@ function AuctionDetail() {
   }
 
   return (
-    <Box height="calc(var(--vh, 1vh) * 100)" position="relative" bg="#282828">
+    <Box
+      overflowY="auto"
+      height="calc(var(--vh, 1vh) * 100)"
+      position="relative"
+      bg="#282828"
+    >
       <PrivateCodeModal
         isPrivate={data.auctionDto.isPrivate}
         isOwner={data.readUser.isOwner}

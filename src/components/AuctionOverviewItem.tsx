@@ -37,13 +37,13 @@ function AuctionOverviewItem({ item, auctionId }: AuctionProps) {
       onClick={handleEnterAuctionOverview}
       color="white"
     >
-      <VStack flex="2" gap={-10} alignItems="flex-start">
+      <VStack gap={2} alignItems="flex-start">
         <Text fontSize="15px" fontWeight={700}>
           {item.title}
         </Text>
         <Text fontSize="13px">{`${year}년 ${month}월 ${day}일 ${hours}시 ${minutes}분`}</Text>
       </VStack>
-      <Text fontWeight={700} fontSize="18px" flex="1">
+      <Text fontWeight={700} fontSize="18px">
         {item.status}
       </Text>
     </HStack>

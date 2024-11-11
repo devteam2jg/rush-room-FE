@@ -22,6 +22,7 @@ export default function CreateAuction() {
       minW="320px"
       maxW="container.lg"
       bgColor="#282828"
+      overflow="hidden"
     >
       <SwiperButton
         type="prev"
