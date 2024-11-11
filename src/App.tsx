@@ -16,51 +16,36 @@ function App() {
   });
   return (
     <ChakraProvider theme={theme}>
-      <Box bg="#161717">
+      <Flex
+        height="calc(var(--vh, 1vh) * 100)"
+        bg="#161717"
+        gap="200px"
+        alignItems="center"
+        justifyContent="center"
+        flexDirection={{ base: 'column', lg: 'row' }}
+      >
         <Flex
-          margin="0 auto"
-          maxWidth="1280px"
-          alignItems="center"
-          justifyContent="space-around"
-          flexDirection={{ base: 'column', lg: 'row' }}
-        >
-          {/* <Box
           display={{ base: 'none', lg: 'block' }}
-          width="500px"
-          height="500px"
-          bg="red"
+          flexDirection="column"
+          justifyContent="center"
+          alignItems="center"
         >
-          123
-        </Box> */}
-          <Flex
-            gap={4}
-            flexDirection="column"
-            justifyContent="center"
-            alignItems="center"
-          >
-            <Image width="250px" src={ServiceLogo} />
-            <Text color="#FCFCFD" fontSize="20px">
-              지금 경매에 참여해 보세요!
-            </Text>
-            <Image
-              borderRadius="15px"
-              src="/images/qr.svg"
-              alt="QR code"
-              display={{ base: 'none', lg: 'block' }}
-              width="300px"
-              height="300px"
-            />
-          </Flex>
-
-          <Box
-            margin={{ base: '0 auto', lg: '0' }}
-            width="100%"
-            maxWidth="430px"
-          >
-            <RouterProvider router={router} />
-          </Box>
+          <Image width="250px" src={ServiceLogo} />
+          <Text color="#FCFCFD" fontSize="20px">
+            지금 경매에 참여해 보세요!
+          </Text>
+          <Image
+            borderRadius="15px"
+            src="/images/qr.svg"
+            alt="QR code"
+            width="300px"
+            height="300px"
+          />
         </Flex>
-      </Box>
+        <Box width="100%" maxWidth="430px">
+          <RouterProvider router={router} />
+        </Box>
+      </Flex>
     </ChakraProvider>
   );
 }

@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import { createStandaloneToast, Box } from '@chakra-ui/react';
+import { createStandaloneToast, Box, Text } from '@chakra-ui/react';
 import useAuction from '../../hooks/useAuction';
 import { AuctionItem } from '../../utils/types';
 
@@ -39,7 +39,7 @@ interface ItemProps {
 }
 
 function Card({ auctionDto, ownerProfile }: ItemProps) {
-  console.log(ownerProfile);
+  // console.log(ownerProfile);
   return (
     <div className="relative w-40 p-3 rounded-lg h-72 shrink-0">
       <span className="absolute w-fit z-10 rounded-full bg-red-500 px-3 py-0.5 text-sm font-extrabold text-white">
@@ -90,9 +90,11 @@ function ShowingItem() {
       <div className="grid grid-cols-2 gap-4">
         {data?.data?.map((item: AuctionItem) => {
           return (
-            <Link to={`/auction/${item.auctionDto.id}`}>
+            <Link
+              key={item.auctionDto.id}
+              to={`/auction/${item.auctionDto.id}`}
+            >
               <Card
-                key={item.id}
                 auctionDto={item.auctionDto}
                 ownerProfile={item.ownerProfile}
               />

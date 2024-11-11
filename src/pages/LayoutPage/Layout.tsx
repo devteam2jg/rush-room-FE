@@ -3,11 +3,9 @@ import { Outlet } from 'react-router-dom';
 
 function Layout() {
   return (
-    <>
-      <Box>
-        <Outlet />
-      </Box>
-    </>
+    <Box>
+      <Outlet />
+    </Box>
   );
 }
 

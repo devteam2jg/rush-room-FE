@@ -51,13 +51,15 @@ export default function AuctionOverviewList() {
           경매 목록 리스트
         </Heading>
         <Divider />
-        {data.data.map((item: { auctionDto: Auction }) => (
-          <AuctionOverviewItemList
-            auctionId={item.auctionDto.id}
-            key={item.auctionDto.id}
-            item={item.auctionDto}
-          />
-        ))}
+        <VStack alignItems="center" width="100%" justifyContent="space-between">
+          {data.data.map((item: { auctionDto: Auction }) => (
+            <AuctionOverviewItemList
+              auctionId={item.auctionDto.id}
+              key={item.auctionDto.id}
+              item={item.auctionDto}
+            />
+          ))}
+        </VStack>
       </VStack>
     </Box>
   );
