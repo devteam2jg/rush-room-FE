@@ -35,7 +35,9 @@ const useConnectOnEnter = ({ auctionId }: SocketProps) => {
       setSocketIsConnected(true);
     });
 
-    newSocket.on('connect_error', (error) => {});
+    newSocket.on('connect_error', (error) => {
+      console.log('GameSocket Connection Error', error.message);
+    });
 
     newVideoSocket.on('connect', () => {
       videoSocketRef.current = newVideoSocket;
@@ -43,7 +45,9 @@ const useConnectOnEnter = ({ auctionId }: SocketProps) => {
       setVideoIsConnected(true);
     });
 
-    newVideoSocket.on('connect_error', (error) => {});
+    newVideoSocket.on('connect_error', (error) => {
+      console.log('MediaSocket Connection Error', error.message);
+    });
 
     newSocket?.on('disconnect', (reason) => {
       setSocketIsConnected(false);
