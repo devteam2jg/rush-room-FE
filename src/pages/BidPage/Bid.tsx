@@ -24,6 +24,7 @@ import BiddingControlModalOnState from '../../components/Bid/BiddingControlModal
 import useConnectOnEnter from '../../hooks/Bid/useConnectOnEnter';
 import BidHeader from '../../components/Bid/BidHeader';
 import BiddingTime from '../../components/Bid/BiddingTime';
+import BiddingFinalTime from '../../components/Bid/BiddingFinalTime';
 
 function Bid() {
   const { auctionId } = useParams();
@@ -217,6 +218,7 @@ function Bid() {
           >
             <BiddingChatting />
           </Box>
+          <BiddingFinalTime />
         </Container>
       </Flex>
     </Box>
