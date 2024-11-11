@@ -327,6 +327,7 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
         video: {
           width: { ideal: 720 },
           height: { ideal: 1280 },
+          facingMode: 'user',
         },
       });
 
