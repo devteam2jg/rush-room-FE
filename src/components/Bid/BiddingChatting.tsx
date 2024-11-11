@@ -34,9 +34,6 @@ function BiddingChatting() {
       const updatedList = [...prev, newMessageWithUuid];
 
       if (updatedList.length > MESSAGE_LIMIT) {
-        console.log(
-          `메시지 정리: ${updatedList.length - MESSAGE_LIMIT}개 제거`
-        );
         return updatedList.slice(-MESSAGE_LIMIT);
       }
 

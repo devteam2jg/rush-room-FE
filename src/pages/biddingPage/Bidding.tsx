@@ -52,7 +52,6 @@ function Bidding() {
     // 입찰가 업데이트 이벤트 리스너
     newSocket.on('bid_updated', (newBid) => {
       setCurrentPrice(newBid.newCurrentBid);
-      console.log('bid_updated');
     });
 
     // 현재 입찰가 이벤트 리스너
@@ -66,7 +65,6 @@ function Bidding() {
     return () => {
       if (newSocket) {
         newSocket.disconnect();
-        console.log('End Connection from bidding');
       }
       document.body.style.overflow = 'auto';
     };

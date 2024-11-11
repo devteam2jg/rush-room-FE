@@ -32,7 +32,6 @@ function BiddingTimePriceInfo({ initialItemPrice }: PriceProps) {
     const handleItemPriceBidderRecieve = (priceData: PriceData) => {
       setRecievedPrice(priceData.bidPrice);
       setBidder(priceData.bidderNickname);
-      console.log('PRICE_UPDATE');
     };
 
     socket.on('NOTIFICATION', hanldItemPriceRecieve);

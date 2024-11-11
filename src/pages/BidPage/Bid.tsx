@@ -44,26 +44,20 @@ function Bid() {
     socket.on('ALERT', (response) => {
       toast.closeAll();
 
-      console.log(response);
-
       const { type } = response;
       let backgroundColor;
 
       switch (type) {
         case 'RED':
-          console.log('오팬무', type);
           backgroundColor = '#EDA28C';
           break;
         case 'YELLOW':
-          console.log('오팬무', type);
           backgroundColor = '#EDD68C';
           break;
         case 'GREEN':
-          console.log('오팬무', type);
           backgroundColor = '#8CED8F';
           break;
         case 'BLUE':
-          console.log('오팬무', type);
           backgroundColor = '#8CB6ED';
           break;
         default:

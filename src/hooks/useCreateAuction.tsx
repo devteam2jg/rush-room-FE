@@ -12,8 +12,6 @@ const useCreateAuction = () => {
   const createAuction = async () => {
     const formData = getFormData();
 
-    console.log(formData);
-
     const data = {
       title: formData.title,
       description: formData.description,

@@ -22,7 +22,6 @@ export default function DeleteAuction() {
   const handleDeleteAuction = () => {
     deleteAuction();
     nav(`/overview`);
-    console.log('경매 삭제 완료');
   };
 
   return (

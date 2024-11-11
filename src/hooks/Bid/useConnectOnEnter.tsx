@@ -33,32 +33,24 @@ const useConnectOnEnter = ({ auctionId }: SocketProps) => {
       socketRef.current = newSocket;
       setSocket(newSocket);
       setSocketIsConnected(true);
-      console.log('Game Socket connected', newSocket.id);
     });
 
-    newSocket.on('connect_error', (error) => {
-      console.log('Game Socket connect_error:', error);
-    });
+    newSocket.on('connect_error', (error) => {});
 
     newVideoSocket.on('connect', () => {
       videoSocketRef.current = newVideoSocket;
       setVideoSocket(newVideoSocket);
       setVideoIsConnected(true);
-      console.log('Stream Connected to server:', newVideoSocket.id);
     });
 
-    newVideoSocket.on('connect_error', (error) => {
-      console.log('Stream Socket connect_error:', error);
-    });
+    newVideoSocket.on('connect_error', (error) => {});
 
     newSocket?.on('disconnect', (reason) => {
       setSocketIsConnected(false);
-      console.log('Game Socket disconnected', reason);
     });
 
     newVideoSocket?.on('disconnect', (reason) => {
       setVideoIsConnected(false);
-      console.log('Stream Video Socket disconnected', reason);
     });
 
     return () => {
@@ -74,7 +66,6 @@ const useConnectOnEnter = ({ auctionId }: SocketProps) => {
       socketRef.current?.disconnect();
       videoSocketRef.current?.disconnect();
       // setIsConnected(false);
-      console.log('End Socket Connection!');
     };
   }, [auctionId]);
 };

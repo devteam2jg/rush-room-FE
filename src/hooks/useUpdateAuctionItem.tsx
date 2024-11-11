@@ -47,7 +47,6 @@ const useUpdateAuctionItem = () => {
       nav(-1);
     },
     onError: (error) => {
-      console.log(error);
       showToast('Error', `Item${error}`, 'error');
     },
   });

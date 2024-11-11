@@ -13,7 +13,7 @@ function Home() {
   const showToast = useShowToast();
   const nav = useNavigate();
   const data = useAuthStore();
-  console.log(data);
+
   const getLogout = async () => {
     try {
       await axiosInstance.get('/auth/logout');

@@ -77,7 +77,7 @@ function BiddingControlModalOnState({
           nav('/');
           break;
         default:
-          console.log('UNKOWN STATUS ERROR');
+        // 213
       }
     };
 

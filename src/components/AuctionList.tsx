@@ -46,21 +46,18 @@ export default function AuctionList({
   }
 
   const handleDragStart = (item: AuctionItem) => {
-    console.log('Drag start', item);
     setDraggingItem(item);
   };
   const handleDragOver = (
     e: React.DragEvent<HTMLDivElement>,
     index: number
   ) => {
-    console.log('Drag Over', index);
     e.preventDefault();
     setDragOverIndex(index);
   };
 
   // 드롭 시 호출
   const handleDrop = () => {
-    console.log('Drop:', draggingItem);
     if (draggingItem !== null && dragOverIndex !== null) {
       const updatedItems = [...items];
       const draggedIndex = updatedItems.findIndex(

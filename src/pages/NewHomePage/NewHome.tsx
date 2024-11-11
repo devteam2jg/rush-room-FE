@@ -13,7 +13,7 @@ function NewHome() {
   const logout = useAuthStore((state) => state.logout);
   const showToast = useShowToast();
   const data = useAuthStore();
-  console.log(data);
+
   const getLogout = async () => {
     try {
       await axiosInstance.get('/auth/logout');

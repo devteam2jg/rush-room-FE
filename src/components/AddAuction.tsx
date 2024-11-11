@@ -30,16 +30,13 @@ export default function AddAuction({ data, isOwner }: Data) {
       updateField('status', data.auctionDto.status);
       mutationUpdateStatus.mutate();
     } else {
-      console.error('아이템이 생성되지 않습니다.');
+      // 123
     }
     try {
       const { data: dataBE } = await axiosInstance.get(
         `/game/start/${auctionId}`
       );
-      console.log(dataBE);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   return (

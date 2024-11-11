@@ -33,7 +33,6 @@ interface ItemProps {
 }
 
 function Card({ auctionDto, ownerProfile }: ItemProps) {
-  console.log(ownerProfile);
   return (
     <div className="relative w-40 p-3 rounded-lg h-72 shrink-0">
       <span className="absolute w-fit z-10 rounded-full bg-red-500 px-3 py-0.5 text-sm font-extrabold text-white">

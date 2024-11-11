@@ -66,43 +66,33 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [lastReceivedEvent, setLastReceivedEvent] = useState<string>('');
 
-  console.log('agreed', agreed);
-
   useEffect(() => {
     if (!socket) {
-      console.log('Socket not initialized, skipping event registration');
       return undefined;
     }
 
-    console.log('Registering event listeners, socket ID:', socket.id);
-
     // Debug listener registration
     const onSellerAgreedResponse = (response) => {
-      console.log('Received seller-agreed-response:', response);
       setLastReceivedEvent('seller-agreed-response');
       setAgreed(response.isAgreed);
     };
 
     const onNewPeer = ({ peerId }) => {
-      console.log('Received new-peer event:', peerId);
       setLastReceivedEvent('new-peer');
       setPeers((prevPeers) => [...prevPeers, peerId]);
     };
 
     const onPeerLeft = ({ peerId }) => {
-      console.log('Received peer-left event:', peerId);
       setLastReceivedEvent('peer-left');
       setPeers((prevPeers) => prevPeers.filter((id) => id !== peerId));
     };
 
     const onStopProducer = () => {
-      console.log('Received stop-producer event');
       setLastReceivedEvent('stop-producer');
       stopCamera();
     };
 
     const onStopConsumer = () => {
-      console.log('3. stop consumer-----', mediaConsumers.current);
       if (mediaConsumers.current) {
         mediaConsumers.current.videoConsumer?.close();
         mediaConsumers.current.audioConsumer?.close();
@@ -123,13 +113,12 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
     socket.on('stop-producer', onStopProducer);
 
     if (auctionId && !joined) {
-      console.log('Attempting to join room:', auctionId);
       joinRoom();
     }
 
     return () => {
       setIsVideo(false);
-      console.log('끊어');
+
       stopCamera();
       socket.off('stop-consumer');
       socket.off('new-peer');
@@ -139,13 +128,8 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
     };
   }, [socket]);
 
-  console.log('joined', joined);
-  console.log('isOwner', isOwner);
-  console.log('agreed', agreed);
-
   useEffect(() => {
     if (joined && isOwner && agreed) {
-      console.log('카메라를 켜요 제발');
       startCamera();
     }
   }, [agreed]);
@@ -256,14 +240,12 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
   };
 
   const joinRoom = () => {
-    console.log('------socket', socket);
     if (!socket || !auctionId) return;
-    console.log('거 드가쇼');
+
     socket.emit(
       'join-room',
       { roomId: auctionId, peerId: socket.id },
       async (response: JoinRoomResponse) => {
-        console.log('여기는 오나?');
         if (response.error) {
           console.error('Error joining room:', response.error);
           return;
@@ -302,7 +284,6 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
           await consume(producerInfo);
         }
 
-        console.log('방에 들어갈게요?');
         setJoined(true);
       }
     );
@@ -313,10 +294,9 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
 
     socket.emit('leave-room', (response) => {
       if (response && response.error) {
-        console.error('Error leaving room:', response.error);
         return;
       }
-      console.log('Left room');
+
       // 로컬 상태 초기화
       setJoined(false);
       setPeers([]);
@@ -353,15 +333,12 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
       setLocalStream(stream);
       return stream; // 성공 시 stream 반환
     } catch (error) {
-      console.log('카메라 켜기 싫대요', error);
       socket?.emit('seller-disagreed-camera', { roomId: auctionId });
     }
   };
 
   const startProducing = async () => {
     if (!sendTransportRef.current) return;
-
-    console.log('New Creater-----');
 
     const stream = await getStream();
     /* produce audio */
@@ -390,7 +367,7 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
     // });
 
     // if (!stream) {
-    //   console.log('거절@@@');
+
     //   return;
     // }
     if (stream) {
@@ -408,7 +385,6 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
       mediaProducers.current.videoProducer = newVideoProducer;
       setIsSeller(true);
 
-      console.log('영상틀었다요');
       const audioTrack = await getLocalAudioStreamAndTrack();
       const newAudioProducer = await sendTransportRef.current.produce({
         track: audioTrack,
@@ -441,7 +417,6 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
   };
 
   const handleNewProducer = async ({ producerId, peerId, kind }) => {
-    console.log(`New producer: ${producerId} from ${peerId} of kind ${kind}`);
     // stopCamera();
     setIsVideo(true);
     await consume({ producerId, peerId, kind });
@@ -451,7 +426,6 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
     const device = deviceRef.current;
     const recvTransport = recvTransportRef.current;
     if (!device || !recvTransport) {
-      console.log('Device or RecvTransport not initialized');
     }
 
     socket.emit(
@@ -465,7 +439,6 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
       },
       async (response) => {
         if (response.error) {
-          console.error('Error consuming:', response.error);
           return;
         }
 
@@ -483,7 +456,6 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
         // Consumer를 resume합니다.
         await consumer.resume();
 
-        console.log('New consumer:', consumer.kind);
         // 수신한 미디어를 재생
         const remoteStream = new MediaStream();
         remoteStream.addTrack(consumer.track);
@@ -507,7 +479,7 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
           try {
             await audioElement.play();
           } catch (err) {
-            console.error('Audio playback failed:', err);
+            // 123
           }
         }
       }
@@ -539,20 +511,14 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
   };
 
   const startCamera = () => {
-    console.log(
-      '1. start camera and stop prev producer============',
-      auctionId
-    );
     socket.emit(
       'stop-prev-producer',
       { roomId: auctionId, peerId: socket.id },
       (response: boolean) => {
-        console.log('stop prev producer response+++++++++++++', response);
         if (!response) {
-          console.log('2. No prev producer============', auctionId);
           return;
         }
-        console.log('2. prev prod stopped============', auctionId);
+
         startProducing();
       }
     );

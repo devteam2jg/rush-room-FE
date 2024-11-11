@@ -28,8 +28,6 @@ function PrivateCodeModal({ isPrivate, isOwner, endorsed }: AuctionData) {
   const mutation = useCheckPrivateCode();
   const { updateField } = useAuctionStore();
 
-  console.log('isOpen, ', isOpen);
-
   useEffect(() => {
     // 조건을 만족하면 모달을 열어줍니다
     if (isPrivate && !isOwner && !endorsed) {
