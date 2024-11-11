@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { createStandaloneToast, Box } from '@chakra-ui/react';
 import useAuction from '../../hooks/useAuction';
 import { AuctionItem } from '../../utils/types';
@@ -84,11 +84,13 @@ function ShowingItem() {
       <div className="grid grid-cols-2 gap-4">
         {data?.data?.map((item: AuctionItem) => {
           return (
-            <Card
-              key={item.id}
-              auctionDto={item.auctionDto}
-              ownerProfile={item.ownerProfile}
-            />
+            <Link to={`/auction/${item.auctionDto.id}`}>
+              <Card
+                key={item.id}
+                auctionDto={item.auctionDto}
+                ownerProfile={item.ownerProfile}
+              />
+            </Link>
           );
         })}
       </div>

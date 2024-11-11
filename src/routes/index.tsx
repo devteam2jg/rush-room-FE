@@ -10,7 +10,7 @@ import auctions from './auction';
 import TermsOfUse from '../pages/TermsOfUsePage/TermsOfUse';
 import AuctionOverview from '../pages/AuctionOverviewPage/AuctionOverview';
 import MyPage from '../pages/myPage/myPage';
-import TestingPage from '../pages/TestingPage';
+// import TestingPage from '../pages/TestingPage';
 import NewHome from '../pages/NewHomePage/NewHome';
 
 const router = createBrowserRouter([
@@ -23,7 +23,7 @@ const router = createBrowserRouter([
         index: true,
         element: (
           <ProtectedRoute>
-            <Home />
+            <NewHome />
           </ProtectedRoute>
         ), // 보호된 경로
       },
@@ -55,10 +55,10 @@ const router = createBrowserRouter([
         path: 'myPage/:userId',
         element: <MyPage />,
       },
-      {
-        path: 'test',
-        element: <RTCTestPage />,
-      },
+      // {
+      //   path: 'test',
+      //   element: <RTCTestPage />,
+      // },
       {
         path: 'newhome',
         element: <NewHome />,

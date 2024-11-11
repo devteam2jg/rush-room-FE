@@ -110,7 +110,7 @@ function BiddingRaise({
   };
 
   const handleMaxRaise = () => {
-    const bid = raisedPrice + maxRange;
+    const bid = raisedPrice + 50000;
     if (budget && Number(bid) > budget) {
       toast({
         title: '실패',
