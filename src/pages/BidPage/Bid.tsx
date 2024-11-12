@@ -136,7 +136,7 @@ function Bid() {
             onClick={() => setIsVisible(!isVisible)}
             zIndex={0}
           >
-            <BiddingStream />
+            {/* <BiddingStream /> */}
           </Box>
 
           <BiddingRaise
