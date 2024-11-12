@@ -7,6 +7,7 @@ interface User {
   socialType: 'kakao';
   iat: number;
   exp: number;
+  profileUrl: string;
 }
 
 interface AuthState {

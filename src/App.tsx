@@ -1,4 +1,11 @@
-import { Box, ChakraProvider, Flex, Image, Text } from '@chakra-ui/react';
+import {
+  Box,
+  ChakraProvider,
+  Flex,
+  Image,
+  Text,
+  VStack,
+} from '@chakra-ui/react';
 import { RouterProvider } from 'react-router-dom';
 import { useEffect } from 'react';
 import theme from './utils/theme';
@@ -17,6 +24,7 @@ function App() {
   return (
     <ChakraProvider theme={theme}>
       <Flex
+        width="100vw"
         height="calc(var(--vh, 1vh) * 100)"
         bg="#161717"
         gap="200px"
@@ -24,11 +32,11 @@ function App() {
         justifyContent="center"
         flexDirection={{ base: 'column', lg: 'row' }}
       >
-        <Flex
-          display={{ base: 'none', lg: 'block' }}
-          flexDirection="column"
-          justifyContent="center"
+        <VStack
+          gap={6}
           alignItems="center"
+          justifyContent="center"
+          display={{ base: 'none', lg: 'flex' }}
         >
           <Image width="250px" src={ServiceLogo} />
           <Text color="#FCFCFD" fontSize="20px">
@@ -38,10 +46,10 @@ function App() {
             borderRadius="15px"
             src="/images/qr.svg"
             alt="QR code"
-            width="300px"
-            height="300px"
+            width="250px"
+            height="250px"
           />
-        </Flex>
+        </VStack>
         <Box width="100%" maxWidth="430px">
           <RouterProvider router={router} />
         </Box>

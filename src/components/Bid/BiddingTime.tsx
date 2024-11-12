@@ -1,36 +1,117 @@
-import { useEffect, useState } from 'react';
-import { Text } from '@chakra-ui/react';
+import { useEffect, useState, useRef } from 'react';
+import { motion, animate } from 'framer-motion';
+import {
+  Stat,
+  StatGroup,
+  StatNumber,
+  Text,
+  Box,
+  StatHelpText,
+  StatArrow,
+} from '@chakra-ui/react';
 import useSecondsToFormat from '../../hooks/Bid/useSecondsToFormat';
 import useSocketStore from '../../store/useSocketStore';
 
-type Time = {
-  time: number;
-};
-
 function BiddingTime() {
-  const [currentTime, setCurrentTime] = useState<number>(0);
-  const timeText = useSecondsToFormat({ currentTime, thirtyMatters: false });
+  const [currentTime, setCurrentTime] = useState(0);
+  const [animationKey, setAnimationKey] = useState(0);
+  const [addDiffer, setAddDiffer] = useState(0);
+  const [subDiffer, setSubDiffer] = useState(0);
   const socket = useSocketStore((state) => state.socket);
+  const [displayTime, setDisplayTime] = useState(currentTime);
+  const previousTime = useRef(currentTime);
+
+  const timeText = useSecondsToFormat({
+    currentTime: displayTime,
+    thirtyMatters: false,
+  });
 
   useEffect(() => {
     if (!socket) return undefined;
-    const handleTime = (timeData: Time) => {
+
+    const handleTime = (timeData) => {
+      previousTime.current = currentTime;
       setCurrentTime(timeData.time);
+
+      animate(previousTime.current, timeData.time, {
+        duration: 0.5,
+        ease: timeData.time < previousTime.current ? 'easeIn' : 'easeOut',
+        onUpdate: (latest) => setDisplayTime(Math.round(latest)),
+        onComplete: () => {
+          setAddDiffer(0);
+          setSubDiffer(0);
+        },
+      });
     };
+
+    const handleAnimate = (response) => {
+      setAnimationKey((prev) => prev + 1);
+      const { type, differ } = response;
+      if (type === 'ADD') {
+        console.log(differ);
+        setAddDiffer(differ);
+      } else if (type === 'SUB') {
+        console.log(differ);
+        setSubDiffer(differ);
+      }
+    };
+
     socket?.on('TIME_UPDATE', handleTime);
+    socket?.on('TIME', handleAnimate);
+
     return () => {
       socket?.off('TIME_UPDATE', handleTime);
+      socket?.off('TIME', handleAnimate);
     };
-  }, [socket]);
+  }, [socket, currentTime]);
 
   return (
-    <Text
-      fontWeight="700"
-      fontSize={{ base: '25px', sm: '30px' }}
-      color={currentTime < 30 ? '#ff000d' : '#FDFDFC'}
-    >
-      {timeText}
-    </Text>
+    <div className="flex flex-col items-end gap-1.5">
+      <Text
+        fontWeight="700"
+        fontSize={{ base: '15px', sm: '24px' }}
+        color="#FCFCFD"
+      >
+        현재 경매 시간
+      </Text>
+      <div className="font-bold text-2xl md:text-3xl">
+        <StatGroup>
+          <Stat>
+            <motion.div
+              key={animationKey}
+              initial={{ opacity: 0, scale: 3 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, ease: 'easeOut' }}
+            >
+              <StatNumber
+                color={`${displayTime < 30 ? 'red' : 'white'}`}
+                fontSize={{ base: '23px', sm: '30px' }}
+              >
+                {timeText}
+              </StatNumber>
+
+              <StatHelpText
+                fontWeight="700"
+                fontSize={{ base: '10px', sm: '20px' }}
+              >
+                {addDiffer ? (
+                  <Box color="green">
+                    <StatArrow type="increase" />
+                    {addDiffer} 초
+                  </Box>
+                ) : null}
+                {subDiffer ? (
+                  <Box color="red">
+                    <StatArrow type="decrease" />
+                    {subDiffer} 초
+                  </Box>
+                ) : null}
+              </StatHelpText>
+            </motion.div>
+          </Stat>
+        </StatGroup>
+      </div>
+    </div>
   );
 }
 

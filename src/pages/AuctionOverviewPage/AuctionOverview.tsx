@@ -1,4 +1,4 @@
-import { Image, Flex, Box } from '@chakra-ui/react';
+import { Image, Flex, Box, VStack } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import Navigator from '../../components/Navigator';
 import serviceLogo from '../../assets/images/serviceLogo.png';

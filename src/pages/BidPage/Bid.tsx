@@ -28,6 +28,7 @@ import BiddingFinalTime from '../../components/Bid/BiddingFinalTime';
 
 function Bid() {
   const { auctionId } = useParams();
+  const { toast } = createStandaloneToast();
   useConnectOnEnter({ auctionId });
   const socket = useSocketStore((state) => state.socket);
   const [open, setOpen] = useState(false);
@@ -36,8 +37,6 @@ function Bid() {
   const [isVisible, setIsVisible] = useState(true);
 
   const { isConnected, initialInfo } = useOnEnterBid({ auctionId });
-
-  const { toast } = createStandaloneToast();
 
   useEffect(() => {
     if (!socket) return undefined;

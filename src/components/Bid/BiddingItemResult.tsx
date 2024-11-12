@@ -1,7 +1,7 @@
-import { Box, HStack, Image, Text, VStack } from '@chakra-ui/react';
+import { Avatar, Box, HStack, Image, Text, VStack } from '@chakra-ui/react';
 import { keyframes } from '@emotion/react';
-import Winner from '../../assets/images/winner.png';
 import Cry from '../../assets/images/cry.png';
+import useAuthStore from '../../store/UserAuthStore';
 
 export interface WinnerProps {
   bidPrice: number;
@@ -21,6 +21,10 @@ export const blinkAnimation = keyframes`
 `;
 
 function BiddingItemResult({ winnerInfo }: WinnerInfoProps) {
+  const user = useAuthStore((state) => state.user);
+  if (!winnerInfo) {
+    return <div>Error..</div>;
+  }
   return (
     <VStack
       alignItems="center"
@@ -41,7 +45,10 @@ function BiddingItemResult({ winnerInfo }: WinnerInfoProps) {
             축하합니다 !🥳
           </Text>
           <Text>팽팽한 경쟁을 뚫고 낙찰 되셨습니다!</Text>
-          <Image width={{ base: '150px', sm: '200px' }} src={Winner} />
+          <Box width={{ sm: '250px' }} height={{ sm: '250px' }}>
+            <Avatar size={{ base: '2xl', sm: 'full' }} src={user?.profileUrl} />
+          </Box>
+
           <HStack>
             <Text
               fontSize={{ base: '16px', sm: '20px' }}
@@ -50,8 +57,14 @@ function BiddingItemResult({ winnerInfo }: WinnerInfoProps) {
             >
               {winnerInfo?.name} 님이
             </Text>
-            <Text>{winnerInfo?.bidPrice} </Text>
-            <Text>크레딧에</Text>
+            <Text
+              fontSize={{ base: '16px', sm: '20px' }}
+              fontWeight="700"
+              color="#CB9428"
+            >
+              {winnerInfo.bidPrice.toLocaleString()}{' '}
+            </Text>
+            <Text>원에</Text>
           </HStack>
           <Text fontSize={{ base: '18px', sm: '20px' }} color="#FF8C00">
             {winnerInfo?.title}
