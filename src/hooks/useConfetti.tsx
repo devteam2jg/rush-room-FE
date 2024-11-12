@@ -3,15 +3,23 @@ import { useEffect, useRef } from 'react';
 
 const useConfetti = () => {
   const jsConfettiRef = useRef<JSConfetti | null>(null);
-  useEffect(() => {
-    jsConfettiRef.current = new JSConfetti();
 
+  const getConfetti = () => {
+    if (!jsConfettiRef.current) {
+      jsConfettiRef.current = new JSConfetti();
+    }
+    return jsConfettiRef.current;
+  };
+
+  useEffect(() => {
     return () => {
+      console.log('지움');
       jsConfettiRef.current?.destroyCanvas();
       jsConfettiRef.current = null;
     };
   }, []);
-  return { confetti: jsConfettiRef.current };
+
+  return { confetti: getConfetti() };
 };
 
 export default useConfetti;

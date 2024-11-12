@@ -25,6 +25,10 @@ function BiddingControlModalOnState({
   const nav = useNavigate();
   const { confetti } = useConfetti();
 
+  // const confetti = new JSConfetti();
+
+  console.log('confetti', confetti);
+
   const handleConffeti = () => {
     confetti?.addConfetti({
       confettiColors: [
@@ -53,6 +57,8 @@ function BiddingControlModalOnState({
     const handleNotiState = (response: any) => {
       const { type } = response;
 
+      console.log(response);
+
       switch (type) {
         case 'BID_READY':
           setOpenResult(false);
@@ -68,6 +74,7 @@ function BiddingControlModalOnState({
           setWinnerInfo(response);
           setOpenResult(true);
           if (response.name) {
+            console.log('샀다');
             handleConffeti();
           } else {
             handleSadConffeti();

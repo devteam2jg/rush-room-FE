@@ -42,7 +42,7 @@ function BiddingTimePriceInfo({ initialItemPrice }: PriceProps) {
       .fill(null)
       .map(() => {
         const audio = new Audio(coinSound);
-        audio.volume = 0.5; // 볼륨 설정 (0.0 ~ 1.0)
+        audio.volume = 0.3; // 볼륨 설정 (0.0 ~ 1.0)
         return audio;
       });
 

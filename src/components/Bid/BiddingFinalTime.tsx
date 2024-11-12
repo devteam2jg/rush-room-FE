@@ -10,16 +10,20 @@ type Time = {
 function BiddingFinalTime() {
   const [count, setCount] = useState<number | null>(null);
   const socket = useSocketStore((state) => state.socket);
-  const [audio] = useState(
-    new Audio('../../../public/sounds/countdownEffect.wav')
-  ); // 효과음 파일 경로
+  const [audio] = useState(new Audio('/sounds/not0.wav'));
+  const [endAudio] = useState(new Audio('/sounds/is0.wav'));
 
   useEffect(() => {
     if (!socket) return undefined;
     const handleFinalTime = (timeData: Time) => {
+      console.log('마지막 시간', timeData);
       setCount(timeData.time);
       if (timeData.time > 0) {
         audio.play().catch((error) => {
+          console.error('오디오 재생 실패:', error);
+        });
+      } else {
+        endAudio.play().catch((error) => {
           console.error('오디오 재생 실패:', error);
         });
       }
