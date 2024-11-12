@@ -45,7 +45,7 @@ function Card({ auctionDto, ownerProfile }: ItemProps) {
       <span className="absolute w-fit z-10 rounded-full bg-red-500 px-3 py-0.5 text-sm font-extrabold text-white">
         {auctionDto.status}
       </span>
-      <span className="absolute bottom-[98px] left-3 w-fit z-20 rounded-full bg-transparent px-3 py-0.5 text-xs font-extrabold text-white flex items-center">
+      <span className="absolute bottom-[68px] w-fit z-20 rounded-full bg-transparent py-0.5 text-xs font-extrabold text-white flex items-center">
         <img
           className="object-cover w-6 h-6 mr-2 rounded-full"
           src={ownerProfile.thumbnailUrl}
@@ -53,7 +53,7 @@ function Card({ auctionDto, ownerProfile }: ItemProps) {
         />
         {ownerProfile.nickname}
       </span>
-      <div className="absolute bottom-0 left-0 right-0 h-[88px] w-full z-20 font-mono font-black text-left transition-colors bg-white border-2 border-white rounded-b-xl text-neutral-800 backdrop-blur hover:bg-white/30 hover:text-white">
+      <div className="absolute bottom-0 left-0 right-0 h-[60px] w-full z-20 font-mono font-black text-left transition-colors bg-white border-2 border-white rounded-b-xl text-neutral-800 backdrop-blur hover:bg-white/30 hover:text-white">
         <div className="relative z-10">
           <p className="block my-2 font-mono font-extrabold leading-loose origin-top-left text-md">
             {auctionDto.title}
