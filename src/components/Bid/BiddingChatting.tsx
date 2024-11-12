@@ -75,7 +75,7 @@ function BiddingChatting() {
       const highestBidder: Message = {
         auctionId: '',
         userId: 'bidderid',
-        message: `${currentBid.toLocaleString()} 크레딧`,
+        message: `${currentBid.toLocaleString()} 원`,
         nickname: bidder,
       };
       addMessage(highestBidder);

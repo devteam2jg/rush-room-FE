@@ -47,13 +47,18 @@ function BiddingRaise({
   useEffect(() => {
     if (!socket) return undefined;
 
+    console.log('rasiedPrice', raisedPrice);
+
     if (!budget) {
       setBudget(initialBudget);
     }
 
     if (!raisedPrice && initialItemPrice) {
+      console.log('initialItemPrice', initialItemPrice);
       setRaisedPrice(initialItemPrice);
     }
+
+    console.log('rasiedPrice', raisedPrice);
 
     const handlePriceRaiseRecieve = (priceData: PriceData) => {
       setRaisedPrice(priceData.bidPrice);
@@ -67,9 +72,22 @@ function BiddingRaise({
       }
     };
 
+    const sendBiddingRequest = {
+      auctionId,
+      type: 'INFO',
+      userId: user?.id,
+    };
+
+    const handleCurrentBid = (response) => {
+      console.log('현재가 다시 고치래', response.bidPrice);
+      setRaisedPrice(response.bidPrice);
+    };
+
     socket?.on('PRICE_UPDATE', handlePriceRaiseRecieve);
 
     socket.on('NOTIFICATION', handleRaiseItemPrice);
+
+    socket.emit('CONTEXT', sendBiddingRequest, handleCurrentBid);
 
     return () => {
       socket?.off('PRICE_UPDATE', handlePriceRaiseRecieve);
@@ -78,6 +96,7 @@ function BiddingRaise({
   }, [socket]);
 
   const handleMinRaise = () => {
+    console.log('보내요');
     const bid = raisedPrice + minRange;
     if (budget && Number(bid) > budget) {
       toast({
@@ -96,6 +115,7 @@ function BiddingRaise({
         bidderId: user?.id,
         bidderNickname: user?.name,
       };
+      console.log('이거진짜 보내요', bid);
       socket?.emit('new_bid', bidForm);
     } else {
       toast({
@@ -163,7 +183,7 @@ function BiddingRaise({
           color="#FCFCFD"
         >
           <HStack justifyContent="space-between" width={{ base: '220px' }}>
-            <Text>보유 크레딧 </Text>
+            <Text>보유 금액 </Text>
             <Text fontWeight="700" color="#F1D849">
               {budget?.toLocaleString()} 원
             </Text>
@@ -191,7 +211,8 @@ function BiddingRaise({
                 <Box display={{ base: 'block', sm: 'none' }}>
                   <BiTimer fontSize="20px" />
                 </Box>
-                <Text>{raisedPrice + maxRange}</Text>
+                {/* <Text>{(raisedPrice + maxRange).toLocaleString()} 원</Text> */}
+                <Text>50,000 원</Text>
               </Flex>
             </Button>
           </Box>
@@ -207,7 +228,7 @@ function BiddingRaise({
             color="#FDFDFC"
             zIndex={2}
           >
-            입찰하기 {raisedPrice + minRange}
+            입찰하기 {(raisedPrice + minRange).toLocaleString()} 원
           </Button>
         </Box>
       </VStack>
