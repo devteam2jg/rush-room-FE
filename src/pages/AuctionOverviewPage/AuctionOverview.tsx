@@ -8,19 +8,19 @@ export default function AuctionOverview() {
   const nav = useNavigate();
 
   return (
-    <Box
+    <VStack
+      width="100%"
       height="calc(var(--vh, 1vh) * 100)"
       position="relative"
-      width="100%"
-      overflow="hidden"
+      justifyContent="space-between"
+      alignItems="inherit"
+      overflow="auto"
     >
-      <Box height="100%">
-        <Flex p={3} backgroundColor="#161717" justifyContent="space-between">
-          <Image height="50px" src={serviceLogo} onClick={() => nav('/')} />
-        </Flex>
-        <AuctionOverviewList />
-        <Navigator />
-      </Box>
-    </Box>
+      <Flex width="100%" backgroundColor="#161717" justifyContent="flex-start">
+        <Image height="50px" src={serviceLogo} onClick={() => nav('/')} />
+      </Flex>
+      <AuctionOverviewList />
+      <Navigator />
+    </VStack>
   );
 }

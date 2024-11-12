@@ -39,19 +39,19 @@ export default function AuctionOverviewList() {
     });
   }
   return (
-    <Box
-      height="100%"
-      position="absolute"
-      p={4}
-      textAlign="center"
-      bg="#282828"
-    >
-      <VStack spacing={4} align="flex-start">
+    <Box overflow="hidden" height="100%" p={4} textAlign="center" bg="#282828">
+      <VStack height="100%" spacing={4} align="center">
         <Heading as="h5" size="xm" textAlign="left" color="white">
           경매 목록 리스트
         </Heading>
         <Divider />
-        <VStack alignItems="center" width="100%" justifyContent="space-between">
+        <VStack
+          height="100%"
+          overflow="auto"
+          alignItems="center"
+          width="100%"
+          justifycontent="space-between"
+        >
           {data.data.map((item: { auctionDto: Auction }) => (
             <AuctionOverviewItemList
               auctionId={item.auctionDto.id}
