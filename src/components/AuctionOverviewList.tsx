@@ -39,7 +39,13 @@ export default function AuctionOverviewList() {
     });
   }
   return (
-    <Box height="100%" p={4} textAlign="center" bg="#282828">
+    <Box
+      height="100%"
+      position="absolute"
+      p={4}
+      textAlign="center"
+      bg="#282828"
+    >
       <VStack spacing={4} align="flex-start">
         <Heading as="h5" size="xm" textAlign="left" color="white">
           경매 목록 리스트
