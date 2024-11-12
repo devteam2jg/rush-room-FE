@@ -34,7 +34,7 @@ function Bid() {
   const [open, setOpen] = useState(false);
   const [infoOpen, setInfoOpen] = useState(false);
   const [itemOpen, setItemOpen] = useState(false);
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
 
   const { isConnected, initialInfo } = useOnEnterBid({ auctionId });
 
@@ -86,7 +86,10 @@ function Bid() {
       });
     });
 
+    socket.on('ERROR', (e) => console.log('현승이 에러', e));
+
     return () => {
+      socket.off('ERROR');
       socket.off('ALERT');
     };
   }, [socket]);
@@ -136,7 +139,7 @@ function Bid() {
             onClick={() => setIsVisible(!isVisible)}
             zIndex={0}
           >
-            {/* <BiddingStream /> */}
+            <BiddingStream />
           </Box>
 
           <BiddingRaise
