@@ -11,9 +11,12 @@ import {
   TransportOptions,
 } from 'mediasoup-client/lib/types';
 import { useParams } from 'react-router-dom';
-import { Image } from '@chakra-ui/react';
-import { log } from 'console';
+import { Box, Image, Text } from '@chakra-ui/react';
 import VideoSocketStore from '../store/VideoSocketStore';
+import SpeakingIndicator from '../components/Bid/SpeakingIndicator';
+import SpringModal from '../components/Modal/SpringModal';
+import { blinkAnimation } from '../components/Bid/BiddingItemResult';
+import useAuthStore from '../store/UserAuthStore';
 
 interface JoinRoomResponse {
   sendTransportOptions: TransportOptions;
@@ -52,10 +55,11 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
   const [peers, setPeers] = useState<any[]>([]);
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
   const [isVideo, setIsVideo] = useState(false);
-  const [isSeller, setIsSeller] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const [agreed, setAgreed] = useState(false);
   const sendTransportRef = useRef<Transport | null>(null);
   const mediaProducers = useRef<MediaProducers>({} as MediaProducers);
+  const audioContextRef = useRef<AudioContext | null>(null);
   const localVideoRef = useRef<HTMLVideoElement | null>(null);
   const deviceRef = useRef<Device | null>(null);
   const mediaConsumers = useRef<MediaConsumers>({
@@ -65,8 +69,36 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
   const recvTransportRef = useRef<Transport | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [lastReceivedEvent, setLastReceivedEvent] = useState<string>('');
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  const animationFrameRef = useRef<number | null>(null);
+  const user = useAuthStore((state) => state.user);
 
   console.log('agreed', agreed);
+
+  useEffect(() => {
+    // 오디오 컨텍스트 초기화
+    const initAudioContext = async () => {
+      try {
+        console.log('생성?');
+        if (!audioContextRef.current) {
+          console.log('응 생성');
+          audioContextRef.current = new (window.AudioContext ||
+            window.webkitAudioContext)();
+        }
+      } catch (err) {
+        console.error('Failed to initialize AudioContext:', err);
+      }
+    };
+
+    initAudioContext();
+
+    return () => {
+      if (audioContextRef.current) {
+        audioContextRef.current.close();
+        audioContextRef.current = null;
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (!socket) {
@@ -99,6 +131,7 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
       console.log('Received stop-producer event');
       setLastReceivedEvent('stop-producer');
       stopCamera();
+      setIsVideo(false);
     };
 
     const onStopConsumer = () => {
@@ -128,9 +161,8 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
     }
 
     return () => {
-      setIsVideo(false);
-      console.log('끊어');
-      stopCamera();
+      cleanupResources(); // 기존 cleanup 대신 통합된 cleanup 함수 사용
+      socket.off('NOTIFICATION', handleOwnerRequset);
       socket.off('stop-consumer');
       socket.off('new-peer');
       socket.off('peer-left');
@@ -144,11 +176,13 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
   console.log('agreed', agreed);
 
   useEffect(() => {
-    if (joined && isOwner && agreed) {
-      console.log('카메라를 켜요 제발');
+    if (!joined) return;
+
+    if (isOwner && agreed) {
+      console.log('joined:', joined, 'isOwner:', isOwner, 'agreed:', agreed);
       startCamera();
     }
-  }, [agreed]);
+  }, [agreed, joined]);
 
   useEffect(() => {
     setAgreed(false);
@@ -248,22 +282,44 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
     return newRecvTransport;
   };
 
-  const getLocalAudioStreamAndTrack = async () => {
-    const audioStream = await navigator.mediaDevices.getUserMedia({
-      audio: true,
-    });
-    return audioStream.getAudioTracks()[0];
+  const cleanupResources = () => {
+    stopCamera();
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
+    }
+    if (sendTransportRef.current) {
+      sendTransportRef.current.close();
+      sendTransportRef.current = null;
+    }
+    if (recvTransportRef.current) {
+      recvTransportRef.current.close();
+      recvTransportRef.current = null;
+    }
+    if (deviceRef.current) {
+      deviceRef.current = null;
+    }
+    if (audioContextRef.current) {
+      audioContextRef.current.close();
+      audioContextRef.current = null;
+    }
+    setJoined(false);
+    setIsVideo(false);
+    setAgreed(false);
   };
 
   const joinRoom = () => {
     console.log('------socket', socket);
     if (!socket || !auctionId) return;
+
+    if (joined) {
+      cleanupResources();
+    }
+
     console.log('거 드가쇼');
     socket.emit(
       'join-room',
       { roomId: auctionId, peerId: socket.id },
       async (response: JoinRoomResponse) => {
-        console.log('여기는 오나?');
         if (response.error) {
           console.error('Error joining room:', response.error);
           return;
@@ -280,30 +336,22 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
 
         setAgreed(isAgreed);
 
-        // Device 생성 및 로드
         const newDevice = await createDevice(rtpCapabilities);
-
-        // 송신용 Transport 생성
-        const newSendTransport = createSendTransport(
-          newDevice,
-          sendTransportOptions
-        );
-
-        // 수신용 Transport 생성
+        createSendTransport(newDevice, sendTransportOptions);
         createRecvTransport(newDevice, recvTransportOptions);
 
         socket.on('new-producer', handleNewProducer);
-
-        // 기존 참여자 목록 업데이트
         setPeers(peerIds.filter((id) => id !== socket.id));
 
-        // 기존 Producer들에 대한 Consumer 생성
         for (const producerInfo of existingProducers) {
           await consume(producerInfo);
         }
 
-        console.log('방에 들어갈게요?');
         setJoined(true);
+
+        if (isOwner && isAgreed) {
+          startCamera();
+        }
       }
     );
   };
@@ -339,105 +387,112 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
     });
   };
 
-  const getStream = async () => {
-    let stream;
+  const startProducing = async () => {
+    console.log('==== Start Producing Called ====');
+    console.log('SendTransport State:', sendTransportRef.current);
+
+    if (!sendTransportRef.current) {
+      console.error('Send transport not initialized');
+      return;
+    }
 
     try {
-      stream = await navigator.mediaDevices.getUserMedia({
+      console.log('Requesting media stream...');
+      const stream = await navigator.mediaDevices.getUserMedia({
         video: {
           width: { ideal: 720 },
           height: { ideal: 1280 },
         },
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true,
+        },
       });
 
       setLocalStream(stream);
-      return stream; // 성공 시 stream 반환
-    } catch (error) {
-      console.log('카메라 켜기 싫대요', error);
-      socket?.emit('seller-disagreed-camera', { roomId: auctionId });
-    }
-  };
 
-  const startProducing = async () => {
-    if (!sendTransportRef.current) return;
+      const videoTrack = stream.getVideoTracks()[0];
+      const audioTrack = stream.getAudioTracks()[0];
 
-    console.log('New Creater-----');
-
-    const stream = await getStream();
-    /* produce audio */
-
-    /* produce video */
-    // let stream;
-    // navigator.mediaDevices
-    //   .getUserMedia({
-    //     video: {
-    //       width: { ideal: 720 }, // 원하는 가로 해상도
-    //       height: { ideal: 1280 }, // 원하는 세로 해상도
-    //     },
-    //   })
-    //   .then((gotStream) => {
-    //     setLocalStream(gotStream);
-    //     stream = gotStream;
-    //   })
-    //   .catch((reason) => {
-    //     socket?.emit('seller-disagreed-camera', { roomId: auctionId });
-    //   });
-    // const stream = await navigator.mediaDevices.getUserMedia({
-    //   video: {
-    //     width: { ideal: 720 }, // 원하는 가로 해상도
-    //     height: { ideal: 1280 }, // 원하는 세로 해상도
-    //   },
-    // });
-
-    // if (!stream) {
-    //   console.log('거절@@@');
-    //   return;
-    // }
-    if (stream) {
       if (localVideoRef.current) {
         localVideoRef.current.srcObject = stream;
       }
 
-      const videoTrack = stream.getVideoTracks()[0];
+      if (videoTrack) {
+        console.log('Creating video producer...');
+        const newVideoProducer = await sendTransportRef.current.produce({
+          track: videoTrack,
+        });
+        console.log('Video producer created:', newVideoProducer.id);
+        mediaProducers.current.videoProducer = newVideoProducer;
+      }
 
-      // 비디오 Producer 생성
-      const newVideoProducer = await sendTransportRef.current.produce({
-        track: videoTrack,
+      if (audioTrack) {
+        console.log('Creating audio producer...');
+        const newAudioProducer = await sendTransportRef.current.produce({
+          track: audioTrack,
+        });
+        console.log('Audio producer created:', newAudioProducer.id);
+        mediaProducers.current.audioProducer = newAudioProducer;
+      }
+
+      setIsVideo(true);
+    } catch (error) {
+      console.error('StartProducing Error:', error);
+      console.error('Error details:', {
+        name: error.name,
+        message: error.message,
+        stack: error.stack,
       });
-      // setVideoProducer(newVideoProducer);
-      mediaProducers.current.videoProducer = newVideoProducer;
-      setIsSeller(true);
+      stopCamera();
+      socket?.emit('seller-disagreed-camera', { roomId: auctionId });
+    }
+  };
 
-      console.log('영상틀었다요');
-      const audioTrack = await getLocalAudioStreamAndTrack();
-      const newAudioProducer = await sendTransportRef.current.produce({
-        track: audioTrack,
-      });
-
-      // setAudioProducer(newAudioProducer);
-      mediaProducers.current.audioProducer = newAudioProducer;
+  const stopConsumers = () => {
+    if (mediaConsumers.current.videoConsumer) {
+      mediaConsumers.current.videoConsumer.close();
+      mediaConsumers.current.videoConsumer = null;
+    }
+    if (mediaConsumers.current.audioConsumer) {
+      mediaConsumers.current.audioConsumer.close();
+      mediaConsumers.current.audioConsumer = null;
+    }
+    if (localVideoRef.current) {
+      localVideoRef.current.srcObject = null;
+    }
+    if (audioRef.current) {
+      audioRef.current.srcObject = null;
     }
   };
 
   const stopCamera = () => {
     if (localStream) {
-      localStream.getTracks().forEach((track) => track.stop());
+      localStream.getTracks().forEach((track) => {
+        track.stop();
+        track.enabled = false; // 트랙 비활성화 추가
+      });
       setLocalStream(null);
-      setIsVideo(false);
     }
+
     if (localVideoRef.current) {
       localVideoRef.current.srcObject = null;
     }
+
     if (mediaProducers.current.videoProducer) {
       mediaProducers.current.videoProducer.close();
       mediaProducers.current.videoProducer = null;
     }
-    // if (audioProducer) {
+
     if (mediaProducers.current.audioProducer) {
       mediaProducers.current.audioProducer.close();
       mediaProducers.current.audioProducer = null;
     }
-    setIsSeller(false);
+
+    // Consumer 정리 추가
+    stopConsumers();
+    setIsVideo(false);
   };
 
   const handleNewProducer = async ({ producerId, peerId, kind }) => {
@@ -499,15 +554,52 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
         } else if (consumer.kind === 'audio') {
           const audioElement = audioRef.current;
           audioElement.srcObject = remoteStream;
-          audioElement.autoplay = true;
-          // audioElement.controls = true;
-          // document.getElementById('remote-media').appendChild(audioElement);
+          // audioElement.autoplay = true;
 
-          // 브라우저의 자동재생 정책을 우회하기 위해 재생 시도
+          // 오디오 컨텍스트 생성 및 초기화
+          if (!audioContextRef.current) {
+            audioContextRef.current = new (window.AudioContext ||
+              window.webkitAudioContext)();
+          }
+
+          // 오디오 분석 설정
+          const source =
+            audioContextRef.current.createMediaStreamSource(remoteStream);
+          const analyser = audioContextRef.current.createAnalyser();
+          analyserRef.current = analyser;
+
+          console.log('analyser', analyserRef.current);
+
+          // 분석 설정
+          analyser.fftSize = 256;
+          analyser.smoothingTimeConstant = 0.5;
+
+          source.connect(analyser);
+          // 오디오 출력을 위한 연결
+          source.connect(audioContextRef.current.destination);
+
+          // 사용자 인터랙션 핸들러
+          const resumeAudio = async () => {
+            try {
+              if (audioContextRef.current?.state === 'suspended') {
+                await audioContextRef.current.resume();
+              }
+              await audioElement.play();
+              document.removeEventListener('click', resumeAudio);
+              document.removeEventListener('touchstart', resumeAudio);
+            } catch (err) {
+              console.error('Audio playback failed:', err);
+            }
+          };
+
+          document.addEventListener('click', resumeAudio);
+          document.addEventListener('touchstart', resumeAudio);
+
           try {
             await audioElement.play();
           } catch (err) {
-            console.error('Audio playback failed:', err);
+            setIsOpen(true);
+            console.log('Waiting for user interaction to play audio');
           }
         }
       }
@@ -538,28 +630,73 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
     }
   };
 
-  const startCamera = () => {
-    console.log(
-      '1. start camera and stop prev producer============',
-      auctionId
-    );
-    socket.emit(
-      'stop-prev-producer',
-      { roomId: auctionId, peerId: socket.id },
-      (response: boolean) => {
-        console.log('stop prev producer response+++++++++++++', response);
-        if (!response) {
-          console.log('2. No prev producer============', auctionId);
-          return;
-        }
-        console.log('2. prev prod stopped============', auctionId);
-        startProducing();
-      }
-    );
+  const startCamera = async () => {
+    console.log('==== Start Camera Called ====');
+    console.log('Current Socket State:', socket?.connected);
+    console.log('Current MediaProducers:', mediaProducers.current);
+
+    stopCamera();
+
+    if (!socket || !socket.connected) {
+      console.error('Socket Connection Error - Socket:', socket);
+      return;
+    }
+
+    try {
+      // 이전 producer 정리
+      const response = await new Promise<boolean>((resolve) => {
+        console.log('Emitting stop-prev-producer');
+        socket.emit(
+          'stop-prev-producer',
+          { roomId: auctionId, peerId: socket.id },
+          (res: boolean) => {
+            console.log('Stop Previous Producer Response:', res);
+            resolve(res);
+          }
+        );
+      });
+
+      console.log('After stopping previous producer');
+      await startProducing();
+    } catch (error) {
+      console.error('StartCamera Error:', error);
+    }
   };
 
+  console.log('isVideo', isVideo);
+
   return (
-    <div style={{ width: '100%', height: '100%' }}>
+    <Box
+      bgImage="url('/images/defaultImage.png')"
+      bgSize="cover"
+      bgPosition="center"
+      width="100%"
+      height="100%"
+    >
+      <SpeakingIndicator analyser={analyserRef.current} />
+      <Box display={isOwner ? 'none' : 'block'}>
+        <Text
+          animation={`${blinkAnimation} 1.5s ease-in-out infinite`}
+          backgroundColor="transparent"
+          textAlign="center"
+          fontWeight="700"
+          color="#FCFCFD"
+          left={0}
+          right={0}
+          position="absolute"
+          bottom="50px"
+          display={isOpen ? 'block' : 'none'}
+          fontSize="24px"
+          zIndex={100}
+          onClick={() => setIsOpen(false)}
+        >
+          아무 곳이나 눌러주세요
+        </Text>
+        <SpringModal p="" isOpen={isOpen} setIsOpen={setIsOpen}>
+          <Box height="1px" />
+        </SpringModal>
+      </Box>
+
       <div style={{ display: 'none' }}>
         <h2>Room: {auctionId || '-'}</h2>
         {!joined ? (
@@ -589,7 +726,8 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
         </div>
       </div>
       <div style={{ display: agreed ? 'block' : 'none' }}>
-        <audio ref={audioRef}>
+        {/* <div style={{ display: agreed && isVideo ? 'block' : 'none' }}> */}
+        <audio ref={audioRef} playsInline controls={false}>
           <track />
         </audio>
         <video
@@ -604,14 +742,16 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
           }}
         />
       </div>
-      <Image
+      {/* <Image
         display={agreed ? 'none' : 'block'}
+        // display={agreed && isVideo ? 'none' : 'block'}
         width="100%"
         height="100%"
-        src="/images/back_temp.jpeg"
+        // src={agreed && isVideo ? '' : '/images/back_temp.jpeg'}
+        src={agreed ? '' : '/images/back_temp.jpeg'}
         objectFit="cover"
-      />
-    </div>
+      /> */}
+    </Box>
   );
 }
 
