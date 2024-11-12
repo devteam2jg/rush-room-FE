@@ -24,6 +24,10 @@ function BiddingControlModalOnState({
   const socket = useSocketStore((state) => state.socket);
   const nav = useNavigate();
   const { confetti } = useConfetti();
+  const [rushAudio] = useState(new Audio('/sounds/rush.wav'));
+  const [waitingAudio] = useState(new Audio('/sounds/waitingVer1.wav'));
+  const [successAudio] = useState(new Audio('/sounds/congraturation.wav'));
+  const [failAudio] = useState(new Audio('/sounds/none.wav'));
 
   // const confetti = new JSConfetti();
 
@@ -52,6 +56,18 @@ function BiddingControlModalOnState({
     });
   };
 
+  const handleSuccessSound = () => {
+    successAudio.play().catch((error) => {
+      console.error('오디오 재생 실패:', error);
+    });
+  };
+
+  const handleSadSound = () => {
+    failAudio.play().catch((error) => {
+      console.error('오디오 재생 실패:', error);
+    });
+  };
+
   useEffect(() => {
     if (!socket) return undefined;
     const handleNotiState = (response: any) => {
@@ -63,9 +79,19 @@ function BiddingControlModalOnState({
         case 'BID_READY':
           setOpenResult(false);
           setOpenReady(true);
+          waitingAudio.play().catch((error) => {
+            console.error('오디오 재생 실패:', error);
+          });
           break;
         case 'BID_START':
           setOpenReady(false);
+          waitingAudio.pause();
+          waitingAudio.currentTime = 0;
+          break;
+        case 'RUSH_TIME':
+          rushAudio.play().catch((error) => {
+            console.error('오디오 재생 실패:', error);
+          });
           break;
         case 'BID_END':
           setOpen(false);
@@ -76,8 +102,10 @@ function BiddingControlModalOnState({
           if (response.name) {
             console.log('샀다');
             handleConffeti();
+            handleSuccessSound();
           } else {
             handleSadConffeti();
+            handleSadSound();
           }
           break;
         case 'AUCTION_END':
