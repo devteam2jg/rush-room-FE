@@ -50,7 +50,7 @@ export default function AuctionOverviewList() {
           overflow="auto"
           alignItems="center"
           width="100%"
-          justifycontent="space-between"
+          justifyContent="space-between"
         >
           {data.data.map((item: { auctionDto: Auction }) => (
             <AuctionOverviewItemList
