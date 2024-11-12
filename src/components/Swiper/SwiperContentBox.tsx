@@ -107,6 +107,7 @@ function SwiperContentBox({
           />
           {getValue() && (
             <Input
+              color="white"
               placeholder={placeholderText}
               value={auctionInfo.privateCode}
               onChange={(e) => {
@@ -121,6 +122,7 @@ function SwiperContentBox({
             <Textarea
               h="200px"
               size="md"
+              color="white"
               value={getValue() as string}
               onChange={handleOnChange}
               placeholder={placeholderText}
@@ -128,6 +130,7 @@ function SwiperContentBox({
           )}
           {inputType === 'text' && (
             <Input
+              color="white"
               type={inputType}
               value={getValue() as string}
               onChange={handleOnChange}
@@ -136,6 +139,7 @@ function SwiperContentBox({
           )}
           {inputType === 'datetime-local' && (
             <Input
+              color="white"
               type={inputType}
               value={getValue() as string}
               onChange={handleOnChange}
@@ -144,6 +148,7 @@ function SwiperContentBox({
           )}
           {inputType === 'file' && (
             <Input
+              color="white"
               type={inputType}
               onChange={handleFilesChange}
               placeholder={placeholderText}

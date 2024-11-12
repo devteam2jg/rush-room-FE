@@ -28,8 +28,14 @@ function Background() {
 }
 
 interface ItemProps {
-  auctionDto: object;
-  ownerProfile: object;
+  auctionDto: {
+    status: string;
+    title: string;
+  };
+  ownerProfile: {
+    nickname: string;
+    thumbnailUrl: string;
+  };
 }
 
 function Card({ auctionDto, ownerProfile }: ItemProps) {

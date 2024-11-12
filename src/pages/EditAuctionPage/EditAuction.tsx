@@ -67,7 +67,7 @@ export default function EditAuction() {
         sourceType="editAuction"
       />
       <Box marginLeft="20px" marginBottom="30px">
-        <Text fontSize="20px" fontWeight={700}>
+        <Text color="white" fontSize="20px" fontWeight={700}>
           수정하고 싶은
           <br />
           정보를 입력해 주세요.
@@ -78,30 +78,33 @@ export default function EditAuction() {
         onIndexChange={handleIndexChange}
       >
         <Box margin="0 auto" width="90vw" height="60vh">
-          <Text fontSize="12px" mb="8px">
+          <Text color="white" fontSize="12px" mb="8px">
             이름
           </Text>
           <Input
+            color="white"
             value={auctionInfo.title}
             onChange={(e) => updateField('title', e.target.value)}
             placeholder="이름을 입력해주세요."
           />
         </Box>
         <Box margin="0 auto" width="90vw" height="60vh">
-          <Text fontSize="12px" mb="8px">
+          <Text color="white" fontSize="12px" mb="8px">
             상세내용
           </Text>
           <Textarea
+            color="white"
             value={auctionInfo.description}
             onChange={(e) => updateField('description', e.target.value)}
             placeholder="상세 내용을 입력해주세요"
           />
         </Box>
         <Box margin="0 auto" width="90vw" height="60vh">
-          <Text fontSize="12px" mb="8px">
+          <Text color="white" fontSize="12px" mb="8px">
             물품 당 경매 시간
           </Text>
           <Input
+            color="white"
             value={auctionInfo.sellingLimitTime}
             onChange={(e) => updateField('sellingLimitTime', e.target.value)}
             placeholder="물품 당 경매 시간을 정해주세요."
@@ -109,10 +112,11 @@ export default function EditAuction() {
           />
         </Box>
         <Box margin="0 auto" width="90vw" height="60vh">
-          <Text fontSize="12px" mb="8px">
+          <Text color="white" fontSize="12px" mb="8px">
             날짜
           </Text>
           <Input
+            color="white"
             type="datetime-local"
             value={auctionInfo.eventDate.slice(0, -5)}
             onChange={(e) => updateField('eventDate', e.target.value)}
@@ -120,10 +124,11 @@ export default function EditAuction() {
           />
         </Box>
         <Box margin="0 auto" width="90vw" height="60vh">
-          <Text fontSize="12px" mb="8px">
+          <Text color="white" fontSize="12px" mb="8px">
             참가자 예산 설정
           </Text>
           <Input
+            color="white"
             value={auctionInfo.budget}
             onChange={(e) => updateField('budget', e.target.value)}
             placeholder="참가자의 예산 제한 금액을 입력해주세요."
@@ -132,11 +137,12 @@ export default function EditAuction() {
         </Box>
 
         <Box margin="0 auto" width="90vw" height="60vh">
-          <Text fontSize="12px" mb="8px">
+          <Text color="white" fontSize="12px" mb="8px">
             경매 방을 비공개로 설정하시겠어용 ㅇㅅㅇ?
           </Text>
           {!auctionInfo.isPrivate ? (
             <Checkbox
+              color="white"
               isChecked={auctionInfo.isPrivate}
               onChange={(e) => updateField('isPrivate', e.target.checked)}
               placeholder="비밀번호를 입력해주세요"
@@ -144,10 +150,12 @@ export default function EditAuction() {
           ) : (
             <>
               <Checkbox
+                color="white"
                 isChecked={auctionInfo.isPrivate}
                 onChange={(e) => updateField('isPrivate', e.target.checked)}
               />
               <Input
+                color="white"
                 value={auctionInfo.privateCode}
                 onChange={(e) => updateField('privateCode', e.target.value)}
                 placeholder="비밀번호를 입력해주세요"
