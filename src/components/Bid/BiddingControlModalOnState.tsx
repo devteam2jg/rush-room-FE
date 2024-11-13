@@ -112,7 +112,7 @@ function BiddingControlModalOnState({
           nav('/');
           break;
         default:
-          console.log('UNKOWN STATUS ERROR');
+          console.log('UNKHOWN STATUS ERROR');
       }
     };
 
@@ -127,6 +127,10 @@ function BiddingControlModalOnState({
 
     return () => {
       socket.off('NOTIFICATION', handleNotiState);
+      waitingAudio.pause();
+      rushAudio.pause();
+      successAudio.pause();
+      failAudio.pause();
     };
   }, [socket]);
 
@@ -138,6 +142,9 @@ function BiddingControlModalOnState({
       <SpringModal p="" isOpen={openReady} setIsOpen={setOpenReady}>
         <BiddingWaiting />
       </SpringModal>
+      {/* <SpringModal p="" isOpen={openReady} setIsOpen={setOpenReady}>
+        <BiddingFinalResult />
+      </SpringModal> */}
     </>
   );
 }
