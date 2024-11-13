@@ -13,11 +13,12 @@ function CreateItem() {
   };
   return (
     <Container
-      padding="0"
-      minW="320px"
-      maxW="container.lg"
       height="calc(var(--vh, 1vh) * 100)"
       bg="#282828"
+      padding={{ base: '0', sm: '0' }}
+      minW="320px"
+      width="100%"
+      overflow="hidden"
     >
       <SwiperButton
         type="prev"
@@ -26,7 +27,11 @@ function CreateItem() {
         sourceType="auctionItem"
       />
       <Box marginLeft="20px" marginBottom="30px">
-        <Text fontSize="20px" fontWeight={700} color="white">
+        <Text
+          fontSize={{ base: '20px', sm: '22px' }}
+          fontWeight={700}
+          color="white"
+        >
           등록할 물품의
           <br />
           정보를 입력해 주세요

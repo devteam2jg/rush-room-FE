@@ -52,7 +52,7 @@ function PrivateCodeModal({ isPrivate, isOwner, endorsed }: AuctionData) {
 
   return (
     <Box position="absolute">
-      <SpringModal isOpen={isOpen} setIsOpen={setIsOpen}>
+      <SpringModal p="" isOpen={isOpen} setIsOpen={setIsOpen}>
         <Heading color="white">쉿! 비밀 방 입장하기</Heading>
         <Box pb={6}>
           <FormControl>

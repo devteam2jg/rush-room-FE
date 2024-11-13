@@ -28,7 +28,14 @@ function BiddingImage({ images }: BiddingImageProps) {
 
   return (
     <Box backgroundColor="#141517">
-      <Swiper pagination modules={[Pagination]} className="mySwiper">
+      <Swiper
+        style={{
+          '--swiper-pagination-color': '#B9A5E2',
+        }}
+        pagination
+        modules={[Pagination]}
+        className="mySwiper"
+      >
         {images.map((image, index) => (
           <SwiperSlide key={nanoid()}>
             {image.split('.').pop() === 'm3u8' ? (
@@ -71,6 +78,8 @@ function BiddingImage({ images }: BiddingImageProps) {
             style={{
               width: '100%',
               height: '100%',
+              '--swiper-navigation-color': '#B9A5E2',
+              '--swiper-pagination-color': '#B9A5E2',
             }}
           >
             {images.map((image) => (

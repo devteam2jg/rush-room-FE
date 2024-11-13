@@ -7,6 +7,7 @@ import {
   VStack,
   Box,
 } from '@chakra-ui/react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { AuctionItem } from '../../utils/types';
 import useFormatPrice from '../../hooks/Bid/useFormatPrice';
 
@@ -15,6 +16,12 @@ interface ItemProps {
 }
 
 function BiddingItemInfo({ item }: ItemProps) {
+  const { auctionId } = useParams();
+  const nav = useNavigate();
+
+  const handleDetail = () => {
+    nav(`/auction/${auctionId}/details/${item.id}`);
+  };
   return (
     <Box>
       <Flex
@@ -59,6 +66,7 @@ function BiddingItemInfo({ item }: ItemProps) {
             color="#FCFCFD"
             padding="10px"
             height={{ base: '40px', sm: '50px' }}
+            onClick={handleDetail}
           >
             상세보기
           </Button>

@@ -129,9 +129,9 @@ function BiddingRaise({
     }
   };
 
-  const handleMaxRaise = () => {
-    const bid = raisedPrice + 50000;
-    if (budget && Number(bid) > budget) {
+  const handleMaxRaise = (finalPrice) => {
+    console.log('얼만데', finalPrice.raise);
+    if (budget && Number(finalPrice.raise) > budget) {
       toast({
         title: '실패',
         description: '예산을 초과했습니다',
@@ -141,12 +141,13 @@ function BiddingRaise({
         isClosable: true,
       });
     }
-    if (bid) {
+    if (finalPrice.raise) {
       const bidForm = {
         auctionId,
-        bidPrice: Number(bid),
+        bidPrice: Number(finalPrice.raise),
         bidderId: user?.id,
         bidderNickname: user?.name,
+        percent: finalPrice.percent,
       };
       socket?.emit('new_bid', bidForm);
     } else {
@@ -159,6 +160,37 @@ function BiddingRaise({
         isClosable: true,
       });
     }
+  };
+
+  const RaiseFive = Math.round((raisedPrice * 1.05) / 10) * 10;
+  const RaiseTen = Math.round((raisedPrice * 1.1) / 10) * 10;
+  const RaiseTwenty = Math.round((raisedPrice * 1.2) / 10) * 10;
+
+  const handleRaiseCalcFive = () => {
+    const Raise = {
+      raise: RaiseFive,
+      percent: 5,
+    };
+    console.log('이거', Raise);
+    handleMaxRaise(Raise);
+  };
+
+  const handleRaiseCalcTen = () => {
+    const Raise = {
+      raise: RaiseTen,
+      percent: 10,
+    };
+    console.log('이거', Raise);
+    handleMaxRaise(Raise);
+  };
+
+  const handleRaiseCalcTwenty = () => {
+    const Raise = {
+      raise: RaiseTwenty,
+      percent: 20,
+    };
+    console.log('이거', Raise);
+    handleMaxRaise(Raise);
   };
 
   return (
@@ -197,12 +229,12 @@ function BiddingRaise({
         </VStack>
         <BiddingSetRaceTime currentTime={currentTime.currentTime} />
         {currentTime.currentTime > 30 ? (
-          <Box width="100%">
+          <HStack width="100%">
             <Button
               width="100%"
               height={{ base: '40px', sm: '50px' }}
               colorScheme="red"
-              onClick={handleMaxRaise}
+              onClick={handleRaiseCalcFive}
             >
               <Flex alignItems="center" gap="12px">
                 <Box display={{ base: 'none', sm: 'block' }}>
@@ -211,11 +243,45 @@ function BiddingRaise({
                 <Box display={{ base: 'block', sm: 'none' }}>
                   <BiTimer fontSize="20px" />
                 </Box>
-                {/* <Text>{(raisedPrice + maxRange).toLocaleString()} 원</Text> */}
-                <Text>50,000 원</Text>
+                {/* <Text>{RaiseFive.toLocaleString()} 원</Text> */}
+                <Text>5 %</Text>
               </Flex>
             </Button>
-          </Box>
+            <Button
+              width="100%"
+              height={{ base: '40px', sm: '50px' }}
+              colorScheme="red"
+              onClick={handleRaiseCalcTen}
+            >
+              <Flex alignItems="center" gap="12px">
+                <Box display={{ base: 'none', sm: 'block' }}>
+                  <BiTimer fontSize="30px" />
+                </Box>
+                <Box display={{ base: 'block', sm: 'none' }}>
+                  <BiTimer fontSize="20px" />
+                </Box>
+                {/* <Text>{RaiseTen.toLocaleString()} 원</Text> */}
+                <Text>10 %</Text>
+              </Flex>
+            </Button>
+            <Button
+              width="100%"
+              height={{ base: '40px', sm: '50px' }}
+              colorScheme="red"
+              onClick={handleRaiseCalcTwenty}
+            >
+              <Flex alignItems="center" gap="12px">
+                <Box display={{ base: 'none', sm: 'block' }}>
+                  <BiTimer fontSize="30px" />
+                </Box>
+                <Box display={{ base: 'block', sm: 'none' }}>
+                  <BiTimer fontSize="20px" />
+                </Box>
+                {/* <Text>{RaiseTwenty.toLocaleString()} 원</Text> */}
+                <Text>20 %</Text>
+              </Flex>
+            </Button>
+          </HStack>
         ) : null}
 
         <Box position="relative" width="100%">

@@ -43,7 +43,7 @@ export default function AddAuction({ data, isOwner }: Data) {
   };
 
   return (
-    <Box p={4} textAlign="center" bg="#282828">
+    <Box width="100%" p={4} textAlign="center" bg="#282828">
       {isOwner ? (
         <>
           <VStack spacing={4} align="flex-start">

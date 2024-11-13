@@ -11,12 +11,12 @@ function AuctionItemList({ item }: ItemsProps) {
   const { auctionId } = useParams();
   const nav = useNavigate();
   const handleEnterAuction = () => {
-    nav(`/auction/${auctionId}/bid/${item.id}`);
+    nav(`/auction/${auctionId}/bid`);
   };
   return (
     <Grid
       width="100%"
-      templateColumns="20% 25% 25% 25%"
+      templateColumns="1fr 1fr 1fr 1fr"
       alignItems="center"
       gap={2}
     >
@@ -61,10 +61,9 @@ function AuctionItemList({ item }: ItemsProps) {
       </GridItem>
       <GridItem>
         <Button
-          marginRight="12px"
           backgroundColor="#AA8EBF"
           color="white"
-          width="80%"
+          width="100%"
           textAlign="center"
           onClick={handleEnterAuction}
         >

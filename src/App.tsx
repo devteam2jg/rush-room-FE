@@ -27,9 +27,9 @@ function App() {
         width="100vw"
         height="calc(var(--vh, 1vh) * 100)"
         bg="#161717"
-        gap="200px"
+        gap={{ base: '0', xl: '200px' }}
         alignItems="center"
-        justifyContent="center"
+        justifyContent={{ base: 'space-evenly', xl: 'center' }}
         flexDirection={{ base: 'column', lg: 'row' }}
       >
         <VStack

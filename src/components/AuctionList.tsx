@@ -20,8 +20,8 @@ export default function AuctionList({
   const { toast } = createStandaloneToast();
   const { data, error, isPending } = useAuctionDetail();
   const [items, setItems] = useState<AuctionItem[]>([]);
-  const [draggingItem, setDraggingItem] = useState<AuctionItem | null>(null);
-  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+  // const [draggingItem, setDraggingItem] = useState<AuctionItem | null>(null);
+  // const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
 
   useEffect(() => {
     if (data) {
@@ -45,72 +45,69 @@ export default function AuctionList({
     });
   }
 
-  const handleDragStart = (item: AuctionItem) => {
-    console.log('Drag start', item);
-    setDraggingItem(item);
-  };
-  const handleDragOver = (
-    e: React.DragEvent<HTMLDivElement>,
-    index: number
-  ) => {
-    console.log('Drag Over', index);
-    e.preventDefault();
-    setDragOverIndex(index);
-  };
+  // const handleDragStart = (item: AuctionItem) => {
+  //   console.log('Drag start', item);
+  //   setDraggingItem(item);
+  // };
+  // const handleDragOver = (
+  //   e: React.DragEvent<HTMLDivElement>,
+  //   index: number
+  // ) => {
+  //   console.log('Drag Over', index);
+  //   e.preventDefault();
+  //   setDragOverIndex(index);
+  // };
 
-  // 드롭 시 호출
-  const handleDrop = () => {
-    console.log('Drop:', draggingItem);
-    if (draggingItem !== null && dragOverIndex !== null) {
-      const updatedItems = [...items];
-      const draggedIndex = updatedItems.findIndex(
-        (i) => i.id === draggingItem.id
-      );
+  // // 드롭 시 호출
+  // const handleDrop = () => {
+  //   console.log('Drop:', draggingItem);
+  //   if (draggingItem !== null && dragOverIndex !== null) {
+  //     const updatedItems = [...items];
+  //     const draggedIndex = updatedItems.findIndex(
+  //       (i) => i.id === draggingItem.id
+  //     );
 
-      if (draggedIndex !== -1 && draggedIndex !== dragOverIndex) {
-        const [removedItem] = updatedItems.splice(draggedIndex, 1);
-        updatedItems.splice(dragOverIndex, 0, removedItem);
-        setItems(updatedItems);
-      }
-    }
-    setDraggingItem(null);
-    setDragOverIndex(null);
-  };
+  //     if (draggedIndex !== -1 && draggedIndex !== dragOverIndex) {
+  //       const [removedItem] = updatedItems.splice(draggedIndex, 1);
+  //       updatedItems.splice(dragOverIndex, 0, removedItem);
+  //       setItems(updatedItems);
+  //     }
+  //   }
+  //   setDraggingItem(null);
+  //   setDragOverIndex(null);
+  // };
 
   return (
     <Box
+      width="100%"
       marginBottom="20vh"
       p={4}
-      height="100%"
+      height="calc(100vh - 20vh)"
       textAlign="center"
       color={fontColor}
       bg={bgColor}
+      overflow="hidden"
     >
-      <VStack justifyContent="center" spacing={4} alignItems="center">
+      <VStack
+        width="100%"
+        justifyContent="flex-start"
+        spacing={4}
+        alignItems="center"
+        height="100%"
+        overflowY="auto"
+      >
         <Heading
           display={headerShow === 'show' ? 'block' : 'none'}
           as="h5"
           size="xm"
           textAlign="left"
           color="white"
+          w="100%"
         >
           경매 물품 리스트
         </Heading>
-        {items?.map((item, index) => (
-          <div
-            key={item.id}
-            draggable
-            onDragStart={() => handleDragStart(item)}
-            onDragOver={(e) => handleDragOver(e, index)}
-            onDrop={handleDrop}
-            style={{
-              border: dragOverIndex === index ? '2px dashed #AA8EBF' : 'none',
-              padding: '4px',
-            }}
-          >
-            <AuctionItemList item={item} />
-          </div>
-        ))}
+
+        {items?.map((item) => <AuctionItemList key={item.id} item={item} />)}
       </VStack>
     </Box>
   );

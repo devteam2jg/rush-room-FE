@@ -24,9 +24,9 @@ const useConnectOnEnter = ({ auctionId }: SocketProps) => {
     const newSocket = io(GAME_SERVER_URL, {
       path: '/game/socket.io',
     });
-    // const newVideoSocket = io(MEDIA_SERVER_URL, {
-    //   path: '/media/socket.io',
-    // });
+    const newVideoSocket = io(MEDIA_SERVER_URL, {
+      path: '/media/socket.io',
+    });
 
     newSocket?.on('connect', () => {
       // setIsConnected(true);
@@ -40,26 +40,26 @@ const useConnectOnEnter = ({ auctionId }: SocketProps) => {
       console.log('Game Socket connect_error:', error);
     });
 
-    // newVideoSocket.on('connect', () => {
-    //   videoSocketRef.current = newVideoSocket;
-    //   setVideoSocket(newVideoSocket);
-    //   setVideoIsConnected(true);
-    //   console.log('Stream Connected to server:', newVideoSocket.id);
-    // });
+    newVideoSocket.on('connect', () => {
+      videoSocketRef.current = newVideoSocket;
+      setVideoSocket(newVideoSocket);
+      setVideoIsConnected(true);
+      console.log('Stream Connected to server:', newVideoSocket.id);
+    });
 
-    // newVideoSocket.on('connect_error', (error) => {
-    //   console.log('Stream Socket connect_error:', error);
-    // });
+    newVideoSocket.on('connect_error', (error) => {
+      console.log('Stream Socket connect_error:', error);
+    });
 
     newSocket?.on('disconnect', (reason) => {
       setSocketIsConnected(false);
       console.log('Game Socket disconnected', reason);
     });
 
-    // newVideoSocket?.on('disconnect', (reason) => {
-    //   setVideoIsConnected(false);
-    //   console.log('Stream Video Socket disconnected', reason);
-    // });
+    newVideoSocket?.on('disconnect', (reason) => {
+      setVideoIsConnected(false);
+      console.log('Stream Video Socket disconnected', reason);
+    });
 
     return () => {
       videoSocketRef.current?.emit('leave-room', { roomId: auctionId });

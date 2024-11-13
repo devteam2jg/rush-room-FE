@@ -1,4 +1,4 @@
-import { Image, Flex, Box, VStack } from '@chakra-ui/react';
+import { VStack } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import Navigator from '../../components/Navigator';
 import serviceLogo from '../../assets/images/serviceLogo.png';
@@ -16,9 +16,9 @@ export default function AuctionOverview() {
       alignItems="inherit"
       overflow="auto"
     >
-      <Flex width="100%" backgroundColor="#161717" justifyContent="flex-start">
+      {/* <Flex width="100%" backgroundColor="#161717" justifyContent="flex-start">
         <Image height="50px" src={serviceLogo} onClick={() => nav('/')} />
-      </Flex>
+      </Flex> */}
       <AuctionOverviewList />
       <Navigator />
     </VStack>

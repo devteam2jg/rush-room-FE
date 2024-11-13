@@ -46,6 +46,7 @@ export default function AuctionOverviewList() {
         </Heading>
         <Divider />
         <VStack
+          // gap={10}
           height="100%"
           overflow="auto"
           alignItems="center"
@@ -53,13 +54,17 @@ export default function AuctionOverviewList() {
           justifyContent="space-between"
         >
           {data.data.map((item: { auctionDto: Auction }) => (
-            <AuctionOverviewItemList
-              auctionId={item.auctionDto.id}
-              key={item.auctionDto.id}
-              item={item.auctionDto}
-            />
+            <Box p={2} width="100%">
+              <AuctionOverviewItemList
+                auctionId={item.auctionDto.id}
+                key={item.auctionDto.id}
+                item={item.auctionDto}
+              />
+              <Box marginTop="12px" width="100%" height="12px" bg="#222222" />
+            </Box>
           ))}
         </VStack>
+        <Box height="60px" />
       </VStack>
     </Box>
   );

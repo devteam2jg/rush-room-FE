@@ -1,4 +1,4 @@
-import { HStack, VStack, Text } from '@chakra-ui/react';
+import { HStack, VStack, Text, Divider, Box } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 
 interface Auction {

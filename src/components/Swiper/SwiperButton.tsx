@@ -85,28 +85,18 @@ function SwiperButton({ type, currentIndex, slides, sourceType }: ButtonProps) {
           </Button>
         </Box>
       ) : (
-        <Flex justifyContent="center">
+        <Flex padding={4} justifyContent="center">
           <Button
             id="custom-next"
-            sx={{
-              backgroundColor: '#AA8EBF',
-              color: 'white',
-            }}
-            width="90%"
-            _hover={{ backgroundColor: '#977DAB' }}
-            _focus={{ backgroundColor: '#AA8EBF' }}
+            colorScheme="mong"
+            width="100%"
             display={currentIndex === slides - 1 ? 'none' : 'block'}
           >
             확인
           </Button>
           <Button
-            sx={{
-              backgroundColor: '#AA8EBF',
-              color: 'white',
-            }}
-            width="90%"
-            _hover={{ backgroundColor: '#977DAB' }}
-            _focus={{ backgroundColor: '#AA8EBF' }}
+            width="100%"
+            colorScheme="mong"
             display={currentIndex === slides - 1 ? 'block' : 'none'}
             onClick={handleSubmit}
             isLoading={mutation.isPending}

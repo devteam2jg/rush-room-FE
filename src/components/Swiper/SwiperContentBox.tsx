@@ -2,6 +2,7 @@ import { Box, Checkbox, Input, Text, Textarea } from '@chakra-ui/react';
 import useAuctionStore from '../../store/AuctionStore';
 import useShowToast from '../../hooks/useShowToast';
 import useAuctionItemStore from '../../store/AuntionItemStore';
+import FileUpload from '../Bidding/FileUpload';
 
 type SwiperProps =
   | 'title'
@@ -32,7 +33,6 @@ function SwiperContentBox({
   const { auctionItemInfo, updateItemField } = useAuctionItemStore();
   const showToast = useShowToast();
 
-  // 공통된 업데이트 로직 함수
   const handleUpdate = (
     field: SwiperProps | SwiperItemProps,
     value: string | boolean | File[] | null
@@ -95,15 +95,18 @@ function SwiperContentBox({
   };
 
   return (
-    <Box margin="0 auto" width="90vw" height="60vh">
-      <Text fontSize="12px" mb="8px" color="white">
+    <Box margin="0 auto" padding="4" width="100%" height="60vh">
+      <Text fontSize={{ base: '12px', sm: '18px' }} mb="8px" color="white">
         {labelText}
       </Text>
       {inputType === 'checkbox' ? (
         <>
           <Checkbox
+            size={{ base: 'sm', sm: 'lg' }}
+            colorScheme="mong"
             onChange={handleCheckboxChange}
             isChecked={getValue() as boolean}
+            marginBottom="12px"
           />
           {getValue() && (
             <Input
@@ -147,12 +150,9 @@ function SwiperContentBox({
             />
           )}
           {inputType === 'file' && (
-            <Input
-              color="white"
-              type={inputType}
-              onChange={handleFilesChange}
-              placeholder={placeholderText}
-              multiple
+            <FileUpload
+              handleFilesChange={handleFilesChange}
+              placeholderText="파일 선택하기"
             />
           )}
         </>

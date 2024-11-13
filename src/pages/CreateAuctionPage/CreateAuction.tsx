@@ -18,10 +18,9 @@ export default function CreateAuction() {
     <Container
       height="calc(var(--vh, 1vh) * 100)"
       bg="#282828"
-      padding="0"
+      padding={{ base: '0', sm: '0' }}
       minW="320px"
-      maxW="container.lg"
-      bgColor="#282828"
+      width="100%"
       overflow="hidden"
     >
       <SwiperButton
@@ -31,7 +30,11 @@ export default function CreateAuction() {
         sourceType="auction"
       />
       <Box marginLeft="20px" marginBottom="30px">
-        <Text fontSize="20px" fontWeight={700} color="white">
+        <Text
+          fontSize={{ base: '20px', sm: '22px' }}
+          fontWeight={700}
+          color="white"
+        >
           경매 방 생성을 위해
           <br />
           필요한 정보를 입력해 주세요.
@@ -77,7 +80,7 @@ export default function CreateAuction() {
           sourceType="auction"
         />
         <SwiperContentBox
-          labelText="경매 방을 비공개로 설정하시겠어용 ㅇㅅㅇ?"
+          labelText="경매 방 비공개"
           typeValue="isPrivate"
           inputType="checkbox"
           placeholderText="비밀번호를 입력해주세요"

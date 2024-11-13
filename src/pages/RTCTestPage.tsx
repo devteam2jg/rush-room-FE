@@ -162,7 +162,6 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
 
     return () => {
       cleanupResources(); // 기존 cleanup 대신 통합된 cleanup 함수 사용
-      socket.off('NOTIFICATION', handleOwnerRequset);
       socket.off('stop-consumer');
       socket.off('new-peer');
       socket.off('peer-left');

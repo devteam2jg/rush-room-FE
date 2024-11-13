@@ -1,4 +1,4 @@
-import { Box, createStandaloneToast, Spinner } from '@chakra-ui/react';
+import { Box, createStandaloneToast, Spinner, VStack } from '@chakra-ui/react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import AuctionInfo from '../../components/AuctionInfo';
@@ -36,11 +36,15 @@ function AuctionDetail() {
   }
 
   return (
-    <Box
-      overflowY="auto"
+    <VStack
+      width="100%"
+      // overflowY="auto"
       height="calc(var(--vh, 1vh) * 100)"
       position="relative"
+      overflow="hidden"
       bg="#282828"
+      alignItems="center"
+      justifyContent="space-between"
     >
       <PrivateCodeModal
         isPrivate={data.auctionDto.isPrivate}
@@ -50,8 +54,10 @@ function AuctionDetail() {
       <AuctionInfo />
       <AddAuction data={data} isOwner={data.readUser.isOwner} />
       <Box h={4} bgColor="#161617" />
-      <AuctionList headerShow="show" fontColor="white" bgColor="#282828" />
-    </Box>
+      <Box height="100vh">
+        <AuctionList headerShow="show" fontColor="white" bgColor="#282828" />
+      </Box>
+    </VStack>
   );
 }
 

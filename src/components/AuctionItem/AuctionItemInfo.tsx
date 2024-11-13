@@ -54,7 +54,12 @@ function AuctionItemInfo() {
   };
 
   return (
-    <Box height="100%" padding="16px" backgroundColor="#212326">
+    <Box
+      position="relative"
+      height="100%"
+      padding="16px"
+      backgroundColor="#212326"
+    >
       <Flex
         marginBottom="12px"
         alignItems="center"
@@ -96,7 +101,7 @@ function AuctionItemInfo() {
         backgroundColor="#212326"
         left={0}
         bottom={0}
-        position="fixed"
+        position="absolute"
         alignItems="center"
         borderTop="1px solid #323438"
         justifyContent="space-between"

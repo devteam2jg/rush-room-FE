@@ -6,10 +6,12 @@ import { FaRegUserCircle } from 'react-icons/fa';
 import { FiHome } from 'react-icons/fi';
 
 import useAuthStore from '../store/UserAuthStore';
+import AuctionHistoryStore from '../store/AuctionHistoryStore';
 
 export default function Navigator() {
   const navigate = useNavigate();
   const user = useAuthStore((state) => state.user);
+  const history = AuctionHistoryStore((state) => state.lastAuction);
 
   return (
     <Box
@@ -58,7 +60,7 @@ export default function Navigator() {
         <Flex
           direction="column"
           align="center"
-          onClick={() => navigate('/')}
+          onClick={() => navigate(`/auction/${history}/bid`)}
           cursor="pointer"
         >
           <MdInput />

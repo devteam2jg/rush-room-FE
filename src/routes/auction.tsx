@@ -52,7 +52,7 @@ const auctions = [
         ),
       },
       {
-        path: 'bid/:itemId',
+        path: 'bid/',
         element: (
           <ProtectedRoute>
             <Bid />

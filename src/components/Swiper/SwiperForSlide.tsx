@@ -18,6 +18,9 @@ function SwiperForSlide({
 }: SwiperProps) {
   return (
     <Swiper
+      style={{
+        '--swiper-pagination-fraction-color': '#fff',
+      }}
       pagination={{
         type: 'fraction',
       }}

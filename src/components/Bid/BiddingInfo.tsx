@@ -14,6 +14,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import DragCloseDrawer from '../Drawer/DragCloseDrawer';
 import useItemInfo from '../../hooks/Bid/useItemInfo';
 import useSocketStore from '../../store/useSocketStore';
+import BiddingImage from '../Bidding/BiddingImage';
 
 interface InfoProps {
   initialItemId: string | undefined;
@@ -30,6 +31,8 @@ function BiddingInfo({ initialItemId, infoOpen, setInfoOpen }: InfoProps) {
   );
   const nav = useNavigate();
   const { toast } = createStandaloneToast();
+
+  console.log(data);
 
   useEffect(() => {
     if (!auctionId || !socket) return undefined;
@@ -68,7 +71,7 @@ function BiddingInfo({ initialItemId, infoOpen, setInfoOpen }: InfoProps) {
       h=""
       open={infoOpen}
       setOpen={setInfoOpen}
-      heightValue="50vh"
+      heightValue="60vh"
     >
       <Box height="100%">
         <Box borderRadius="15px 15px 0 0" color="#E3E3E3" bg="#282828">
@@ -107,8 +110,11 @@ function BiddingInfo({ initialItemId, infoOpen, setInfoOpen }: InfoProps) {
           color="#E5E5E5"
           bg="#222222"
           overflow="auto"
-          height="calc(40vh - 48px)"
+          height="calc(60vh - 48px)"
         >
+          <Box height="12px" bg="#161617" />
+          <BiddingImage images={data.imageUrls} />
+          <Box height="12px" bg="#161617" />
           <Box padding="12px">
             <Text fontSize={{ base: '16px', sm: '18px' }} fontWeight="700">
               물품 제목

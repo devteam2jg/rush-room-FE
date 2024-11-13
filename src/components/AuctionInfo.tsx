@@ -48,8 +48,19 @@ export default function AuctionInfo() {
 
   return (
     <>
-      <Box bg="#282828" shadow="md" position="relative" maxHeight="100%vh">
-        <Flex h={16} alignItems="center" justifyContent="space-between">
+      <Box
+        width="100%"
+        bg="#282828"
+        shadow="md"
+        position="relative"
+        maxHeight="100%vh"
+      >
+        <Flex
+          width="100%"
+          h={16}
+          alignItems="center"
+          justifyContent="space-between"
+        >
           <Button
             bgColor="transparent"
             color="white"
@@ -59,9 +70,6 @@ export default function AuctionInfo() {
           >
             &lt;
           </Button>
-
-          <Box flex="1" />
-
           <Button
             color="white"
             fontSize="md"
@@ -72,7 +80,6 @@ export default function AuctionInfo() {
           >
             경매 정보
           </Button>
-          <Box />
         </Flex>
       </Box>
 
