@@ -2,10 +2,9 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Box, Text } from '@chakra-ui/react';
 import useSocketStore from '../../store/useSocketStore';
-import NeonBorder from '../NeonBorder';
 
 function BiddingRushTime() {
-  const [isRushTime, setIsRushTime] = useState(true);
+  const [isRushTime, setIsRushTime] = useState(false);
   const socket = useSocketStore((state) => state.socket);
 
   useEffect(() => {
