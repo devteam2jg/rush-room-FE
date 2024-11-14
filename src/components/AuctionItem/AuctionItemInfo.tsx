@@ -6,21 +6,16 @@ import {
   Flex,
   HStack,
   Image,
-  Modal,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
   Text,
-  useDisclosure,
 } from '@chakra-ui/react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useState } from 'react';
 import useBidItemInfo from '../../hooks/useBidItemInfo';
 import useAuctionItemDelete from '../../hooks/useAuctionItemDelete';
+import SpringModal from '../Modal/SpringModal';
 
 function AuctionItemInfo() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isOpen, setIsOpen] = useState(false);
   const { auctionId, itemId } = useParams();
   const { data, error, isPending } = useBidItemInfo();
   const { deleteAuctionItem } = useAuctionItemDelete();
@@ -128,25 +123,24 @@ function AuctionItemInfo() {
           width="75px"
           color="#D5D7DB"
           backgroundColor="#B9A5E2"
-          onClick={onOpen}
+          onClick={() => setIsOpen(!isOpen)}
         >
           Edit
         </Button>
       </Flex>
-      <Modal
-        size="xs"
-        blockScrollOnMount
-        isOpen={isOpen}
-        onClose={onClose}
-        isCentered
-      >
-        <ModalOverlay />
-        <ModalContent backgroundColor="#3A383F" height="150px" width="300px">
-          <ModalHeader fontWeight="700" color="#D5D7DB">
+      <SpringModal isOpen={isOpen} setIsOpen={setIsOpen}>
+        <Box backgroundColor="#3A383F" width="100%" p={5}>
+          <Text
+            fontWeight="sm"
+            fontSize="2xl"
+            color="#D5D7DB"
+            align="center"
+            pb={6}
+          >
             수정하기
-          </ModalHeader>
-          <ModalCloseButton color="#D5D7DB" />
-          <ModalFooter gap="20px" margin="0 auto">
+          </Text>
+          {/* <Button color="#D5D7DB" onClick={() => setIsOpen(!isOpen)} /> */}
+          <Flex gap={4} justifyContent="center" alignItems="center">
             <Button
               height="50px"
               width="120px"
@@ -168,9 +162,9 @@ function AuctionItemInfo() {
             >
               삭제
             </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+          </Flex>
+        </Box>
+      </SpringModal>
     </Box>
   );
 }
