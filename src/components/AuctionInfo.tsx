@@ -7,6 +7,7 @@ import {
   Avatar,
   VStack,
   createStandaloneToast,
+  HStack,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
@@ -21,7 +22,7 @@ export default function AuctionInfo() {
   const { toast } = createStandaloneToast();
   const { data, isPending, error } = useAuctionDetail();
   const [isOpen, setIsOpen] = useState(false);
-  console.log(data);
+  // console.log(data);
   if (isPending) {
     return <div>Loading...</div>;
   }
@@ -55,12 +56,7 @@ export default function AuctionInfo() {
         position="relative"
         maxHeight="100%vh"
       >
-        <Flex
-          width="100%"
-          h={16}
-          alignItems="center"
-          justifyContent="space-between"
-        >
+        <Flex width="100%" h={16} justifyContent="space-between">
           <Button
             bgColor="transparent"
             color="white"
@@ -97,7 +93,7 @@ export default function AuctionInfo() {
           >
             &lt;
           </Button>
-          <Flex gap={2}>
+          <Flex gap={3} p={2}>
             <EditAuction />
             <DeleteAuction />
           </Flex>
@@ -109,65 +105,83 @@ export default function AuctionInfo() {
             pt={3}
             color="white"
             bgColor="#282828"
+            align="start"
           >
-            <Heading as="h5" size="sm" textAlign="left" mb={2}>
-              경매 이벤트 명
-            </Heading>
-            <Text fontSize="sm" mb={2} textAlign="center">
-              {data.auctionDto.title}
-            </Text>
-            <Heading as="h5" size="sm" textAlign="left" mb={2}>
-              경매 상세 설명
-            </Heading>
-            <Text fontSize="sm" mb={2} textAlign="center">
-              {data.auctionDto.description}
-            </Text>
-            <Heading as="h5" size="sm" textAlign="left" mb={2}>
-              경매 제한 시간
-            </Heading>
-            <Text fontSize="sm" mb={2} textAlign="center">
-              {data.auctionDto.sellingLimitTime}분
-            </Text>
-            <Heading as="h5" size="sm" textAlign="left" mb={2}>
-              참가자 제한 예산
-            </Heading>
-            <Text fontSize="sm" mb={2} textAlign="center">
-              {data.auctionDto.budget}
-            </Text>
-            <Heading as="h5" size="sm" textAlign="left" mb={2}>
-              경매 주최자
-            </Heading>
-            <Flex
-              p={2}
-              gap={6}
-              justifyContent="center"
-              alignItems="center"
-              onClick={() => nav(`/myPage/${data.ownerProfile.id}`)}
-            >
-              <Avatar size="sm" src={data.ownerProfile.profileUrl} />
-              <Text fontSize="sm" mb={2} textAlign="center">
-                {data.ownerProfile.nickname}
+            <HStack justify="space-between" width="100%">
+              <Heading as="h5" size="sm" mb={2}>
+                경매 이벤트명
+              </Heading>
+              <Text fontSize="sm" mb={2}>
+                {data.auctionDto.title}
               </Text>
-            </Flex>
-            <Heading as="h5" size="sm" textAlign="left" mb={2}>
-              경매 시작 일시
-            </Heading>
-            <Text fontSize="xm" mb={2} textAlign="center">
-              {`${year}년 ${month}월 ${day}일 ${hours}시 ${minutes}분 ${seconds}
+            </HStack>
+
+            <HStack justify="space-between" width="100%" spacing={4}>
+              <Heading as="h5" size="sm" mb={2} flexShrink={0}>
+                경매 상세 설명
+              </Heading>
+              <Text fontSize="sm" mb={2} noOfLines={10}>
+                {data.auctionDto.description}
+              </Text>
+            </HStack>
+
+            <HStack justify="space-between" width="100%">
+              <Heading as="h5" size="sm" mb={2}>
+                경매 제한 시간
+              </Heading>
+              <Text fontSize="sm" mb={2}>
+                {data.auctionDto.sellingLimitTime}분
+              </Text>
+            </HStack>
+
+            <HStack justify="space-between" width="100%">
+              <Heading as="h5" size="sm" mb={2}>
+                참가자 제한 예산
+              </Heading>
+              <Text fontSize="sm" mb={2}>
+                {data.auctionDto.budget}
+              </Text>
+            </HStack>
+
+            <HStack justify="space-between" width="100%">
+              <Heading as="h5" size="sm" mb={2}>
+                경매 주최자
+              </Heading>
+              <Flex
+                p={2}
+                gap={6}
+                justifyContent="center"
+                alignItems="center"
+                onClick={() => nav(`/myPage/${data.ownerProfile.id}`)}
+              >
+                <Avatar size="sm" src={data.ownerProfile.profileUrl} />
+                <Text fontSize="sm" mb={2}>
+                  {data.ownerProfile.nickname}
+                </Text>
+              </Flex>
+            </HStack>
+
+            <HStack justify="space-between" width="100%">
+              <Heading as="h5" size="sm" mb={2}>
+                경매 시작 일시
+              </Heading>
+              <Text fontSize="md" mb={2}>
+                {`${year}년 ${month}월 ${day}일 ${hours}시 ${minutes}분 ${seconds}
               초`}
-            </Text>
-            <Heading as="h5" size="sm" textAlign="left" mb={2}>
+              </Text>
+            </HStack>
+            {/* <Heading as="h5" size="sm" textAlign="left" mb={2}>
               경매 방 잠그기
-            </Heading>
-            <Text fontSize="sm" mb={2} textAlign="center">
+            </Heading> */}
+            {/* <Text fontSize="sm" mb={2} textAlign="left">
               {String(data.auctionDto.isPrivate)}
             </Text>
             <Heading as="h5" size="sm" textAlign="left" mb={2}>
               경매 방 비밀번호
             </Heading>
-            <Text fontSize="sm" mb={2} textAlign="center">
+            <Text fontSize="sm" mb={2} textAlign="left">
               {data.auctionDto?.privateCode}
-            </Text>
+            </Text> */}
           </VStack>
         </Box>
       </DragCloseDrawer>
