@@ -18,8 +18,8 @@ const useEditAuction = () => {
       description: formData.description,
       eventDate: new Date(formData.eventDate).toISOString(),
       sellingLimitTime: Number(formData.sellingLimitTime),
-      isPrivate: formData.isPrivate,
-      privateCode: formData.privateCode,
+      // isPrivate: formData.isPrivate,
+      // privateCode: formData.privateCode,
       budget: Number(formData.budget),
     };
 

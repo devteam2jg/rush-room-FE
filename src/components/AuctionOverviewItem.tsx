@@ -1,4 +1,4 @@
-import { HStack, VStack, Text, Divider, Box } from '@chakra-ui/react';
+import { HStack, VStack, Text, Box } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 
 interface Auction {
@@ -8,7 +8,7 @@ interface Auction {
   eventDate: string;
   sellingLimitTime: number;
   status: string;
-  isPrivate: boolean;
+  // isPrivate: boolean;
 }
 
 type AuctionProps = {
@@ -31,22 +31,25 @@ function AuctionOverviewItem({ item, auctionId }: AuctionProps) {
   const minutes = String(date.getMinutes()).padStart(2, '0');
 
   return (
-    <HStack
-      width="100%"
-      justifyContent="space-between"
-      onClick={handleEnterAuctionOverview}
-      color="white"
-    >
-      <VStack gap={2} alignItems="flex-start">
-        <Text fontSize="15px" fontWeight={700}>
-          {item.title}
+    <Box p={2} width="100%">
+      <HStack
+        width="100%"
+        justifyContent="space-between"
+        onClick={handleEnterAuctionOverview}
+        color="white"
+      >
+        <VStack gap={2} alignItems="flex-start">
+          <Text fontSize="15px" fontWeight={700}>
+            {item.title}
+          </Text>
+          <Text fontSize="13px">{`${year}년 ${month}월 ${day}일 ${hours}시 ${minutes}분`}</Text>
+        </VStack>
+        <Text fontWeight={700} fontSize="18px">
+          {item.status}
         </Text>
-        <Text fontSize="13px">{`${year}년 ${month}월 ${day}일 ${hours}시 ${minutes}분`}</Text>
-      </VStack>
-      <Text fontWeight={700} fontSize="18px">
-        {item.status}
-      </Text>
-    </HStack>
+      </HStack>
+      <Box marginTop="12px" width="100%" height="12px" bg="#222222" />
+    </Box>
   );
 }
 
