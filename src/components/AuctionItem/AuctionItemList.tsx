@@ -10,9 +10,7 @@ type ItemsProps = {
 function AuctionItemList({ item }: ItemsProps) {
   const { auctionId } = useParams();
   const nav = useNavigate();
-  const handleEnterAuction = () => {
-    nav(`/auction/${auctionId}/bid`);
-  };
+
   return (
     <Grid
       width="100%"
@@ -65,9 +63,11 @@ function AuctionItemList({ item }: ItemsProps) {
           color="white"
           width="100%"
           textAlign="center"
-          onClick={handleEnterAuction}
+          onClick={() => {
+            nav(`/auction/${auctionId}/details/${item.id}`);
+          }}
         >
-          <Text fontSize="xs">경매참여</Text>
+          <Text fontSize="sm">상세보기</Text>
         </Button>
       </GridItem>
     </Grid>
