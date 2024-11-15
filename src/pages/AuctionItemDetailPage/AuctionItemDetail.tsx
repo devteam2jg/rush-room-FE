@@ -26,7 +26,7 @@ function AuctionItemDetail() {
   }
 
   return (
-    <Flex height="100vh" flexDirection="column">
+    <Flex height="calc(var(--vh, 1vh) * 100)" flexDirection="column">
       <BiddingImage images={data?.imageUrls} />
       <Box flex={1}>
         <AuctionItemInfo />

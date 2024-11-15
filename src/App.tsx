@@ -8,12 +8,16 @@ import {
 } from '@chakra-ui/react';
 import { RouterProvider } from 'react-router-dom';
 import { useEffect } from 'react';
+import { QRCodeSVG } from 'qrcode.react';
+import { keyframes } from '@emotion/react';
 import theme from './utils/theme';
 import router from './routes';
 import './App.css';
 import ServiceLogo from './assets/images/serviceLogo.png';
+import AuctionQRStore from './store/\bAuctionQRStore';
 
 function App() {
+  const AuctionUrlForQR = AuctionQRStore((state) => state.AuctionUrlForQR);
   function setScreenSize() {
     const vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty('--vh', `${vh}px`);
@@ -21,6 +25,13 @@ function App() {
   useEffect(() => {
     setScreenSize();
   });
+
+  console.log('AuctionUrlForQR', AuctionUrlForQR);
+
+  const blinkAnimation = keyframes`
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+  `;
   return (
     <ChakraProvider theme={theme}>
       <Flex
@@ -39,16 +50,24 @@ function App() {
           display={{ base: 'none', lg: 'flex' }}
         >
           <Image width="250px" src={ServiceLogo} />
-          <Text color="#FCFCFD" fontSize="20px">
+
+          <QRCodeSVG
+            value={AuctionUrlForQR}
+            size={250}
+            level="H"
+            includeMargin
+            style={{
+              borderRadius: '10px', // SVG 자체에 borderRadius 적용
+            }}
+          />
+
+          <Text
+            animation={`${blinkAnimation} 1.5s ease-in-out infinite`}
+            color="#FCFCFD"
+            fontSize="20px"
+          >
             지금 경매에 참여해 보세요!
           </Text>
-          <Image
-            borderRadius="15px"
-            src="/images/qr.svg"
-            alt="QR code"
-            width="250px"
-            height="250px"
-          />
         </VStack>
         <Box width="100%" maxWidth="430px">
           <RouterProvider router={router} />

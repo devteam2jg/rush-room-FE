@@ -39,7 +39,7 @@ function CardContent({ result }: CardContentProps) {
           position="absolute"
           width="100%"
           objectFit="cover"
-          src="/images/congrats.png"
+          src={result.picture}
           pointerEvents="none"
         />
 

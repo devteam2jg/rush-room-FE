@@ -22,7 +22,8 @@ interface Auction {
 export default function AuctionOverviewList() {
   const nav = useNavigate();
   const { toast } = createStandaloneToast();
-  const { data, error, isPending } = useAuction();
+  const { data, error, isPending } = useAuction(100);
+  console.log(data);
   if (isPending) {
     return <div>Loading...!!</div>;
   }
@@ -53,7 +54,7 @@ export default function AuctionOverviewList() {
           width="100%"
           justifyContent="space-between"
         >
-          {data.data?.map((item) => (
+          {data?.pages[0].data?.map((item) => (
             <AuctionOverviewItemList
               auctionId={item.auctionDto.id}
               key={item.auctionDto.id}

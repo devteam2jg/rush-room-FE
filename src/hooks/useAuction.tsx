@@ -1,18 +1,29 @@
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import axiosInstance from '../utils/AxiosInstance';
 
-const useAuction = () => {
+interface AuctionParams {
+  userId?: string;
+  page: number;
+  take: number;
+}
+
+const useAuction = (take: number = 10) => {
   const { userId } = useParams();
 
-  const getAuction = async () => {
+  const getAuction = async ({ pageParam = 1 }) => {
     try {
-      const { data } = await axiosInstance.get(`/auction`, {
-        params: {
-          userId,
-        },
-      });
+      const params: AuctionParams = {
+        page: pageParam,
+        take,
+      };
+
+      if (userId) {
+        params.userId = userId;
+      }
+
+      const { data } = await axiosInstance.get(`/auction`, { params });
       return data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -34,9 +45,17 @@ const useAuction = () => {
       throw new Error('예기치 못한 에러가 발생했습니다');
     }
   };
-  return useQuery({
+
+  return useInfiniteQuery({
     queryKey: ['Auction', userId],
     queryFn: getAuction,
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, allPages) => {
+      // 서버 응답에서 다음 페이지 여부 확인
+      // lastPage.hasNextPage가 false면 undefined 반환하여 무한스크롤 중단
+      if (!lastPage.hasNextPage) return undefined;
+      return allPages.length + 1;
+    },
     staleTime: 0,
     refetchOnMount: true,
     refetchOnWindowFocus: true,

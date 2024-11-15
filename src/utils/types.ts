@@ -55,4 +55,5 @@ export interface Result {
   title: string;
   bidPrice: number;
   bidder: Bidder;
+  picture: string;
 }

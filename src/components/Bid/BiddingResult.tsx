@@ -10,6 +10,7 @@ type ResultData = {
   title: string;
   bidPrice: number;
   bidder: BidderData;
+  picture: string;
 };
 
 interface ResultInfo {

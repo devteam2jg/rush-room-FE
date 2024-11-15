@@ -6,6 +6,7 @@ import AddAuction from '../../components/AddAuction';
 import AuctionList from '../../components/AuctionList';
 import AuctionHistoryStore from '../../store/AuctionHistoryStore';
 import useAuctionDetail from '../../hooks/useAuctionDetail';
+import AuctionQRStore from '../../store/\bAuctionQRStore';
 // import PrivateCodeModal from '../../components/PrivateCodeModal';
 
 function AuctionDetail() {
@@ -14,9 +15,16 @@ function AuctionDetail() {
   const { data, error, isPending } = useAuctionDetail();
   const nav = useNavigate();
   const { toast } = createStandaloneToast();
+  const setQRUrl = AuctionQRStore((state) => state.setQRUrl);
 
   useEffect(() => {
     setLastAuction(auctionId);
+    setQRUrl(
+      `https://rushroom.kr/api/v1/auth-test/login?url=https://rushroom.kr/auction/${auctionId}/bid`
+    );
+    return () => {
+      setQRUrl('https://rushroom.kr/');
+    };
   }, []);
 
   if (isPending) {
@@ -54,7 +62,7 @@ function AuctionDetail() {
       <AuctionInfo />
       <AddAuction data={data} isOwner={data?.readUser.isOwner} />
       <Box h={4} bgColor="#161617" />
-      <Box height="100vh">
+      <Box height="calc(var(--vh, 1vh) * 100)">
         <AuctionList headerShow="show" fontColor="white" bgColor="#282828" />
       </Box>
     </VStack>

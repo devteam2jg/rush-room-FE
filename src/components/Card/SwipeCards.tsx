@@ -18,6 +18,7 @@ type ResultIdData = {
   title: string;
   bidPrice: number;
   bidder: BidderData;
+  picture: string;
 };
 
 interface ResultIdInfo {

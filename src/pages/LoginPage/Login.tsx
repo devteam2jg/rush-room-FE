@@ -17,8 +17,8 @@ function Login() {
       justifyContent="center"
       alignItems="center"
     >
-      <Image width="157px" src={ServiceLogo} marginBottom="10px" />
-      <Text color="blackAlpha.900" fontWeight={500} textAlign="center">
+      <Image width="180px" src={ServiceLogo} marginBottom="10px" />
+      <Text color="#FCFCFD" fontWeight={700} textAlign="center">
         간편하게 로그인 하고
         <br />
         다양한 서비스를 이용해보세요.

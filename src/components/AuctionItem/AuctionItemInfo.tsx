@@ -1,11 +1,11 @@
 import {
+  Avatar,
   Box,
   Button,
   createStandaloneToast,
   Divider,
   Flex,
   HStack,
-  Image,
   Text,
 } from '@chakra-ui/react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -47,6 +47,7 @@ function AuctionItemInfo() {
     deleteAuctionItem();
     nav(-1);
   };
+  console.log(data);
 
   return (
     <Box
@@ -61,11 +62,7 @@ function AuctionItemInfo() {
         justifyContent="space-between"
       >
         <Flex justifyContent="center" alignItems="center" gap="10px">
-          <Image
-            height="8vh"
-            borderRadius="full"
-            src={data.postedUser.profileUrl}
-          />
+          <Avatar src={data.postedUser.profileUrl} />
           <Text color="#FCFCFD" fontWeight="700" fontSize="18px">
             {data.postedUser.nickname}
           </Text>
@@ -116,7 +113,7 @@ function AuctionItemInfo() {
             가격
           </Text>
           <Text fontSize="23px" fontWeight="700" color="#D5D7DB">
-            10000원
+            {data.startPrice.toLocaleString()}
           </Text>
         </HStack>
         <Button
@@ -128,7 +125,7 @@ function AuctionItemInfo() {
           Edit
         </Button>
       </Flex>
-      <SpringModal isOpen={isOpen} setIsOpen={setIsOpen}>
+      <SpringModal p="" isOpen={isOpen} setIsOpen={setIsOpen}>
         <Box backgroundColor="#3A383F" width="100%" p={5}>
           <Text
             fontWeight="sm"

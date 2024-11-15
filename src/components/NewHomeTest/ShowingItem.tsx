@@ -1,12 +1,16 @@
-import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
+import { useInView } from 'react-intersection-observer';
 import {
   createStandaloneToast,
   Box,
   Image,
   Badge,
   Text,
+  Center,
+  Spinner,
+  Skeleton,
 } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
 import useAuction from '../../hooks/useAuction';
 import { AuctionItem } from '../../utils/types';
 
@@ -19,18 +23,37 @@ interface CardProps {
 }
 
 function Background({ auctionDto }: CardProps) {
-  const defaultImage = 'images/biditem.png';
+  const defaultImage = 'images/defaultImageItem.png';
   const imageUrl = auctionDto.firstItem?.imageUrl?.[0] || defaultImage;
+  const [isLoading, setIsLoading] = useState(true);
 
   return (
     <Box position="absolute" inset="0" zIndex="0">
-      <Image
-        src={imageUrl || '/default-image.jpg'}
-        alt="Background Image"
-        objectFit="cover"
-        width="100%"
-        height="100%"
-      />
+      {imageUrl.slice(-4) === 'm3u8' ? (
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+          }}
+          onLoadedData={() => setIsLoading(false)}
+        >
+          <source src={imageUrl} type="application/x-mpegURL" />
+        </video>
+      ) : (
+        <Image
+          src={imageUrl || defaultImage}
+          alt="Background Image"
+          objectFit="cover"
+          width="100%"
+          height="100%"
+          onLoad={() => setIsLoading(false)}
+        />
+      )}
     </Box>
   );
 }
@@ -102,6 +125,7 @@ function Card({ auctionDto, ownerProfile }: ItemProps) {
 
       <Box
         position="absolute"
+        maxWidth="100px"
         bottom="68px"
         display="flex"
         alignItems="center"
@@ -121,7 +145,7 @@ function Card({ auctionDto, ownerProfile }: ItemProps) {
           src={ownerProfile.thumbnailUrl}
           alt="유저 프로필 이미지"
         />
-        {ownerProfile.nickname}
+        <Text isTruncated>{ownerProfile.nickname}</Text>
       </Box>
 
       <Box
@@ -161,11 +185,31 @@ function Card({ auctionDto, ownerProfile }: ItemProps) {
 }
 
 function ShowingItem() {
-  const { data, error, isPending } = useAuction();
   const nav = useNavigate();
   const { toast } = createStandaloneToast();
-  if (isPending) {
-    return <div>Loading...!!</div>;
+  const { ref, inView } = useInView();
+
+  const {
+    data,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    status,
+  } = useAuction(10);
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  if (status === 'pending') {
+    return (
+      <Center height="full">
+        <Spinner size="xl" color="mong.500" />
+      </Center>
+    );
   }
 
   if (error) {
@@ -178,20 +222,40 @@ function ShowingItem() {
       duration: 3000,
       isClosable: true,
     });
+    return null;
   }
 
   return (
-    <Box height={{ base: '50vh', sm: '70vh' }} overflowY="auto">
+    <Box
+      height={{
+        base: 'calc(calc(var(--vh, 1vh) * 100) - 250px)',
+        sm: 'calc(calc(var(--vh, 1vh) * 100) - 250px)',
+      }}
+      overflowY="auto"
+    >
       <div className="grid grid-cols-2 gap-5">
-        {data?.data?.map((item: AuctionItem) => (
-          <Link key={item.auctionDto.id} to={`/auction/${item.auctionDto.id}`}>
-            <Card
-              auctionDto={item.auctionDto}
-              ownerProfile={item.ownerProfile}
-            />
-          </Link>
-        ))}
+        {data?.pages.map((page) =>
+          page.data.map((item: AuctionItem) => (
+            <Link
+              key={item.auctionDto.id}
+              to={`/auction/${item.auctionDto.id}`}
+            >
+              <Card
+                auctionDto={item.auctionDto}
+                ownerProfile={item.ownerProfile}
+              />
+            </Link>
+          ))
+        )}
       </div>
+
+      <Box ref={ref} h="10px" />
+
+      {isFetchingNextPage && (
+        <Center my={4}>
+          <Spinner size="md" color="mong.500" />
+        </Center>
+      )}
     </Box>
   );
 }

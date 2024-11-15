@@ -94,6 +94,9 @@ const theme = extendTheme({
         bg: mode('#FCFCFD', '#000')(props),
         color: mode('gray.800', 'whiteAlpha.900')(props),
         fontFamily: 'Spoqa Han Sans Neo, sans-serif',
+        overscrollBehavior: 'none',
+        touchAction: 'pan-y pinch-zoom',
+        overflow: 'hidden',
       },
       '::-webkit-scrollbar': {
         width: '0px',

@@ -1,4 +1,4 @@
-import { Grid, GridItem, Text, Button, Image } from '@chakra-ui/react';
+import { Grid, GridItem, Text, Button, Image, Avatar } from '@chakra-ui/react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AuctionItem } from '../../utils/types';
 import useFormatPrice from '../../hooks/Bid/useFormatPrice';
@@ -19,22 +19,15 @@ function AuctionItemList({ item }: ItemsProps) {
       gap={2}
     >
       <GridItem>
-        {item.imageUrls[0].split('.').pop() === 'm3u8' ? (
-          <video muted autoPlay width="100%" controls>
-            <source src={item.imageUrls[0]} type="video/mp4" />
-            <track kind="captions" />
-          </video>
-        ) : (
-          <Image
-            boxSize="fit"
-            src={item.imageUrls[0]}
-            objectFit="contain"
-            alt="item cover image"
-          />
-        )}
+        <Avatar
+          size={{ base: 'md', sm: 'lg' }}
+          src={item.imageUrls[0].endsWith('m3u8') ? '' : item.imageUrls[0]}
+          objectFit="contain"
+        />
       </GridItem>
       <GridItem>
         <Text
+          width={{ base: '60px', sm: '80px' }}
           marginBottom="10px"
           whiteSpace="nowrap"
           fontSize="14px"
@@ -49,10 +42,12 @@ function AuctionItemList({ item }: ItemsProps) {
       </GridItem>
       <GridItem>
         <Text
+          width={{ base: '90px', sm: '120px' }}
           whiteSpace="nowrap"
           fontWeight={700}
           fontSize="18px"
           textAlign="center"
+          isTruncated
         >
           {useFormatPrice(item.startPrice)}
         </Text>

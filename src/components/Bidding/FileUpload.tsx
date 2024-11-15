@@ -20,7 +20,7 @@ function FileUpload({ handleFilesChange, placeholderText }) {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     setSelectedFiles(files);
-    handleFilesChange(e); // 기존의 onChange 핸들러 호출
+    handleFilesChange(e);
   };
 
   const removeFile = (indexToRemove: number) => {
@@ -29,7 +29,6 @@ function FileUpload({ handleFilesChange, placeholderText }) {
     );
     setSelectedFiles(newFiles);
 
-    // FileList를 직접 수정할 수 없으므로 새로운 DataTransfer 객체 생성
     const dataTransfer = new DataTransfer();
     newFiles.forEach((file) => {
       dataTransfer.items.add(file);
@@ -37,14 +36,13 @@ function FileUpload({ handleFilesChange, placeholderText }) {
 
     if (fileInputRef.current) {
       fileInputRef.current.files = dataTransfer.files;
-      // 변경 이벤트 발생시키기
       const event = new Event('change', { bubbles: true });
       fileInputRef.current.dispatchEvent(event);
     }
   };
 
   return (
-    <VStack align="stretch" spacing={4}>
+    <VStack fontWeight="700" color="#FCFCFD" align="stretch" spacing={4}>
       <Button onClick={handleButtonClick} colorScheme="mongCancle">
         {placeholderText}
       </Button>
@@ -64,9 +62,9 @@ function FileUpload({ handleFilesChange, placeholderText }) {
             <HStack
               key={index}
               p={2}
-              bg="gray.100"
               borderRadius="md"
               justify="space-between"
+              bg="#5D5D5D"
             >
               <Text noOfLines={1}>{file.name}</Text>
               <IconButton
