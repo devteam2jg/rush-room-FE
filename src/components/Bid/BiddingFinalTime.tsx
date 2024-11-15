@@ -14,9 +14,13 @@ function BiddingFinalTime() {
   const [endAudio] = useState(new Audio('/sounds/is0.wav'));
 
   useEffect(() => {
+    audio.volume = 0.25;
+    endAudio.volume = 0.25;
+  }, [audio, endAudio]);
+
+  useEffect(() => {
     if (!socket) return undefined;
     const handleFinalTime = (timeData: Time) => {
-      console.log('마지막 시간', timeData);
       setCount(timeData.time);
       if (timeData.time > 0) {
         audio.play().catch((error) => {

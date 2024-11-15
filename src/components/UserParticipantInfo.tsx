@@ -5,20 +5,23 @@ import UserGetItem from './UserGetItem';
 function UserParticipantInfo() {
   return (
     <Box
+      height="calc(calc(var(--vh, 1vh) * 100) - 350px)"
+      margin="12px auto"
       bg="#282828"
-      p={6}
+      p={4}
       borderRadius="lg"
       boxShadow="2xl"
       mt={4}
       w="90%"
       maxW="md"
-      overflowY="auto"
       alignItems="inherit"
     >
-      <Heading as="h3" size="md" mb={5} color="white">
-        경매 참여 정보
-      </Heading>
-      <VStack spacing={4} align="stretch">
+      <VStack
+        height="100%"
+        justifyContent="space-between"
+        spacing={4}
+        align="stretch"
+      >
         <UserHostedAuction />
         <UserGetItem />
       </VStack>

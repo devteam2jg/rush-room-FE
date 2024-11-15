@@ -4,7 +4,7 @@ import useAuthStore from '../../store/UserAuthStore';
 import axiosInstance from '../../utils/AxiosInstance';
 import useShowToast from '../../hooks/useShowToast';
 import Navigator from '../../components/Navigator';
-import Guide from '../../components/Guide';
+
 import serviceLogo from '../../assets/images/serviceLogo.png';
 import Example from '../../components/TiltCard';
 
@@ -13,7 +13,7 @@ function Home() {
   const showToast = useShowToast();
   const nav = useNavigate();
   const data = useAuthStore();
-  console.log(data);
+
   const getLogout = async () => {
     try {
       await axiosInstance.get('/auth/logout');

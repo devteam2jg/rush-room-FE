@@ -37,7 +37,6 @@ const useOnEnterBid = ({ auctionId }: SocketProps) => {
 
       const handleInfoRequest = (response: ResponseType) => {
         if (response) {
-          console.log('이게 초기 값이예요', response);
           setIsConnected(true);
           setInitialInfo(response);
         }
@@ -46,8 +45,6 @@ const useOnEnterBid = ({ auctionId }: SocketProps) => {
       socket.emit('JOIN', sendEnterInfo);
 
       socket.emit('CONTEXT', sendInfoRequest, handleInfoRequest);
-
-      console.log('정보를 주세요!');
     }
 
     return () => {

@@ -48,10 +48,8 @@ function BiddingTime() {
       setAnimationKey((prev) => prev + 1);
       const { type, differ } = response;
       if (type === 'ADD') {
-        console.log(differ);
         setAddDiffer(differ);
       } else if (type === 'SUB') {
-        console.log(differ);
         setSubDiffer(differ);
       }
     };
@@ -69,7 +67,7 @@ function BiddingTime() {
     <div className="flex flex-col items-end gap-1.5">
       <Text
         fontWeight="700"
-        fontSize={{ base: '15px', sm: '24px' }}
+        fontSize={{ base: '15px', sm: '20px' }}
         color="#FCFCFD"
       >
         현재 경매 시간
@@ -85,7 +83,7 @@ function BiddingTime() {
             >
               <StatNumber
                 color={`${displayTime < 30 ? 'red' : 'white'}`}
-                fontSize={{ base: '23px', sm: '30px' }}
+                fontSize={{ base: '23px', sm: '28px' }}
               >
                 {timeText}
               </StatNumber>

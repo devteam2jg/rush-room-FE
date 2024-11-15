@@ -8,7 +8,6 @@ const useDeleteAuction = () => {
   const deleteAuction = async () => {
     try {
       const { data } = await axiosInstance.delete(`/auction/${auctionId}`);
-      console.log('삭제 완료:', data);
       return data;
     } catch (error) {
       if (axios.isAxiosError(error)) {

@@ -18,12 +18,10 @@ interface ResultInfo {
 }
 
 function BiddingResult({ resultInfo }: ResultInfo) {
-  console.log('resultInfo', resultInfo);
   const resultsWithIds = resultInfo?.map((result, index) => ({
     ...result,
     id: index + 1,
   }));
-  console.log('resultsWithIds', resultsWithIds);
   return (
     <VStack
       alignItems="center"

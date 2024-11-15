@@ -26,6 +26,8 @@ import BidHeader from '../../components/Bid/BidHeader';
 import BiddingTime from '../../components/Bid/BiddingTime';
 import BiddingFinalTime from '../../components/Bid/BiddingFinalTime';
 import useAuctionDetail from '../../hooks/useAuctionDetail';
+import AuctionQRStore from '../../store/\bAuctionQRStore';
+import AuctionHistoryStore from '../../store/AuctionHistoryStore';
 
 function Bid() {
   const { auctionId } = useParams();
@@ -39,6 +41,18 @@ function Bid() {
   const nav = useNavigate();
   const { isConnected, initialInfo } = useOnEnterBid({ auctionId });
   const { data, isPending, error } = useAuctionDetail();
+  const setLastAuction = AuctionHistoryStore((state) => state.setlastAuction);
+  const setQRUrl = AuctionQRStore((state) => state.setQRUrl);
+
+  useEffect(() => {
+    setLastAuction(auctionId);
+    setQRUrl(
+      `https://rushroom.kr/api/v1/auth-test/login?url=https://rushroom.kr/auction/${auctionId}`
+    );
+    return () => {
+      setQRUrl('https://rushroom.kr/');
+    };
+  }, []);
 
   useEffect(() => {
     if (!socket) return undefined;
@@ -46,27 +60,21 @@ function Bid() {
     socket.on('ALERT', (response) => {
       toast.closeAll();
 
-      console.log(response);
-
       const { type } = response;
       let backgroundColor;
 
       switch (type) {
         case 'RED':
-          console.log('오팬무', type);
-          backgroundColor = '#EDA28C';
+          backgroundColor = '#DE4747';
           break;
         case 'YELLOW':
-          console.log('오팬무', type);
-          backgroundColor = '#EDD68C';
+          backgroundColor = '#D7BF60';
           break;
         case 'GREEN':
-          console.log('오팬무', type);
-          backgroundColor = '#8CED8F';
+          backgroundColor = '#4AB140';
           break;
         case 'BLUE':
-          console.log('오팬무', type);
-          backgroundColor = '#8CB6ED';
+          backgroundColor = '#3A6EA9';
           break;
         default:
           backgroundColor = '#C49CF1';

@@ -23,7 +23,7 @@ export default function AuctionOverviewList() {
   const nav = useNavigate();
   const { toast } = createStandaloneToast();
   const { data, error, isPending } = useAuction(100);
-  console.log(data);
+
   if (isPending) {
     return <div>Loading...!!</div>;
   }

@@ -47,7 +47,6 @@ function BidHeader({ initialItemId }: HeaderProps) {
     };
 
     const handleAuctionAuthentication = (response) => {
-      console.log('주인이신가요', response);
       setIsOwer(response.isOwner);
     };
 

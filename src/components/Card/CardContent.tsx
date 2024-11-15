@@ -18,9 +18,9 @@ function CardContent({ result }: CardContentProps) {
     <Box height="100%" bg="#FCFCFD" position="relative">
       <Image
         width="100%"
-        height="40%"
+        height="40vh"
         objectFit="cover"
-        src="/images/biditem.png"
+        src={result.picture}
         pointerEvents="none"
       />
 
@@ -39,7 +39,7 @@ function CardContent({ result }: CardContentProps) {
           position="absolute"
           width="100%"
           objectFit="cover"
-          src={result.picture}
+          src="/images/congrats.png"
           pointerEvents="none"
         />
 

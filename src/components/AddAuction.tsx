@@ -1,4 +1,11 @@
-import { Box, Button, Flex, Heading, VStack } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  createStandaloneToast,
+  Flex,
+  Heading,
+  VStack,
+} from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AuctionItem } from '../utils/types';
@@ -22,14 +29,12 @@ export default function AddAuction({ data, isOwner }: Data) {
   const [isStarted, setIsStarted] = useState(false);
   const mutationUpdateStatus = useUpdateAuctionStatus();
   const { updateField } = useAuctionStore();
-
-  console.log(data);
+  const { toast } = createStandaloneToast();
 
   useEffect(() => {
     setIsStarted(data.auctionDto.status === 'PROGRESS');
   }, []);
 
-  // 시작하기 눌렀을 때 동작하는 함수
   const handleStartAuction = async () => {
     if (data.items && data.items.length > 0) {
       setIsStarted(true);
@@ -42,7 +47,25 @@ export default function AddAuction({ data, isOwner }: Data) {
       const { data: dataBE } = await axiosInstance.get(
         `/game/start/${auctionId}`
       );
-      console.log(dataBE);
+      if (dataBE.message === 'Auction Started') {
+        toast({
+          title: '성공',
+          description: '경매가 시작되었습니다!',
+          status: 'success',
+          variant: 'left-accent',
+          duration: 3000,
+          isClosable: true,
+        });
+      } else if (dataBE.message === '이미 시작된 경매입니다') {
+        toast({
+          title: '실패',
+          description: '이미 시작 된 경매입니다..',
+          status: 'error',
+          variant: 'left-accent',
+          duration: 3000,
+          isClosable: true,
+        });
+      }
     } catch (error) {
       console.log(error);
     }
@@ -89,7 +112,7 @@ export default function AddAuction({ data, isOwner }: Data) {
               onClick={() => {
                 handleEnterAuction();
               }}
-              isDisabled={!isStarted}
+              // isDisabled={!isStarted}
             >
               경매참여
             </Button>
@@ -143,7 +166,7 @@ export default function AddAuction({ data, isOwner }: Data) {
               width="240px"
               height="40px"
               onClick={handleEnterAuction}
-              isDisabled={!isStarted}
+              // isDisabled={!isStarted}
             >
               경매 참여
             </Button>

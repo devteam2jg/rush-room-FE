@@ -20,7 +20,7 @@ function AuctionDetail() {
   useEffect(() => {
     setLastAuction(auctionId);
     setQRUrl(
-      `https://rushroom.kr/api/v1/auth-test/login?url=https://rushroom.kr/auction/${auctionId}/bid`
+      `https://rushroom.kr/api/v1/auth-test/login?url=https://rushroom.kr/auction/${auctionId}`
     );
     return () => {
       setQRUrl('https://rushroom.kr/');

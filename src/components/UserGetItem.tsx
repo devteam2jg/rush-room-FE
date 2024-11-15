@@ -1,32 +1,20 @@
 import {
+  Avatar,
   Box,
-  Button,
   createStandaloneToast,
-  Flex,
   Heading,
-  SimpleGrid,
+  HStack,
   Text,
   VStack,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import useUserAuctionStats from '../hooks/useUserAuctionStats';
-import SpringModal from './Modal/SpringModal';
-import AuctionItemList from './AuctionItem/AuctionItemList';
 
-interface AuctionItem {
-  id: string;
-  title: string;
-  startPrice: number;
-}
+import useUserAuctionStats from '../hooks/useUserAuctionStats';
 
 function UserGetItem() {
-  const [isOpen, setIsOpen] = useState(false);
   const nav = useNavigate();
   const { toast } = createStandaloneToast();
   const { data, error, isPending } = useUserAuctionStats();
-
-  console.log('user--', data?.data);
 
   if (isPending) {
     return <div>Loading...!!</div>;
@@ -43,6 +31,7 @@ function UserGetItem() {
       isClosable: true,
     });
   }
+
   return (
     <Box
       overflow="hidden"
@@ -50,24 +39,37 @@ function UserGetItem() {
       height="100%"
       p={4}
       bg="#222222"
-      color="white"
+      color="#FCFCFD"
       overflowY="auto"
       borderRadius="lg"
     >
       <VStack height="100%" spacing={4} align="stretch">
-        <Heading as="h5" size="xm" color="white">
-          낙찰 물품 리스트
+        <Heading as="h5" size="xm" color="#FCFCFD">
+          <HStack width="100%" justifyContent="space-between">
+            <Text>낙찰 물품 리스트</Text>
+            <Text color="#9C9C9C" fontWeight="700" fontSize="18px">
+              {data?.data?.length} 개
+            </Text>
+          </HStack>
         </Heading>
         <VStack
+          gap={4}
           height="100%"
           overflow="auto"
           alignItems="center"
           width="100%"
-          justifyContent="space-between"
+          justifyContent="flex-start"
         >
-          {data?.data?.map((item) => (
-            <AuctionItemList key={item.id} item={item} />
-          ))}
+          {data?.data?.length > 0 ? (
+            data?.data.map((item) => (
+              <HStack p={2} width="100%" justifyContent="space-between" gap={2}>
+                <Avatar src={item.imageUrls[0]} />
+                <Text>{item.title}</Text>
+              </HStack>
+            ))
+          ) : (
+            <Text>데이터가 없습니다.</Text>
+          )}
         </VStack>
       </VStack>
     </Box>

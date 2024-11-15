@@ -39,7 +39,7 @@ function BiddingTimePriceInfo({ initialItemPrice }: PriceProps) {
         .fill(null)
         .map(() => {
           const audio = new Audio(coinSound);
-          audio.volume = 0.3;
+          audio.volume = 0.1;
           return audio;
         });
     }
@@ -143,9 +143,11 @@ function BiddingTimePriceInfo({ initialItemPrice }: PriceProps) {
         justifyContent="center"
         alignItems="start"
       >
-        <HStack fontWeight="700" fontSize={{ base: '15px', sm: '24px' }}>
+        <HStack fontWeight="700" fontSize={{ base: '15px', sm: '20px' }}>
           {bidder ? <Text color="#FCFCFD">최고 입찰자 : </Text> : null}
-          <Text color="#886CB5">{bidder}</Text>
+          <Text isTruncated color="#886CB5">
+            {bidder}
+          </Text>
         </HStack>
 
         <motion.div

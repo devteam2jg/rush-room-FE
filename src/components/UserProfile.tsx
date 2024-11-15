@@ -1,22 +1,19 @@
 import {
-  Heading,
-  Image,
   Box,
   Text,
   Flex,
   createStandaloneToast,
-  HStack,
-  Divider,
+  Avatar,
+  VStack,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import { CiDollar } from 'react-icons/ci';
 import useUserProfile from '../hooks/useUserProfile';
 
 function UserProfile() {
   const nav = useNavigate();
   const { toast } = createStandaloneToast();
   const { data, error, isPending } = useUserProfile();
-  console.log(data);
+
   if (isPending) {
     return <div>Loading...!!</div>;
   }
@@ -35,14 +32,20 @@ function UserProfile() {
   return (
     <Box w="100%" p={6} pt={10}>
       <Flex color="white" alignItems="center" justifyContent="space-between">
-        <Text fontSize="30" fontWeight="extrabold">
-          {data.name}
-        </Text>
-        <Image
+        <VStack justifyContent="flex-start" alignItems="center">
+          <Text fontSize="30" fontWeight="700">
+            {data.name} 님
+          </Text>
+          <Text fontSize="20" fontWeight="700">
+            어서 오세요!
+          </Text>
+        </VStack>
+
+        <Avatar
+          boxShadow="0 18px 50px -12px rgba(0, 0, 0, 0.85)"
+          border="1px solid #664B9F"
           src={data.thumbnailUrl}
-          alt="UserProfile"
-          borderRadius="full"
-          boxSize="80px"
+          size={{ base: 'xl', sm: '2xl' }}
         />
       </Flex>
     </Box>

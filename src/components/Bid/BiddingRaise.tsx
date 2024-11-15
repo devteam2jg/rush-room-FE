@@ -47,18 +47,13 @@ function BiddingRaise({
   useEffect(() => {
     if (!socket) return undefined;
 
-    console.log('rasiedPrice', raisedPrice);
-
     if (!budget) {
       setBudget(initialBudget);
     }
 
     if (!raisedPrice && initialItemPrice) {
-      console.log('initialItemPrice', initialItemPrice);
       setRaisedPrice(initialItemPrice);
     }
-
-    console.log('rasiedPrice', raisedPrice);
 
     const handlePriceRaiseRecieve = (priceData: PriceData) => {
       setRaisedPrice(priceData.bidPrice);
@@ -79,7 +74,6 @@ function BiddingRaise({
     };
 
     const handleCurrentBid = (response) => {
-      console.log('현재가 다시 고치래', response.bidPrice);
       setRaisedPrice(response.bidPrice);
     };
 
@@ -96,7 +90,6 @@ function BiddingRaise({
   }, [socket]);
 
   const handleMinRaise = () => {
-    console.log('보내요');
     const bid = raisedPrice + minRange;
     if (budget && Number(bid) > budget) {
       toast({
@@ -115,10 +108,8 @@ function BiddingRaise({
         bidderId: user?.id,
         bidderNickname: user?.name,
       };
-      console.log('이거진짜 보내요', bid);
 
       const handleBudget = (response) => {
-        console.log('이거 받았어', response);
         const { budget: budgetRecieved } = response;
         setBudget(budgetRecieved);
       };
@@ -136,7 +127,6 @@ function BiddingRaise({
   };
 
   const handleMaxRaise = (finalPrice) => {
-    console.log('얼만데', finalPrice.raise);
     if (budget && Number(finalPrice.raise) > budget) {
       toast({
         title: '실패',
@@ -156,7 +146,6 @@ function BiddingRaise({
         percent: finalPrice.percent,
       };
       const handleBudget = (response) => {
-        console.log('이거 받았어', response);
         const { budget: budgetRecieved } = response;
         setBudget(budgetRecieved);
       };
@@ -182,7 +171,6 @@ function BiddingRaise({
       raise: RaiseFive,
       percent: 5,
     };
-    console.log('이거', Raise);
     handleMaxRaise(Raise);
   };
 
@@ -191,7 +179,6 @@ function BiddingRaise({
       raise: RaiseTen,
       percent: 10,
     };
-    console.log('이거', Raise);
     handleMaxRaise(Raise);
   };
 
@@ -200,7 +187,6 @@ function BiddingRaise({
       raise: RaiseTwenty,
       percent: 20,
     };
-    console.log('이거', Raise);
     handleMaxRaise(Raise);
   };
 
@@ -240,59 +226,64 @@ function BiddingRaise({
         </VStack>
         <BiddingSetRaceTime currentTime={currentTime.currentTime} />
         {currentTime.currentTime > 15 ? (
-          <HStack width="100%">
-            <Button
-              width="100%"
-              height={{ base: '40px', sm: '50px' }}
-              colorScheme="red"
-              onClick={handleRaiseCalcFive}
-            >
-              <Flex alignItems="center" gap="12px">
-                <Box display={{ base: 'none', sm: 'block' }}>
-                  <BiTimer fontSize="30px" />
-                </Box>
-                <Box display={{ base: 'block', sm: 'none' }}>
-                  <BiTimer fontSize="20px" />
-                </Box>
-                {/* <Text>{RaiseFive.toLocaleString()} 원</Text> */}
-                <Text>5 %</Text>
-              </Flex>
-            </Button>
-            <Button
-              width="100%"
-              height={{ base: '40px', sm: '50px' }}
-              colorScheme="red"
-              onClick={handleRaiseCalcTen}
-            >
-              <Flex alignItems="center" gap="12px">
-                <Box display={{ base: 'none', sm: 'block' }}>
-                  <BiTimer fontSize="30px" />
-                </Box>
-                <Box display={{ base: 'block', sm: 'none' }}>
-                  <BiTimer fontSize="20px" />
-                </Box>
-                {/* <Text>{RaiseTen.toLocaleString()} 원</Text> */}
-                <Text>10 %</Text>
-              </Flex>
-            </Button>
-            <Button
-              width="100%"
-              height={{ base: '40px', sm: '50px' }}
-              colorScheme="red"
-              onClick={handleRaiseCalcTwenty}
-            >
-              <Flex alignItems="center" gap="12px">
-                <Box display={{ base: 'none', sm: 'block' }}>
-                  <BiTimer fontSize="30px" />
-                </Box>
-                <Box display={{ base: 'block', sm: 'none' }}>
-                  <BiTimer fontSize="20px" />
-                </Box>
-                {/* <Text>{RaiseTwenty.toLocaleString()} 원</Text> */}
-                <Text>20 %</Text>
-              </Flex>
-            </Button>
-          </HStack>
+          <Box>
+            <Text textAlign="center" color="red.600">
+              시간 감소는 3만원 입찰 부터 적용 됩니다.
+            </Text>
+            <HStack width="100%">
+              <Button
+                width="100%"
+                height={{ base: '40px', sm: '50px' }}
+                colorScheme="red"
+                onClick={handleRaiseCalcFive}
+              >
+                <Flex alignItems="center" gap="12px">
+                  <Box display={{ base: 'none', sm: 'block' }}>
+                    <BiTimer fontSize="30px" />
+                  </Box>
+                  <Box display={{ base: 'block', sm: 'none' }}>
+                    <BiTimer fontSize="20px" />
+                  </Box>
+                  {/* <Text>{RaiseFive.toLocaleString()} 원</Text> */}
+                  <Text>5 %</Text>
+                </Flex>
+              </Button>
+              <Button
+                width="100%"
+                height={{ base: '40px', sm: '50px' }}
+                colorScheme="red"
+                onClick={handleRaiseCalcTen}
+              >
+                <Flex alignItems="center" gap="12px">
+                  <Box display={{ base: 'none', sm: 'block' }}>
+                    <BiTimer fontSize="30px" />
+                  </Box>
+                  <Box display={{ base: 'block', sm: 'none' }}>
+                    <BiTimer fontSize="20px" />
+                  </Box>
+                  {/* <Text>{RaiseTen.toLocaleString()} 원</Text> */}
+                  <Text>10 %</Text>
+                </Flex>
+              </Button>
+              <Button
+                width="100%"
+                height={{ base: '40px', sm: '50px' }}
+                colorScheme="red"
+                onClick={handleRaiseCalcTwenty}
+              >
+                <Flex alignItems="center" gap="12px">
+                  <Box display={{ base: 'none', sm: 'block' }}>
+                    <BiTimer fontSize="30px" />
+                  </Box>
+                  <Box display={{ base: 'block', sm: 'none' }}>
+                    <BiTimer fontSize="20px" />
+                  </Box>
+                  {/* <Text>{RaiseTwenty.toLocaleString()} 원</Text> */}
+                  <Text>20 %</Text>
+                </Flex>
+              </Button>
+            </HStack>
+          </Box>
         ) : null}
 
         <Box position="relative" width="100%">

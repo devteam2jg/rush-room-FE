@@ -11,12 +11,9 @@ function BiddingRushTime() {
     if (!socket) return undefined;
     const handleRushTime = (response: any) => {
       const { type } = response;
-      console.log('response', response);
       if (type === 'RUSH_TIME') {
-        console.log('러쉬 타임~');
         setIsRushTime(true);
       } else if (type === 'BID_END') {
-        console.log('123');
         setIsRushTime(false);
       }
     };

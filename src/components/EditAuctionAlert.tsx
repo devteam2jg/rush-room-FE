@@ -10,7 +10,6 @@ export default function EditAuctionAlert() {
 
   const handleEditAuction = () => {
     nav(`/auction/edit/${auctionId}`);
-    console.log('경매 수정하기');
   };
 
   return (

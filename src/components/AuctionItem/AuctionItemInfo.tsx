@@ -40,14 +40,12 @@ function AuctionItemInfo() {
 
   const hanldeUpdate = () => {
     nav(`/auction/${auctionId}/update/${itemId}`);
-    console.log('이동');
   };
 
   const handleDelete = () => {
     deleteAuctionItem();
     nav(-1);
   };
-  console.log(data);
 
   return (
     <Box

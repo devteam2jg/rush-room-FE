@@ -24,14 +24,11 @@ function PrivateCodeModal({ isPrivate, isOwner, endorsed }: AuctionData) {
   const [isOpen, setIsOpen] = useState(false);
   const nav = useNavigate();
   const showToast = useShowToast();
-  const [inputPrivateCode, setInputPrivateCode] = useState(''); // 빈 문자열로 초기화
+  const [inputPrivateCode, setInputPrivateCode] = useState('');
   const mutation = useCheckPrivateCode();
   const { updateField } = useAuctionStore();
 
-  console.log('isOpen, ', isOpen);
-
   useEffect(() => {
-    // 조건을 만족하면 모달을 열어줍니다
     if (isPrivate && !isOwner && !endorsed) {
       setIsOpen(true);
     }

@@ -49,28 +49,23 @@ function Bidding() {
       newSocket.emit('join_auction', sendAuctionId);
     });
 
-    // 입찰가 업데이트 이벤트 리스너
     newSocket.on('bid_updated', (newBid) => {
       setCurrentPrice(newBid.newCurrentBid);
-      console.log('bid_updated');
     });
 
-    // 현재 입찰가 이벤트 리스너
     newSocket.on('current_bid', (currentBid) => {
       setCurrentPrice(currentBid);
     });
 
     document.body.style.overflow = 'hidden';
 
-    // cleanup 함수
     return () => {
       if (newSocket) {
         newSocket.disconnect();
-        console.log('End Connection from bidding');
       }
       document.body.style.overflow = 'auto';
     };
-  }, []); // 필요한 의존성만 포함
+  }, []);
 
   if (isPending) {
     return <div>Loading....</div>;

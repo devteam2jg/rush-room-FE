@@ -37,8 +37,7 @@ function BiddingControlModalOnState({
   useEffect(() => {
     rushAudioRef.current.loop = true;
 
-    // rush 오디오만 다른 볼륨으로 설정
-    rushAudioRef.current.volume = 0.05; // rushtime 볼륨 0.3으로 설정
+    rushAudioRef.current.volume = 0.03;
     resultAudioRef.current.volume = 0.1;
 
     const otherAudioRefs = [waitingAudioRef, successAudioRef, failAudioRef];
@@ -100,8 +99,6 @@ function BiddingControlModalOnState({
     const handleNotiState = (response: any) => {
       const { type } = response;
 
-      console.log(response);
-
       switch (type) {
         case 'BID_READY':
           setOpenResult(false);
@@ -128,7 +125,6 @@ function BiddingControlModalOnState({
           setWinnerInfo(response);
           setOpenResult(true);
           if (response.name) {
-            console.log('샀다');
             handleConffeti();
             handleSuccessSound();
           } else {
@@ -137,7 +133,6 @@ function BiddingControlModalOnState({
           }
           break;
         case 'AUCTION_END':
-          console.log(response);
           setResultInfo(response.data);
           setOpenEnd(true);
           handleResultSound();

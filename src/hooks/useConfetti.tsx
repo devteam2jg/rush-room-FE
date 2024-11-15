@@ -13,7 +13,6 @@ const useConfetti = () => {
 
   useEffect(() => {
     return () => {
-      console.log('지움');
       jsConfettiRef.current?.destroyCanvas();
       jsConfettiRef.current = null;
     };

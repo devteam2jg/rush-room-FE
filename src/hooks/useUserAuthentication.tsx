@@ -19,11 +19,10 @@ interface User {
 export const getUser = async (): Promise<User> => {
   try {
     const response = await axiosInstance.get('/auth/me');
-    console.log('로그인 체크 성공:', new Date().toISOString());
+
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.status === 401) {
-      console.log('인증 실패:', new Date().toISOString());
       throw new Error('Unauthorized');
     }
     throw error;

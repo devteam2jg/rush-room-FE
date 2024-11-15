@@ -22,7 +22,6 @@ export default function AuctionInfo() {
   const { toast } = createStandaloneToast();
   const { data, isPending, error } = useAuctionDetail();
   const [isOpen, setIsOpen] = useState(false);
-  // console.log(data);
   if (isPending) {
     return <div>Loading...</div>;
   }

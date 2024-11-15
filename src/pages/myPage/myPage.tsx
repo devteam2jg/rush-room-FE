@@ -16,6 +16,7 @@ export default function MyPage() {
   const nav = useNavigate();
   const { toast } = createStandaloneToast();
   const { data, error, isPending } = useAuction();
+
   if (isPending) {
     return <div>Loading...!!</div>;
   }
@@ -47,17 +48,24 @@ export default function MyPage() {
           w="100%"
         >
           <Box
-            w="100%"
+            w="184vw"
             p={6}
             pt={10}
-            backgroundColor="#886CB5"
+            bgGradient="linear(to-t, #B9A5E2, #574778 )"
             boxShadow="md"
-            borderBottomRadius="2xl"
-          >
+            borderRadius="50%"
+            position="absolute"
+            height={{ base: '60%', sm: '70%' }}
+            top={{ base: '-30px', sm: '-80px' }}
+            zIndex={100}
+          />
+          <Box zIndex={200} width="100%" height="50%">
             <UserProfile />
             <UserAuctionStats />
           </Box>
-          <UserParticipantInfo />
+          <Box zIndex={200} width="100%">
+            <UserParticipantInfo />
+          </Box>
           <Navigator />
         </Flex>
       </Box>

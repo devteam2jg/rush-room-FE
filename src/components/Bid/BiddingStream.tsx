@@ -22,8 +22,6 @@ function BiddingStream() {
 
   useEffect(() => {
     const checkOwnership = () => {
-      console.log('sellerId', sellerId);
-      console.log('myid', user?.id);
       const ownerStatus = sellerId === user?.id;
       setIsOwner(ownerStatus);
 
@@ -59,7 +57,6 @@ function BiddingStream() {
         setCameraOff(true);
         setConfirmed(false);
       } else if (type === 'CAMERA_REQUEST') {
-        console.log('너 꺼래 켜라');
         setIsOwner(true);
         setIsOpen(true);
       }
@@ -75,8 +72,6 @@ function BiddingStream() {
 
     socket.emit('CONTEXT', sendCameraRequest);
 
-    console.log('야 나 주인이니?');
-
     return () => {
       socket.off('NOTIFICATION', handleSellerId);
     };
@@ -86,8 +81,6 @@ function BiddingStream() {
     return <div>Loading...</div>;
   }
 
-  console.log('지나왔어');
-
   const handleConfirm = () => {
     if (!videoSocket) return;
     setConfirmed(true);
@@ -95,7 +88,7 @@ function BiddingStream() {
       roomId: auctionId,
       isAgreed: true,
     };
-    console.log('동의할게?', confirmed);
+
     videoSocket.emit('seller-agreed', agreementSend);
     setIsOpen(false);
   };
@@ -107,7 +100,6 @@ function BiddingStream() {
       roomId: auctionId,
       isAgreed: false,
     };
-    console.log('거절할게?');
     videoSocket.emit('seller-agreed', agreementSend);
     setIsOpen(false);
   };

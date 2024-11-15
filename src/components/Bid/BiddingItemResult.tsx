@@ -98,7 +98,7 @@ function BiddingItemResult({ winnerInfo }: WinnerInfoProps) {
         fontSize={{ base: '16px', sm: '20px' }}
         animation={`${blinkAnimation} 1.5s ease-in-out infinite`}
       >
-        <Text>잠시 후 다음 아이템 경매가 시작 됩니다..</Text>
+        <Text>조금만 기다려 주세요 금방 넘어갈게요..</Text>
       </Box>
     </VStack>
   );

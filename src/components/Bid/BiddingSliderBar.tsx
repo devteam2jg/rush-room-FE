@@ -33,9 +33,7 @@ function BiddingSliderBar({
   }, [bid]);
 
   useEffect(() => {
-    console.log('이거 바꿔줘요', priceOfItem);
     setAmount(String(priceOfItem + 1000));
-    console.log('이거 바꿨어요', amount);
   }, [receievedItemId]);
 
   const handleDragBid = (value: number) => {
@@ -43,7 +41,6 @@ function BiddingSliderBar({
   };
 
   const handleBidSet = () => {
-    console.log('마우스떼곳 설정했음', amount);
     setBid(amount);
   };
 

@@ -32,8 +32,6 @@ function BiddingInfo({ initialItemId, infoOpen, setInfoOpen }: InfoProps) {
   const nav = useNavigate();
   const { toast } = createStandaloneToast();
 
-  console.log(data);
-
   useEffect(() => {
     if (!auctionId || !socket) return undefined;
 
