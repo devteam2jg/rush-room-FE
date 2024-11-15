@@ -37,7 +37,7 @@ function AuctionItemList({ item }: ItemsProps) {
           {item.title}
         </Text>
         <Text fontSize="13px" mt="-10px">
-          {item.postedUser.nickname}
+          {item.postedUser?.nickname ? item.postedUser.nickname : ''}
         </Text>
       </GridItem>
       <GridItem>

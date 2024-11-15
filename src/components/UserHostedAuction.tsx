@@ -1,15 +1,18 @@
 import {
   Box,
   Button,
+  Divider,
   Flex,
+  Heading,
+  SimpleGrid,
   Text,
   VStack,
   createStandaloneToast,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import useAuction from '../hooks/useAuction';
-import SpringModal from './Modal/SpringModal';
+import AuctionOverviewItemList from './AuctionOverviewItem';
 
 interface Auction {
   id: string;
@@ -26,6 +29,7 @@ function UserHostedAuction() {
   const nav = useNavigate();
   const { toast } = createStandaloneToast();
   const { data, error, isPending } = useAuction();
+
   if (isPending) {
     return <div>Loading...!!</div>;
   }
@@ -43,33 +47,36 @@ function UserHostedAuction() {
   }
 
   return (
-    <>
-      <Button>
-        <Flex
-          align="center"
-          justify="space-between"
-          p={4}
-          borderRadius="md"
-          onClick={() => setIsOpen(!isOpen)}
-          cursor="pointer"
+    <Box
+      overflow="hidden"
+      height="100%"
+      width="100%"
+      p={4}
+      bg="#222222"
+      overflowY="auto"
+      borderRadius="lg"
+    >
+      <VStack height="100%" spacing={4} align="stretch">
+        <Heading as="h5" size="xm" color="white">
+          주최 경매 리스트
+        </Heading>
+        <VStack
+          height="100%"
+          overflow="auto"
+          alignItems="center"
+          width="100%"
+          justifyContent="space-between"
         >
-          <Flex align="center">
-            <Text fontSize="md">주최 경매 리스트</Text>
-          </Flex>
-          <Text>&gt;</Text>
-        </Flex>
-      </Button>
-
-      <SpringModal isOpen={isOpen} setIsOpen={setIsOpen}>
-        <Box>
-          <Text color="white">주최 경매 리스트</Text>
-          {data.data.map((item: { auctionDto: Auction }) => (
-            <VStack key={item.auctionDto.id}>{item.auctionDto.title}</VStack>
+          {data.data?.map((item) => (
+            <AuctionOverviewItemList
+              auctionId={item.auctionDto.id}
+              key={item.auctionDto.id}
+              item={item.auctionDto}
+            />
           ))}
-          <Button onClick={() => setIsOpen(!isOpen)}>Close</Button>
-        </Box>
-      </SpringModal>
-    </>
+        </VStack>
+      </VStack>
+    </Box>
   );
 }
 export default UserHostedAuction;
