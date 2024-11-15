@@ -22,6 +22,16 @@ interface SwiperContentBoxProps {
   sourceType: 'auction' | 'auctionItem' | 'editAuction';
 }
 
+const validationPatterns = {
+  title: /^[\p{L}\p{N}\s]{2,15}$/u,
+  itemName: /^[\p{L}\p{N}\s]{2,15}$/u,
+  description: /^[\s\S]{10,500}$/,
+  budget: /^\d{1,8}$/,
+  price: /^\d{1,8}$/,
+  privateCode: /^[a-zA-Z0-9]{4,12}$/,
+  sellingLimitTime: /^\d{1,2}$/,
+};
+
 function SwiperContentBox({
   labelText,
   typeValue,
@@ -33,20 +43,73 @@ function SwiperContentBox({
   const { auctionItemInfo, updateItemField } = useAuctionItemStore();
   const showToast = useShowToast();
 
+  const validateInput = (field: string, value: string): boolean => {
+    const pattern =
+      validationPatterns[field as keyof typeof validationPatterns];
+    if (!pattern) return true;
+
+    if (field === 'sellingLimitTime') {
+      const minutes = parseInt(value, 10);
+      if (!Number.isInteger(minutes) || minutes < 1 || minutes > 60) {
+        showToast(
+          'Error',
+          '경매 제한 시간은 1분에서 60분 사이로 설정해주세요.',
+          'error'
+        );
+        return false;
+      }
+      return true;
+    }
+
+    if (!pattern.test(value)) {
+      let errorMessage = '입력값이 올바르지 않습니다.';
+
+      switch (field) {
+        case 'title':
+          errorMessage = '제목은 2-10자 사이로 입력해주세요.';
+          break;
+        case 'itemName':
+          errorMessage = '상품명은 2-10자 사이로 입력해주세요.';
+          break;
+        case 'description':
+          errorMessage = '설명은 10-500자 사이로 입력해주세요.';
+          break;
+        case 'budget':
+        case 'price':
+          errorMessage = '올바른 금액을 입력해주세요.';
+          break;
+        case 'privateCode':
+          errorMessage = '비공개 코드는 4-12자의 영문, 숫자만 가능합니다.';
+          break;
+        default:
+          console.log('누구징');
+          break;
+      }
+
+      showToast('Error', errorMessage, 'error');
+      return false;
+    }
+    return true;
+  };
+
+  const handleBlur = (
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { value } = e.target;
+    validateInput(typeValue, value);
+  };
+
   const handleUpdate = (
     field: SwiperProps | SwiperItemProps,
     value: string | boolean | File[] | null
   ) => {
-    if (sourceType === 'auction') {
-      updateField(field as SwiperProps, value);
-    } else if (sourceType === 'editAuction') {
+    if (sourceType === 'auction' || sourceType === 'editAuction') {
       updateField(field as SwiperProps, value);
     } else {
       updateItemField(field as SwiperItemProps, value);
     }
   };
 
-  // checkbox 전용 핸들러
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     handleUpdate(typeValue, e.target.checked);
   };
@@ -55,11 +118,35 @@ function SwiperContentBox({
     const { files } = e.target;
     if (files) {
       const fileArray = Array.from(files);
-      handleUpdate(typeValue, fileArray);
+
+      const validTypes = [
+        'image/jpeg',
+        'image/png',
+        'image/gif',
+        'video/quicktime',
+        'video/mp4',
+      ];
+
+      const isValid = fileArray.every((file) => {
+        if (!validTypes.includes(file.type)) {
+          showToast(
+            'Error',
+            'JPG, PNG, GIF, MOV, MP4 형식의 파일만 업로드 가능합니다.',
+            'error'
+          );
+          return false;
+        }
+        return true;
+      });
+
+      if (isValid) {
+        handleUpdate(typeValue, fileArray);
+      } else {
+        e.target.value = '';
+      }
     }
   };
 
-  // 일반 입력값 변경 처리 함수
   const handleOnChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -116,6 +203,7 @@ function SwiperContentBox({
               onChange={(e) => {
                 handleUpdate('privateCode', e.target.value);
               }}
+              onBlur={handleBlur}
             />
           )}
         </>
@@ -128,6 +216,7 @@ function SwiperContentBox({
               color="white"
               value={getValue() as string}
               onChange={handleOnChange}
+              onBlur={handleBlur}
               placeholder={placeholderText}
             />
           )}
@@ -137,6 +226,7 @@ function SwiperContentBox({
               type={inputType}
               value={getValue() as string}
               onChange={handleOnChange}
+              onBlur={handleBlur}
               placeholder={placeholderText}
             />
           )}

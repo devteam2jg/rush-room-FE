@@ -11,7 +11,7 @@ import {
   TransportOptions,
 } from 'mediasoup-client/lib/types';
 import { useParams } from 'react-router-dom';
-import { Box, Image, Text } from '@chakra-ui/react';
+import { Box, Text } from '@chakra-ui/react';
 import VideoSocketStore from '../store/VideoSocketStore';
 import SpeakingIndicator from '../components/Bid/SpeakingIndicator';
 import SpringModal from '../components/Modal/SpringModal';
@@ -422,6 +422,23 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
         console.log('Creating video producer...');
         const newVideoProducer = await sendTransportRef.current.produce({
           track: videoTrack,
+          encodings: [
+            {
+              scaleResolutionDownBy: 4,
+              maxBitrate: 500000,
+              scalabilityMode: 'L1T3',
+            },
+            {
+              scaleResolutionDownBy: 2,
+              maxBitrate: 1000000,
+              scalabilityMode: 'L1T3',
+            },
+            {
+              scaleResolutionDownBy: 1,
+              maxBitrate: 5000000,
+              scalabilityMode: 'L1T3',
+            },
+          ],
         });
         console.log('Video producer created:', newVideoProducer.id);
         mediaProducers.current.videoProducer = newVideoProducer;
@@ -535,7 +552,10 @@ function RTCTestPage({ isOwner, cameraOff }: TestProps) {
         if (kind === 'audio') mediaConsumers.current.audioConsumer = consumer;
 
         // Consumer를 resume합니다.
-        await consumer.resume();
+        socket.emit('resume-consumer', { roomId: auctionId }, async () => {
+          console.log('server resume-consumer', socket.id);
+          await consumer.resume();
+        });
 
         console.log('New consumer:', consumer.kind);
         // 수신한 미디어를 재생

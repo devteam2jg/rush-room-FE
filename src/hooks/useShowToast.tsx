@@ -6,6 +6,7 @@ const useShowToast = () => {
 
   const showToast = useCallback(
     (title: string, description: string, status: UseToastOptions['status']) => {
+      toast.closeAll();
       toast({
         title,
         description,

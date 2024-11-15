@@ -5,7 +5,7 @@ interface ProgressProps {
 }
 
 function BiddingProgressBar({ runtime }: ProgressProps) {
-  return runtime <= 30 ? (
+  return runtime <= 15 ? (
     <Progress
       borderRadius="5px"
       width="100%"
@@ -15,9 +15,9 @@ function BiddingProgressBar({ runtime }: ProgressProps) {
       position="absolute"
       top={0}
       left={0}
-      max={30}
+      max={15}
       min={0}
-      value={runtime <= 30 ? runtime : 30}
+      value={runtime <= 15 ? runtime : 15}
       size="lg"
       zIndex={1}
       hasStripe

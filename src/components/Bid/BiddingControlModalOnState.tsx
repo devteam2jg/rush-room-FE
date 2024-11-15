@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useState, useRef } from 'react';
+import { useParams } from 'react-router-dom';
 import BiddingItemResult, { WinnerProps } from './BiddingItemResult';
 import SpringModal from '../Modal/SpringModal';
 import BiddingWaiting from './BiddingWaiting';
 import useSocketStore from '../../store/useSocketStore';
 import useConfetti from '../../hooks/useConfetti';
+import BiddingResult from './BiddingResult';
 
 interface ModalProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -20,18 +21,31 @@ function BiddingControlModalOnState({
   const { auctionId } = useParams();
   const [openResult, setOpenResult] = useState(false);
   const [openReady, setOpenReady] = useState(false);
+  const [openEnd, setOpenEnd] = useState(false);
+  const [resultInfo, setResultInfo] = useState([]);
   const [winnerInfo, setWinnerInfo] = useState<WinnerProps | null>(null);
   const socket = useSocketStore((state) => state.socket);
-  const nav = useNavigate();
   const { confetti } = useConfetti();
-  const [rushAudio] = useState(new Audio('/sounds/rush.wav'));
-  const [waitingAudio] = useState(new Audio('/sounds/waitingVer1.wav'));
-  const [successAudio] = useState(new Audio('/sounds/congraturation.wav'));
-  const [failAudio] = useState(new Audio('/sounds/none.wav'));
 
-  // const confetti = new JSConfetti();
+  const rushAudioRef = useRef(new Audio('/sounds/rushTimeBgm.wav'));
+  const waitingAudioRef = useRef(new Audio('/sounds/waitingVer1.wav'));
+  const successAudioRef = useRef(new Audio('/sounds/congraturation.wav'));
+  const failAudioRef = useRef(new Audio('/sounds/none.wav'));
+  const resultAudioRef = useRef(new Audio('/sounds/result.mp3'));
 
-  console.log('confetti', confetti);
+  // Set fixed volume and loop for audio elements
+  useEffect(() => {
+    rushAudioRef.current.loop = true;
+
+    // rush 오디오만 다른 볼륨으로 설정
+    rushAudioRef.current.volume = 0.05; // rushtime 볼륨 0.3으로 설정
+    resultAudioRef.current.volume = 0.1;
+
+    const otherAudioRefs = [waitingAudioRef, successAudioRef, failAudioRef];
+    otherAudioRefs.forEach((ref) => {
+      ref.current.volume = 0.3;
+    });
+  }, []);
 
   const handleConffeti = () => {
     confetti?.addConfetti({
@@ -57,19 +71,32 @@ function BiddingControlModalOnState({
   };
 
   const handleSuccessSound = () => {
-    successAudio.play().catch((error) => {
+    successAudioRef.current.play().catch((error) => {
       console.error('오디오 재생 실패:', error);
     });
   };
 
   const handleSadSound = () => {
-    failAudio.play().catch((error) => {
+    failAudioRef.current.play().catch((error) => {
+      console.error('오디오 재생 실패:', error);
+    });
+  };
+
+  const handleResultSound = () => {
+    resultAudioRef.current.play().catch((error) => {
+      console.error('오디오 재생 실패:', error);
+    });
+  };
+
+  const handleRushSound = () => {
+    rushAudioRef.current.play().catch((error) => {
       console.error('오디오 재생 실패:', error);
     });
   };
 
   useEffect(() => {
     if (!socket) return undefined;
+
     const handleNotiState = (response: any) => {
       const { type } = response;
 
@@ -79,21 +106,22 @@ function BiddingControlModalOnState({
         case 'BID_READY':
           setOpenResult(false);
           setOpenReady(true);
-          waitingAudio.play().catch((error) => {
+          waitingAudioRef.current.play().catch((error) => {
             console.error('오디오 재생 실패:', error);
           });
           break;
         case 'BID_START':
           setOpenReady(false);
-          waitingAudio.pause();
-          waitingAudio.currentTime = 0;
+          waitingAudioRef.current.pause();
+          waitingAudioRef.current.currentTime = 0;
           break;
         case 'RUSH_TIME':
-          rushAudio.play().catch((error) => {
-            console.error('오디오 재생 실패:', error);
-          });
+          handleRushSound();
           break;
         case 'BID_END':
+          rushAudioRef.current.pause();
+          rushAudioRef.current.currentTime = 0;
+
           setOpen(false);
           setInfoOpen(false);
           setItemOpen(false);
@@ -109,10 +137,14 @@ function BiddingControlModalOnState({
           }
           break;
         case 'AUCTION_END':
-          nav('/');
+          console.log(response);
+          setResultInfo(response.data);
+          setOpenEnd(true);
+          handleResultSound();
+          handleConffeti();
           break;
         default:
-          console.log('UNKHOWN STATUS ERROR');
+          console.log('UNKNOWN STATUS ERROR');
       }
     };
 
@@ -127,10 +159,17 @@ function BiddingControlModalOnState({
 
     return () => {
       socket.off('NOTIFICATION', handleNotiState);
-      waitingAudio.pause();
-      rushAudio.pause();
-      successAudio.pause();
-      failAudio.pause();
+      const audioRefs = [
+        waitingAudioRef,
+        rushAudioRef,
+        successAudioRef,
+        failAudioRef,
+        resultAudioRef,
+      ];
+      audioRefs.forEach((ref) => {
+        ref.current.pause();
+        ref.current.currentTime = 0;
+      });
     };
   }, [socket]);
 
@@ -142,9 +181,9 @@ function BiddingControlModalOnState({
       <SpringModal p="" isOpen={openReady} setIsOpen={setOpenReady}>
         <BiddingWaiting />
       </SpringModal>
-      {/* <SpringModal p="" isOpen={openReady} setIsOpen={setOpenReady}>
-        <BiddingFinalResult />
-      </SpringModal> */}
+      <SpringModal p="" isOpen={openEnd} setIsOpen={setOpenEnd}>
+        <BiddingResult resultInfo={resultInfo} />
+      </SpringModal>
     </>
   );
 }

@@ -55,6 +55,7 @@ function FileUpload({ handleFilesChange, placeholderText }) {
         onChange={handleFileChange}
         multiple
         display="none"
+        accept=".jpg,.jpeg,.png,.gif,.mov,.mp4"
       />
 
       {selectedFiles.length > 0 && (

@@ -12,6 +12,7 @@ import AuctionOverview from '../pages/AuctionOverviewPage/AuctionOverview';
 import MyPage from '../pages/myPage/myPage';
 // import TestingPage from '../pages/TestingPage';
 import NewHome from '../pages/NewHomePage/NewHome';
+import SwipeCards from '../components/Card/SwipeCards';
 
 const router = createBrowserRouter([
   {
@@ -55,10 +56,35 @@ const router = createBrowserRouter([
         path: 'myPage/:userId',
         element: <MyPage />,
       },
-      // {
-      //   path: 'test',
-      //   element: <RTCTestPage />,
-      // },
+      {
+        path: 'test',
+        element: (
+          <SwipeCards
+            results={[
+              {
+                id: 1,
+                title: 'snsjso',
+                bidPrice: 1100,
+                bidder: {
+                  name: '정재욱',
+                  profileUrl:
+                    'http://k.kakaocdn.net/dn/7GsfZ/btr7gPEMRtX/CCv56Azv41eO4jNxZDFrwK/img_640x640.jpg',
+                },
+              },
+              {
+                id: 2,
+                title: 'ㅛ',
+                bidPrice: 46,
+                bidder: {
+                  name: '정재욱',
+                  profileUrl:
+                    'http://k.kakaocdn.net/dn/7GsfZ/btr7gPEMRtX/CCv56Azv41eO4jNxZDFrwK/img_640x640.jpg',
+                },
+              },
+            ]}
+          />
+        ),
+      },
       {
         path: 'newhome',
         element: <NewHome />,

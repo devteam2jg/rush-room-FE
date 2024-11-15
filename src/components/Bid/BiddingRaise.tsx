@@ -62,7 +62,7 @@ function BiddingRaise({
 
     const handlePriceRaiseRecieve = (priceData: PriceData) => {
       setRaisedPrice(priceData.bidPrice);
-      setBudget(priceData.budget);
+      // setBudget(priceData.budget);
     };
 
     const handleRaiseItemPrice = (response: any) => {
@@ -116,7 +116,13 @@ function BiddingRaise({
         bidderNickname: user?.name,
       };
       console.log('이거진짜 보내요', bid);
-      socket?.emit('new_bid', bidForm);
+
+      const handleBudget = (response) => {
+        console.log('이거 받았어', response);
+        const { budget: budgetRecieved } = response;
+        setBudget(budgetRecieved);
+      };
+      socket?.emit('new_bid', bidForm, handleBudget);
     } else {
       toast({
         title: '실패',
@@ -149,7 +155,12 @@ function BiddingRaise({
         bidderNickname: user?.name,
         percent: finalPrice.percent,
       };
-      socket?.emit('new_bid', bidForm);
+      const handleBudget = (response) => {
+        console.log('이거 받았어', response);
+        const { budget: budgetRecieved } = response;
+        setBudget(budgetRecieved);
+      };
+      socket?.emit('new_bid', bidForm, handleBudget);
     } else {
       toast({
         title: '실패',
@@ -228,7 +239,7 @@ function BiddingRaise({
           </HStack>
         </VStack>
         <BiddingSetRaceTime currentTime={currentTime.currentTime} />
-        {currentTime.currentTime > 30 ? (
+        {currentTime.currentTime > 15 ? (
           <HStack width="100%">
             <Button
               width="100%"
@@ -290,7 +301,7 @@ function BiddingRaise({
             onClick={handleMinRaise}
             width="100%"
             height={{ base: '40px', sm: '50px' }}
-            colorScheme={currentTime.currentTime > 30 ? 'mong' : 'transparent'}
+            colorScheme={currentTime.currentTime > 15 ? 'mong' : 'transparent'}
             color="#FDFDFC"
             zIndex={2}
           >

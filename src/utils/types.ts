@@ -44,3 +44,15 @@ export interface PriceData {
   bidPrice: number;
   bidderNickname: string;
 }
+
+export type Bidder = {
+  name: string;
+  profileUrl: string;
+};
+
+export interface Result {
+  id: number;
+  title: string;
+  bidPrice: number;
+  bidder: Bidder;
+}

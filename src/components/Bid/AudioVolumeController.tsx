@@ -26,7 +26,7 @@ const AudioVolumeController = memo(({ audioPool }: AudioControllerProps) => {
         } else {
           timerRef.current = setTimeout(() => {
             audioPool.forEach((audio) => {
-              audio.volume = 0.3;
+              audio.volume = 0.2;
             });
           }, VOLUME_RESTORE_DELAY);
         }

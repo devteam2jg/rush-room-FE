@@ -9,7 +9,7 @@ const useSecondsToFormat = ({ currentTime, thirtyMatters }: FormatProps) => {
   const remainingSeconds = currentTime % 60;
 
   if (thirtyMatters) {
-    return currentTime > 30
+    return currentTime > 15
       ? `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`
       : `${String(remainingSeconds).padStart(2, '0')}`;
   }

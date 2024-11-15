@@ -8,7 +8,7 @@ interface TimeProps {
 function BiddingSetRaceTime({ currentTime }: TimeProps) {
   const timeText = useSecondsToFormat({ currentTime, thirtyMatters: true });
 
-  return currentTime > 30 ? (
+  return currentTime > 15 ? (
     <Text
       textAlign="center"
       fontSize={{ base: '25px', sm: '30px' }}
