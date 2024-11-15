@@ -24,12 +24,12 @@ function ShowingUser() {
   return (
     <HStack
       w="100%"
-      padding="20px"
+      padding={{ base: '13px', sm: ' 20px' }}
       justifyContent="space-between"
       align="center"
       borderRadius="3xl"
     >
-      <Text fontSize="lg">
+      <Text fontSize={{ base: '16px', sm: 'lg' }}>
         안녕하세요, {`${data.name}`}님!
         <br />
         경매에 한번 참여해볼까요?

@@ -7,7 +7,7 @@ import {
   Spinner,
   VStack,
 } from '@chakra-ui/react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { RiMoneyDollarCircleLine } from 'react-icons/ri';
 import { MdOutlineInfo } from 'react-icons/md';
@@ -25,6 +25,7 @@ import useConnectOnEnter from '../../hooks/Bid/useConnectOnEnter';
 import BidHeader from '../../components/Bid/BidHeader';
 import BiddingTime from '../../components/Bid/BiddingTime';
 import BiddingFinalTime from '../../components/Bid/BiddingFinalTime';
+import useAuctionDetail from '../../hooks/useAuctionDetail';
 
 function Bid() {
   const { auctionId } = useParams();
@@ -35,8 +36,9 @@ function Bid() {
   const [infoOpen, setInfoOpen] = useState(false);
   const [itemOpen, setItemOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-
+  const nav = useNavigate();
   const { isConnected, initialInfo } = useOnEnterBid({ auctionId });
+  const { data, isPending, error } = useAuctionDetail();
 
   useEffect(() => {
     if (!socket) return undefined;
@@ -93,6 +95,34 @@ function Bid() {
       socket.off('ALERT');
     };
   }, [socket]);
+
+  if (isPending) {
+    return <Spinner size="xl" />;
+  }
+
+  if (error) {
+    nav('/');
+    toast({
+      title: '실패',
+      description: `${error.message}`,
+      status: 'error',
+      variant: 'left-accent',
+      duration: 3000,
+      isClosable: true,
+    });
+  }
+
+  if (data.auctionDto.status !== 'PROGRESS') {
+    nav('/');
+    toast({
+      title: '경고',
+      description: '아직 진행 중이 아닙니다!',
+      status: 'error',
+      variant: 'left-accent',
+      duration: 3000,
+      isClosable: true,
+    });
+  }
 
   if (!isConnected) {
     return (

@@ -58,7 +58,14 @@ function Card({ auctionDto, ownerProfile }: ItemProps) {
   const hours = String(date.getHours()).padStart(2, '0');
 
   return (
-    <Box position="relative" w="40" p="3" h="72" rounded="lg" overflow="hidden">
+    <Box
+      position="relative"
+      w={{ base: '140px', sm: '180px' }}
+      p="3"
+      h={{ base: '200px', sm: '72' }}
+      rounded="lg"
+      overflow="hidden"
+    >
       {auctionDto.status === 'PROGRESS' ? (
         <Badge
           position="absolute"
@@ -134,10 +141,15 @@ function Card({ auctionDto, ownerProfile }: ItemProps) {
         zIndex="20"
       >
         <Box position="relative" zIndex="10" p="2">
-          <Text fontSize="md" fontWeight="extrabold" mb="1">
+          <Text isTruncated fontSize="md" fontWeight="extrabold" mb="1">
             {auctionDto.title}
           </Text>
-          <Text fontSize="xs" color="gray.500" fontWeight="semibold">
+          <Text
+            whiteSpace="nowrap"
+            fontSize={{ base: '11px', sm: 'xs' }}
+            color="gray.500"
+            fontWeight="semibold"
+          >
             {`${year}년 ${month}월 ${day}일 ${hours}시`}
           </Text>
         </Box>
@@ -169,7 +181,7 @@ function ShowingItem() {
   }
 
   return (
-    <Box height="70vh" overflowY="auto">
+    <Box height={{ base: '50vh', sm: '70vh' }} overflowY="auto">
       <div className="grid grid-cols-2 gap-5">
         {data?.data?.map((item: AuctionItem) => (
           <Link key={item.auctionDto.id} to={`/auction/${item.auctionDto.id}`}>

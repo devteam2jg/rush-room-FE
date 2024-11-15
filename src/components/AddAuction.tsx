@@ -1,5 +1,5 @@
 import { Box, Button, Flex, Heading, VStack } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AuctionItem } from '../utils/types';
 import useUpdateAuctionStatus from '../hooks/useUpdateAuctionStatus';
@@ -22,6 +22,12 @@ export default function AddAuction({ data, isOwner }: Data) {
   const [isStarted, setIsStarted] = useState(false);
   const mutationUpdateStatus = useUpdateAuctionStatus();
   const { updateField } = useAuctionStore();
+
+  console.log(data);
+
+  useEffect(() => {
+    setIsStarted(data.auctionDto.status === 'PROGRESS');
+  }, []);
 
   // 시작하기 눌렀을 때 동작하는 함수
   const handleStartAuction = async () => {
@@ -81,11 +87,11 @@ export default function AddAuction({ data, isOwner }: Data) {
               width="240px"
               height="40px"
               onClick={() => {
-                navigate(``);
+                handleEnterAuction();
               }}
               isDisabled={!isStarted}
             >
-              종료하기
+              경매참여
             </Button>
             <Button
               fontSize="md"
@@ -137,6 +143,7 @@ export default function AddAuction({ data, isOwner }: Data) {
               width="240px"
               height="40px"
               onClick={handleEnterAuction}
+              isDisabled={!isStarted}
             >
               경매 참여
             </Button>

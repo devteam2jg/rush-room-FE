@@ -56,7 +56,12 @@ export default function AuctionInfo() {
         position="relative"
         maxHeight="100%vh"
       >
-        <Flex width="100%" h={16} justifyContent="space-between">
+        <Flex
+          width="100%"
+          alignItems="center"
+          h={16}
+          justifyContent="space-between"
+        >
           <Button
             bgColor="transparent"
             color="white"

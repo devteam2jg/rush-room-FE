@@ -1,4 +1,4 @@
-import { Box, Flex, Text } from '@chakra-ui/react';
+import { Box, createStandaloneToast, Flex, Text } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { IoIosList, IoIosAddCircleOutline } from 'react-icons/io';
 import { MdInput } from 'react-icons/md';
@@ -12,6 +12,24 @@ export default function Navigator() {
   const navigate = useNavigate();
   const user = useAuthStore((state) => state.user);
   const history = AuctionHistoryStore((state) => state.lastAuction);
+  const { toast } = createStandaloneToast();
+  const nav = useNavigate();
+
+  const handleHistoryAuction = () => {
+    if (history) {
+      navigate(`/auction/${history}/bid`);
+    } else {
+      nav('/');
+      toast({
+        title: '실패',
+        description: '참여한 경매가 없습니다.',
+        status: 'error',
+        variant: 'left-accent',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
 
   return (
     <Box
@@ -60,7 +78,7 @@ export default function Navigator() {
         <Flex
           direction="column"
           align="center"
-          onClick={() => navigate(`/auction/${history}/bid`)}
+          onClick={handleHistoryAuction}
           cursor="pointer"
         >
           <MdInput />
