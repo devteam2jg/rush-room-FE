@@ -1,29 +1,37 @@
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import { createStandaloneToast, Box, Text } from '@chakra-ui/react';
+import {
+  createStandaloneToast,
+  Box,
+  Image,
+  Badge,
+  Text,
+} from '@chakra-ui/react';
 import useAuction from '../../hooks/useAuction';
 import { AuctionItem } from '../../utils/types';
 
-function Background() {
+interface CardProps {
+  auctionDto: {
+    firstItem: {
+      imageUrl: string[];
+    };
+  };
+}
+
+function Background({ auctionDto }: CardProps) {
+  const defaultImage = 'images/biditem.png';
+  const imageUrl = auctionDto.firstItem?.imageUrl?.[0] || defaultImage;
+
   return (
-    <div className="absolute inset-0 z-0">
-      <motion.img
-        src="images/biditem.png" // 첫 번째 이미지 경로
+    <Box position="absolute" inset="0" zIndex="0">
+      <Image
+        src={imageUrl || '/default-image.jpg'}
         alt="Background Image"
-        className="object-cover w-full h-full"
-        variants={{
-          hover: {
-            scaleY: 0.5,
-            y: -25,
-          },
-        }}
-        transition={{
-          duration: 1,
-          ease: 'backInOut',
-          delay: 0.2,
-        }}
+        objectFit="cover"
+        width="100%"
+        height="100%"
       />
-    </div>
+    </Box>
   );
 }
 
@@ -31,6 +39,10 @@ interface ItemProps {
   auctionDto: {
     status: string;
     title: string;
+    eventDate: string;
+    firstItem: {
+      imageUrl: string[];
+    };
   };
   ownerProfile: {
     nickname: string;
@@ -39,29 +51,100 @@ interface ItemProps {
 }
 
 function Card({ auctionDto, ownerProfile }: ItemProps) {
-  // console.log(ownerProfile);
+  const date = new Date(auctionDto.eventDate);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+
   return (
-    <div className="relative w-40 p-3 rounded-lg h-72 shrink-0">
-      <span className="absolute w-fit z-10 rounded-full bg-red-500 px-3 py-0.5 text-sm font-extrabold text-white">
-        {auctionDto.status}
-      </span>
-      <span className="absolute bottom-[68px] w-fit z-20 rounded-full bg-transparent py-0.5 text-xs font-extrabold text-white flex items-center">
-        <img
-          className="object-cover w-6 h-6 mr-2 rounded-full"
+    <Box position="relative" w="40" p="3" h="72" rounded="lg" overflow="hidden">
+      {auctionDto.status === 'PROGRESS' ? (
+        <Badge
+          position="absolute"
+          top="2"
+          left="2"
+          bg="red.500"
+          color="white"
+          fontSize="sm"
+          fontWeight="extrabold"
+          px="3"
+          py="0.5"
+          rounded="full"
+          zIndex="10"
+        >
+          {auctionDto.status}
+        </Badge>
+      ) : (
+        <Badge
+          position="absolute"
+          top="2"
+          left="2"
+          bg="gray.600"
+          color="white"
+          fontSize="sm"
+          fontWeight="extrabold"
+          px="3"
+          py="0.5"
+          rounded="full"
+          zIndex="10"
+        >
+          {auctionDto.status}
+        </Badge>
+      )}
+
+      <Box
+        position="absolute"
+        bottom="68px"
+        display="flex"
+        alignItems="center"
+        fontSize="xs"
+        fontWeight="extrabold"
+        color="whiteAlpha.900"
+        zIndex="20"
+        rounded="full"
+        bg="rgba(128, 128, 128, 0.8)"
+        px={2}
+        py={1}
+      >
+        <Image
+          boxSize="6"
+          mr="2"
+          borderRadius="full"
           src={ownerProfile.thumbnailUrl}
           alt="유저 프로필 이미지"
         />
         {ownerProfile.nickname}
-      </span>
-      <div className="absolute bottom-0 left-0 right-0 h-[60px] w-full z-20 font-mono font-black text-left transition-colors bg-white border-2 border-white rounded-b-xl text-neutral-800 backdrop-blur hover:bg-white/30 hover:text-white">
-        <div className="relative z-10">
-          <p className="block my-2 font-mono font-extrabold leading-loose origin-top-left text-md">
+      </Box>
+
+      <Box
+        position="absolute"
+        bottom="0"
+        left="0"
+        right="0"
+        h="60px"
+        bg="white"
+        color="black"
+        roundedBottom="xl"
+        fontFamily="mono"
+        textAlign="left"
+        transition="all 0.3s"
+        backdropFilter="blur(10px)"
+        _hover={{ bg: 'whiteAlpha.700', color: 'white' }}
+        zIndex="20"
+      >
+        <Box position="relative" zIndex="10" p="2">
+          <Text fontSize="md" fontWeight="extrabold" mb="1">
             {auctionDto.title}
-          </p>
-        </div>
-      </div>
-      <Background />
-    </div>
+          </Text>
+          <Text fontSize="xs" color="gray.500" fontWeight="semibold">
+            {`${year}년 ${month}월 ${day}일 ${hours}시`}
+          </Text>
+        </Box>
+      </Box>
+
+      <Background auctionDto={auctionDto} />
+    </Box>
   );
 }
 
@@ -87,20 +170,15 @@ function ShowingItem() {
 
   return (
     <Box height="70vh" overflowY="auto">
-      <div className="grid grid-cols-2 gap-4">
-        {data?.data?.map((item: AuctionItem) => {
-          return (
-            <Link
-              key={item.auctionDto.id}
-              to={`/auction/${item.auctionDto.id}`}
-            >
-              <Card
-                auctionDto={item.auctionDto}
-                ownerProfile={item.ownerProfile}
-              />
-            </Link>
-          );
-        })}
+      <div className="grid grid-cols-2 gap-5">
+        {data?.data?.map((item: AuctionItem) => (
+          <Link key={item.auctionDto.id} to={`/auction/${item.auctionDto.id}`}>
+            <Card
+              auctionDto={item.auctionDto}
+              ownerProfile={item.ownerProfile}
+            />
+          </Link>
+        ))}
       </div>
     </Box>
   );

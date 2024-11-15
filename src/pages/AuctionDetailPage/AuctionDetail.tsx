@@ -46,13 +46,13 @@ function AuctionDetail() {
       alignItems="center"
       justifyContent="space-between"
     >
-      <PrivateCodeModal
+      {/* <PrivateCodeModal
         isPrivate={data.auctionDto.isPrivate}
         isOwner={data.readUser.isOwner}
         endorsed={data.readUser.endorsed}
-      />
+      /> */}
       <AuctionInfo />
-      <AddAuction data={data} isOwner={data.readUser.isOwner} />
+      <AddAuction data={data} isOwner={data?.readUser.isOwner} />
       <Box h={4} bgColor="#161617" />
       <Box height="100vh">
         <AuctionList headerShow="show" fontColor="white" bgColor="#282828" />

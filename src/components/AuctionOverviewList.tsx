@@ -16,7 +16,7 @@ interface Auction {
   eventDate: string;
   sellingLimitTime: number;
   status: string;
-  isPrivate: boolean;
+  // isPrivate: boolean;
 }
 
 export default function AuctionOverviewList() {
@@ -53,15 +53,12 @@ export default function AuctionOverviewList() {
           width="100%"
           justifyContent="space-between"
         >
-          {data.data.map((item: { auctionDto: Auction }) => (
-            <Box p={2} width="100%">
-              <AuctionOverviewItemList
-                auctionId={item.auctionDto.id}
-                key={item.auctionDto.id}
-                item={item.auctionDto}
-              />
-              <Box marginTop="12px" width="100%" height="12px" bg="#222222" />
-            </Box>
+          {data.data?.map((item) => (
+            <AuctionOverviewItemList
+              auctionId={item.auctionDto.id}
+              key={item.auctionDto.id}
+              item={item.auctionDto}
+            />
           ))}
         </VStack>
         <Box height="60px" />

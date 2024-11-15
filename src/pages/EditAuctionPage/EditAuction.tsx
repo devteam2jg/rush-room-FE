@@ -32,8 +32,8 @@ export default function EditAuction() {
         'sellingLimitTime',
         data.auctionDto.sellingLimitTime || undefined
       );
-      updateField('privateCode', data.auctionDto.privateCode || '');
-      updateField('isPrivate', data.auctionDto.isPrivate || false);
+      // updateField('privateCode', data.auctionDto.privateCode || '');
+      // updateField('isPrivate', data.auctionDto.isPrivate || false);
       updateField('budget', data.auctionDto.budget || undefined);
     }
   }, [data]);
@@ -136,7 +136,7 @@ export default function EditAuction() {
           />
         </Box>
 
-        <Box margin="0 auto" width="90vw" height="60vh">
+        {/* <Box margin="0 auto" width="90vw" height="60vh">
           <Text color="white" fontSize="12px" mb="8px">
             경매 방을 비공개로 설정하시겠어용 ㅇㅅㅇ?
           </Text>
@@ -162,7 +162,7 @@ export default function EditAuction() {
               />
             </>
           )}
-        </Box>
+        </Box> */}
       </SwiperForSlide>
       <SwiperButton
         type="next"

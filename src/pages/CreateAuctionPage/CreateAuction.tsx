@@ -79,13 +79,13 @@ export default function CreateAuction() {
           placeholderText="참가자의 예산 제한 금액을 입력해주세요."
           sourceType="auction"
         />
-        <SwiperContentBox
+        {/* <SwiperContentBox
           labelText="경매 방 비공개"
           typeValue="isPrivate"
           inputType="checkbox"
           placeholderText="비밀번호를 입력해주세요"
           sourceType="auction"
-        />
+        /> */}
       </SwiperForSlide>
       <SwiperButton
         type="next"

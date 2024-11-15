@@ -18,7 +18,7 @@ interface Auction {
   eventDate: string;
   sellingLimitTime: number;
   status: string;
-  isPrivate: boolean;
+  // isPrivate: boolean;
 }
 
 function UserHostedAuction() {

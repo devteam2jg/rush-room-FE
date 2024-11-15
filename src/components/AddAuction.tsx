@@ -42,6 +42,10 @@ export default function AddAuction({ data, isOwner }: Data) {
     }
   };
 
+  const handleEnterAuction = () => {
+    navigate(`/auction/${auctionId}/bid`);
+  };
+
   return (
     <Box width="100%" p={4} textAlign="center" bg="#282828">
       {isOwner ? (
@@ -111,19 +115,32 @@ export default function AddAuction({ data, isOwner }: Data) {
             <Box flex="1" />
           </VStack>
           <Box flex="1" h={1} />
-          <Button
-            fontSize="md"
-            fontWeight="700"
-            bg="#AA8EBF"
-            color="white"
-            width="240px"
-            height="40px"
-            onClick={() => {
-              navigate(`/auction/${auctionId}/create`);
-            }}
-          >
-            등록하기
-          </Button>
+          <Flex gap={4} justifyContent="center" alignItems="center">
+            <Button
+              fontSize="md"
+              fontWeight="700"
+              bg="#AA8EBF"
+              color="white"
+              width="240px"
+              height="40px"
+              onClick={() => {
+                navigate(`/auction/${auctionId}/create`);
+              }}
+            >
+              등록하기
+            </Button>
+            <Button
+              fontSize="md"
+              fontWeight="700"
+              bg="#AA8EBF"
+              color="white"
+              width="240px"
+              height="40px"
+              onClick={handleEnterAuction}
+            >
+              경매 참여
+            </Button>
+          </Flex>
         </>
       )}
     </Box>
