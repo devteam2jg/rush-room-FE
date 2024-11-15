@@ -1,6 +1,7 @@
 import {
   Box,
   createStandaloneToast,
+  Divider,
   Flex,
   Text,
   VStack,
@@ -28,28 +29,29 @@ function UserAuctionStats() {
     });
   }
   return (
-    <Box w="100%" p={6} backgroundColor="#222222">
-      <Flex justifyContent="space-between" alignItems="center" mb={4}>
+    <Box w="100%" p={6}>
+      <Flex justifyContent="space-between" alignItems="center" mb={3}>
         <Text fontSize="lg" fontWeight="bold" color="white">
           경매 주최 횟수
         </Text>
         <Text fontSize="2xl" fontWeight="bold" color="white">
-          {data.totalCount}
+          {data.totalCount} 회
         </Text>
       </Flex>
-      <Flex justifyContent="space-between">
-        <VStack bg="#282828" borderRadius="md" p={4} w="30%" align="center">
+      <Divider />
+      {/* <Flex justifyContent="space-between" mt={4}>
+        <VStack bg="#C9B0F1" borderRadius="md" p={3} w="30%" align="start">
           <Text fontSize="sm" fontWeight="bold" color="white">
             낙찰
           </Text>
           <Text fontSize="lg" fontWeight="bold" color="white">
-            0
+            {data.length}
           </Text>
         </VStack>
         <VStack
-          bg="#282828"
+          bg="#C9B0F1"
           borderRadius="md"
-          p={4}
+          p={2}
           w="30%"
           alignItems="center"
         >
@@ -60,7 +62,7 @@ function UserAuctionStats() {
             5
           </Text>
         </VStack>
-        <VStack bg="#282828" borderRadius="md" p={4} w="30%">
+        <VStack bg="#C9B0F1" borderRadius="md" p={2} w="30%">
           <Text fontSize="sm" fontWeight="bold" color="white">
             최고 금액 갱신
           </Text>
@@ -68,7 +70,7 @@ function UserAuctionStats() {
             5
           </Text>
         </VStack>
-      </Flex>
+      </Flex> */}
     </Box>
   );
 }

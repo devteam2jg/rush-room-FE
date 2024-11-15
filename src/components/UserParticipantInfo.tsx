@@ -10,10 +10,12 @@ function UserParticipantInfo() {
       borderRadius="lg"
       boxShadow="2xl"
       mt={4}
-      w="80%"
+      w="90%"
       maxW="md"
+      overflowY="auto"
+      alignItems="inherit"
     >
-      <Heading as="h3" size="md" mb={4} color="white">
+      <Heading as="h3" size="md" mb={5} color="white">
         경매 참여 정보
       </Heading>
       <VStack spacing={4} align="stretch">

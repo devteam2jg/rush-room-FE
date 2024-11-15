@@ -2,16 +2,21 @@ import {
   Heading,
   Image,
   Box,
+  Text,
   Flex,
   createStandaloneToast,
+  HStack,
+  Divider,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
+import { CiDollar } from 'react-icons/ci';
 import useUserProfile from '../hooks/useUserProfile';
 
 function UserProfile() {
   const nav = useNavigate();
   const { toast } = createStandaloneToast();
   const { data, error, isPending } = useUserProfile();
+  console.log(data);
   if (isPending) {
     return <div>Loading...!!</div>;
   }
@@ -28,25 +33,16 @@ function UserProfile() {
     });
   }
   return (
-    <Box w="100%">
-      <Flex
-        p={6}
-        pt={14}
-        backgroundColor="#886CB5"
-        color="white"
-        alignItems="center"
-        justifyContent="space-between"
-        boxShadow="md"
-        borderBottomRadius="2xl"
-      >
-        <Heading as="h1" size="lg" fontWeight="900">
+    <Box w="100%" p={6} pt={10}>
+      <Flex color="white" alignItems="center" justifyContent="space-between">
+        <Text fontSize="30" fontWeight="extrabold">
           {data.name}
-        </Heading>
+        </Text>
         <Image
           src={data.thumbnailUrl}
           alt="UserProfile"
-          borderRadius="lg"
-          boxSize="100px"
+          borderRadius="full"
+          boxSize="80px"
         />
       </Flex>
     </Box>

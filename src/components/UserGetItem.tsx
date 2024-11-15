@@ -3,6 +3,8 @@ import {
   Button,
   createStandaloneToast,
   Flex,
+  Heading,
+  SimpleGrid,
   Text,
   VStack,
 } from '@chakra-ui/react';
@@ -10,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import useUserAuctionStats from '../hooks/useUserAuctionStats';
 import SpringModal from './Modal/SpringModal';
+import AuctionItemList from './AuctionItem/AuctionItemList';
 
 interface AuctionItem {
   id: string;
@@ -22,6 +25,8 @@ function UserGetItem() {
   const nav = useNavigate();
   const { toast } = createStandaloneToast();
   const { data, error, isPending } = useUserAuctionStats();
+
+  console.log('user--', data?.data);
 
   if (isPending) {
     return <div>Loading...!!</div>;
@@ -39,34 +44,33 @@ function UserGetItem() {
     });
   }
   return (
-    <>
-      <Button>
-        <Flex
-          align="center"
-          justify="space-between"
-          p={4}
-          borderRadius="md"
-          onClick={() => setIsOpen(!isOpen)}
-          cursor="pointer"
+    <Box
+      overflow="hidden"
+      width="100%"
+      height="100%"
+      p={4}
+      bg="#222222"
+      color="white"
+      overflowY="auto"
+      borderRadius="lg"
+    >
+      <VStack height="100%" spacing={4} align="stretch">
+        <Heading as="h5" size="xm" color="white">
+          낙찰 물품 리스트
+        </Heading>
+        <VStack
+          height="100%"
+          overflow="auto"
+          alignItems="center"
+          width="100%"
+          justifyContent="space-between"
         >
-          <Flex align="center">
-            <Text fontSize="md">낙찰 물품 리스트</Text>
-          </Flex>
-          <Text>&gt;</Text>
-        </Flex>
-      </Button>
-
-      <SpringModal isOpen={isOpen} setIsOpen={setIsOpen}>
-        <Box>
-          <Text color="white">낙찰 물품 리스트</Text>
-          {data.data.map((item: AuctionItem) => (
-            <VStack key={item.id}>{item.title}</VStack>
+          {data?.data?.map((item) => (
+            <AuctionItemList key={item.id} item={item} />
           ))}
-
-          <Button onClick={() => setIsOpen(!isOpen)}>Close</Button>
-        </Box>
-      </SpringModal>
-    </>
+        </VStack>
+      </VStack>
+    </Box>
   );
 }
 export default UserGetItem;
