@@ -98,10 +98,7 @@ sketch
 *.asp
 *.cer
 *.csr
-*.css
 *.htm
-*.html
-*.js
 *.jsp
 *.php
 *.rss
@@ -110,3 +107,7 @@ sketch
 *.xhtml
 
 .env
+.env.development
+.env.production
+.env.staging
+

@@ -1,15 +1,12 @@
-import { Box, Text } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import { Outlet } from 'react-router-dom';
 
-const Layout = () => {
+function Layout() {
   return (
-    <>
-      <Box>
-        <Outlet />
-      </Box>
-      <Text>네브바</Text>
-    </>
+    <Box>
+      <Outlet />
+    </Box>
   );
-};
+}
 
 export default Layout;
