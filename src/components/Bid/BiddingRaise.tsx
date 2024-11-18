@@ -211,13 +211,13 @@ function BiddingRaise({
           justifyContent="space-between"
           color="#FCFCFD"
         >
-          <HStack justifyContent="space-between" width={{ base: '220px' }}>
+          <HStack justifyContent="space-between" width={{ base: '230px' }}>
             <Text>보유 금액 </Text>
             <Text fontWeight="700" color="#F1D849">
               {budget?.toLocaleString()} 원
             </Text>
           </HStack>
-          <HStack justifyContent="space-between" width={{ base: '220px' }}>
+          <HStack justifyContent="space-between" width={{ base: '230px' }}>
             <Text>현재 경매가</Text>
             <Text fontWeight="700" color="#FF8C00">
               {raisedPrice.toLocaleString()}원

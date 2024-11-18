@@ -139,7 +139,7 @@ function BiddingControlModalOnState({
           handleConffeti();
           break;
         default:
-          console.log('UNKNOWN STATUS ERROR');
+          console.log('default');
       }
     };
 

@@ -61,38 +61,33 @@ function Bid() {
       toast.closeAll();
 
       const { type } = response;
-      let backgroundColor;
+      let status;
 
       switch (type) {
         case 'RED':
-          backgroundColor = '#DE4747';
+          status = 'error';
           break;
         case 'YELLOW':
-          backgroundColor = '#D7BF60';
+          status = 'warning';
           break;
         case 'GREEN':
-          backgroundColor = '#4AB140';
+          status = 'success';
           break;
         case 'BLUE':
-          backgroundColor = '#3A6EA9';
+          status = 'info';
           break;
         default:
-          backgroundColor = '#C49CF1';
+          status = 'info';
       }
 
       toast({
         position: 'top',
         title: '알림',
         description: response.message,
+        status: `${status}`,
         variant: 'left-accent',
         duration: 3000,
         isClosable: true,
-        containerStyle: {
-          maxWidth: '80%',
-          color: '#FCFCFD',
-          backgroundColor,
-          borderRadius: '15px',
-        },
       });
     });
 
@@ -120,11 +115,12 @@ function Bid() {
     });
   }
 
-  if (data.auctionDto.status !== 'PROGRESS') {
+  if (data.auctionDto.status === 'END') {
     nav('/');
+    toast.closeAll();
     toast({
       title: '경고',
-      description: '아직 진행 중이 아닙니다!',
+      description: '종료 된 경매 입니다!',
       status: 'error',
       variant: 'left-accent',
       duration: 3000,
