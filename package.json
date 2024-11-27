@@ -22,6 +22,7 @@
     "framer-motion": "^11.11.9",
     "hls.js": "^1.5.17",
     "js-confetti": "^0.12.0",
+    "lodash.debounce": "^4.0.8",
     "mediasoup-client": "^3.7.17",
     "nanoid": "^5.0.7",
     "qrcode.react": "^4.1.0",
@@ -37,6 +38,7 @@
   },
   "devDependencies": {
     "@eslint/js": "8.50.0",
+    "@types/lodash.debounce": "^4.0.9",
     "@types/node": "^22.7.8",
     "@types/react": "^18.3.10",
     "@types/react-dom": "^18.3.0",
