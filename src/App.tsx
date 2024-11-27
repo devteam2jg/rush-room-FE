@@ -10,6 +10,7 @@ import { RouterProvider } from 'react-router-dom';
 import { useEffect } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { keyframes } from '@emotion/react';
+import debounce from 'lodash.debounce';
 import theme from './utils/theme';
 import router from './routes';
 import './App.css';
@@ -22,9 +23,21 @@ function App() {
     const vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty('--vh', `${vh}px`);
   }
+
   useEffect(() => {
     setScreenSize();
-  });
+
+    const handleResize = debounce(() => {
+      setScreenSize();
+    }, 250);
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      handleResize.cancel();
+    };
+  }, []);
 
   const blinkAnimation = keyframes`
   0%, 100% { opacity: 1; }
@@ -55,7 +68,7 @@ function App() {
             level="H"
             includeMargin
             style={{
-              borderRadius: '10px', // SVG 자체에 borderRadius 적용
+              borderRadius: '10px',
             }}
           />
 
