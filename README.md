@@ -29,63 +29,63 @@ Rush Room은 **라이브 스트리밍과 실시간 채팅을 결합한 혁신적
 
 #### 경매 생성 페이지
 
-![경매생성페이지](https://github.com/user-attachments/assets/87b3cbef-ed82-4e95-9a88-b6bb1ab9cc3a)
+<img src="https://github.com/user-attachments/assets/87b3cbef-ed82-4e95-9a88-b6bb1ab9cc3a" alt="경매생성페이지" width="300" />
 
 #### 경매 리스트 페이지
 
-![경매리스트](https://github.com/user-attachments/assets/10ac384f-ec83-47a9-b92d-6c4c528e2bff)
+<img src="https://github.com/user-attachments/assets/10ac384f-ec83-47a9-b92d-6c4c528e2bff" alt="경매리스트" width="300" />
 
 #### 경매 상세 페이지
 
-![경매상세페이지](https://github.com/user-attachments/assets/355400a7-8f83-4ab2-a396-c9df6701eafb)
+<img src="https://github.com/user-attachments/assets/355400a7-8f83-4ab2-a396-c9df6701eafb" alt="경매상세페이지" width="300" />
 
 #### 경매 상세 정보
 
-![경매상세정보](https://github.com/user-attachments/assets/1c178055-3464-486e-8c02-6272ae8bdc3c)
+<img src="https://github.com/user-attachments/assets/1c178055-3464-486e-8c02-6272ae8bdc3c" alt="경매상세정보" width="300" />
 
 #### 경매 물품 생성 페이지
 
-![경매물품생성페이지](https://github.com/user-attachments/assets/50cbac46-f9f2-4a08-a747-21c5a35235ee)
+<img src="https://github.com/user-attachments/assets/50cbac46-f9f2-4a08-a747-21c5a35235ee" alt="경매물품생성페이지" width="300" />
 
 #### 경매 물품 상세 페이지
 
-![경매물품상세](https://github.com/user-attachments/assets/57097511-4611-4faf-852b-a780a3777594)
+<img src="https://github.com/user-attachments/assets/57097511-4611-4faf-852b-a780a3777594" alt="경매물품상세" width="300" />
 
 #### 마이페이지
 
-![마이페이지](https://github.com/user-attachments/assets/50f38067-8cdc-4bd8-842b-ba320a033834)
+<img src="https://github.com/user-attachments/assets/50f38067-8cdc-4bd8-842b-ba320a033834" alt="마이페이지" width="300" />
 
 #### 경매 입장 화면(판매자)
 
-![경매입장화면(판매자)](https://github.com/user-attachments/assets/64c25cc3-23d1-43bb-9089-04689b1aea3c)
+<img src="https://github.com/user-attachments/assets/64c25cc3-23d1-43bb-9089-04689b1aea3c" alt="경매입장화면(판매자)" width="300" />
 
 #### 경매 진행 페이지
 
-![경매진행](https://github.com/user-attachments/assets/25c0bf75-4eb5-46f8-a666-c140837b5cc3)
+<img src="https://github.com/user-attachments/assets/25c0bf75-4eb5-46f8-a666-c140837b5cc3" alt="경매진행" width="300" />
 
 #### 경매 입찰 페이지
 
-![경매입찰](https://github.com/user-attachments/assets/aa6f0e0e-d80b-4c71-81af-73bd2fa058a9)
+<img src="https://github.com/user-attachments/assets/aa6f0e0e-d80b-4c71-81af-73bd2fa058a9" alt="경매입찰" width="300" />
 
 #### 경매 RushTime
 
-![경매RushTime](https://github.com/user-attachments/assets/207f13f6-0a9b-4470-8a6e-693e30302a6f)
+<img src="https://github.com/user-attachments/assets/207f13f6-0a9b-4470-8a6e-693e30302a6f" alt="경매RushTime" width="300" />
 
 #### 경매 15초 CountDown
 
-![경매CountDown](https://github.com/user-attachments/assets/9677be88-54a1-4986-b697-48f19d9841d0)
+<img src="https://github.com/user-attachments/assets/9677be88-54a1-4986-b697-48f19d9841d0" alt="경매CountDown" width="300" />
 
 #### 경매 결과 화면
 
-![경매결과](https://github.com/user-attachments/assets/4ea45817-cf45-4956-81c1-323095810e10)
+<img src="https://github.com/user-attachments/assets/4ea45817-cf45-4956-81c1-323095810e10" alt="경매결과" width="300" />
 
 #### 경매 대기 화면(Blinking)
 
-![경매대기](https://github.com/user-attachments/assets/00f70f4f-8e55-49db-bb2b-be6af53ba186)
+<img src="https://github.com/user-attachments/assets/00f70f4f-8e55-49db-bb2b-be6af53ba186" alt="경매대기" width="300" />
 
 #### 경매 최종 결과(Swipe)
 
-![경매최종결과](https://github.com/user-attachments/assets/dbb20409-81c8-4f21-ad28-1bc48b85eb85)
+<img src="https://github.com/user-attachments/assets/dbb20409-81c8-4f21-ad28-1bc48b85eb85" alt="경매최종결과" width="300" />
 
 ### 프로젝트 포스터
 
