@@ -65,7 +65,7 @@ Rush Room은 **라이브 스트리밍과 실시간 채팅을 결합한 혁신적
 
 #### 경매 입찰 페이지
 
-<img src="https://github.com/user-attachments/assets/aa6f0e0e-d80b-4c71-81af-73bd2fa058a9" alt="경매입찰" width="300" />
+<img src="https://github.com/user-attachments/assets/7db42320-66cc-4ebe-9874-1aa650ee7d92" alt="경매입찰" width="300" />
 
 #### 경매 RushTime
 
@@ -95,11 +95,13 @@ Rush Room은 **라이브 스트리밍과 실시간 채팅을 결합한 혁신적
 
 - ### React 에서 마우스 드래그 - 모바일 터치 다루기
 
-  - 문제 상황  
-    경매 아이템 목록 순서 수정 시 HTML draggable 속성을 활용해 드래그 앤 드롭을 구현함
+  - 문제 상황
+
+    경매 아이템 목록 순서 수정 시 HTML draggable 속성을 활용해 드래그 앤 드롭을 구현함  
     모바일 환경에서는 draggable 속성이 지원되지 않음을 발견
 
   - 해결 과정
+
     모바일에서 작동하기 위해 Mouse Event 대신 Touch Event 를 처리
 
     1. 터치가 시작될 때 (touchstart)
@@ -115,11 +117,13 @@ Rush Room은 **라이브 스트리밍과 실시간 채팅을 결합한 혁신적
 
 - ### Chakra UI 의 구조적인 문제점
 
-  - 문제 상황  
-    기존의 컴포넌트에 Chakra UI로 구현해 놓았던 Modal, Drawer 가 웹뷰로 전환되면서 예상치 못한 위치에서 생성되는 이슈 발생
+  - 문제 상황
+
+    기존의 컴포넌트에 Chakra UI로 구현해 놓았던 Modal, Drawer 가 웹뷰로 전환되면서 예상치 못한 위치에서 생성되는 이슈 발생  
     DOM 루트의 Portal을 기준으로 부모의 스타일이나 레이아웃을 무시하는 것이 원인
 
   - 해결 과정
+
     Tailwind CSS를 이용하여 커스텀 Drawer과 Modal 구현
 
   - 결론
