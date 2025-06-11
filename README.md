@@ -18,7 +18,7 @@ Rush Room은 **라이브 스트리밍과 실시간 채팅을 결합한 혁신적
 
 ### 관련 링크
 
-[👉 RushRoom 홈페이지](https://rushroom.kr/api/v1/auth-test/login)  
+👉 RushRoom 홈페이지(서버를 닫아 비활성화)
 [👉 RushRoom 시연 및 최종 발표 영상](https://www.youtube.com/watch?v=jqIyTOLKfDA)
 
 ### 서비스 사진
